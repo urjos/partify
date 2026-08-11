@@ -9,7 +9,7 @@ export default function App() {
         Welcome to Nativewind!
       </Text>
       <Link
-        href="/Onboarding"
+        href="/onboarding"
         className="mt-4 rounded bg-primary text-white p-4"
       >
         Go to onboarding
