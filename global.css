@@ -5,17 +5,19 @@
 @import "nativewind/theme";
 
 @theme {
-  --color-background: #fff9e3;
-  --color-foreground: #081126;
-  --color-card: #fff8e7;
-  --color-muted: #f6eecf;
-  --color-muted-foreground: rgba(0, 0, 0, 0.6);
-  --color-primary: #081126;
-  --color-accent: #ea7a53;
-  --color-border: rgba(0, 0, 0, 0.1);
-  --color-success: #16a34a;
-  --color-destructive: #dc2626;
-  --color-subscription: #8fd1bd;
+  --color-background: #0a0a12;
+  --color-foreground: #0f1730;
+  --color-card: #fff6e8;
+  --color-muted: #f5ebd1;
+  --color-muted-foreground: rgba(15, 23, 48, 0.62);
+  --color-primary: #0f1730;
+  --color-accent: #ff6f5e;
+  --color-border: rgba(15, 23, 48, 0.1);
+  --color-success: #18a957;
+  --color-destructive: #e23d3d;
+  --color-subscription: #7fd9be;
+  --color-highlight: #ffc145;
+  --color-live: #b24bfb;
 
   --font-sans: sans-regular;
   --font-sans-light: sans-light;
@@ -43,13 +45,6 @@
   --spacing-20: 80px;
   --spacing-24: 96px;
   --spacing-30: 120px;
-
-  --font-sans: sans-regular;
-  --font-sans-light: sans-light;
-  --font-sans-medium: sans-medium;
-  --font-sans-semibold: sans-semibold;
-  --font-sans-bold: sans-bold;
-  --font-sans-extrabold: sans-extrabold;
 }
 
 @layer components {
@@ -62,7 +57,7 @@
   }
 
   .tabs-active {
-    @apply bg-accent;
+    @apply bg-live;
   }
 
   .tabs-glyph {
@@ -70,7 +65,7 @@
   }
 
   .home-header {
-    @apply mb-2.5 flex-row items-center justify-between;
+    @apply mb-3.5 flex-row items-center justify-between;
   }
 
   .home-user {
@@ -82,7 +77,7 @@
   }
 
   .home-user-name {
-    @apply ml-4 text-2xl font-sans-bold text-primary;
+    @apply ml-4 text-2xl font-sans-bold text-white;
   }
 
   .home-add-icon {
