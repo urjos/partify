@@ -18,8 +18,8 @@ const TabIcon = ({ focused, icon }: TabIconProps) => {
   );
 };
 const TabLayout = () => {
-  const insets = useSafeAreaInsets();
   const { isSignedIn, isLoaded } = useAuth();
+  const insets = useSafeAreaInsets();
 
   // Wait for auth to load before rendering anything
   if (!isLoaded) {
@@ -43,7 +43,6 @@ const TabLayout = () => {
           marginHorizontal: tabBar.horizontalInset,
           borderRadius: tabBar.radius,
           backgroundColor: colors.primary,
-          borderColor: colors.border,
           borderTopWidth: 0,
           elevation: 0,
         },
