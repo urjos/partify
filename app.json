@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.josjosjos.partify"
     },
     "web": {
       "output": "static",
@@ -51,11 +52,20 @@
             "./assets/fonts/PlusJakartaSans-Medium.ttf"
           ]
         }
-      ]
+      ],
+      "@clerk/expo",
+      "expo-secure-store",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "5a817cf9-b1d4-40a8-8935-88294712ccff"
+      }
     }
   }
 }
