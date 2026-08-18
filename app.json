@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "partify",
+    "name": "Partify",
     "slug": "partify",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/icons/partify-logo.jpg",
     "scheme": "partify",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

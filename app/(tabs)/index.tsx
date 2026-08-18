@@ -1,7 +1,8 @@
 import CreateSubscriptionModal from "@/components/CreateSubscriptionModal";
 import ListHeading from "@/components/ListHeading";
+import MyCard from "@/components/MyCard";
 import SubscriptionCard from "@/components/SubscriptionCard";
-import UpComingSubscriptionCard from "@/components/UpComingSubscriptionCard";
+import UpComingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
 import { HOME_BALANCE } from "@/constants/data";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
@@ -111,6 +112,8 @@ export default function App() {
                 }
               />
             </View>
+
+            <MyCard />
 
             <ListHeading title="All Subscriptions" />
           </>

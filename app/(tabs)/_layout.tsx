@@ -1,5 +1,6 @@
+import GlassTabBarBackground from "@/components/GlassTabBarBackground";
 import { tabs } from "@/constants/data";
-import { colors, components } from "@/constants/theme";
+import { components } from "@/constants/theme";
 import { useAuth } from "@clerk/expo";
 import clsx from "clsx";
 import { Redirect, Tabs } from "expo-router";
@@ -42,10 +43,17 @@ const TabLayout = () => {
           height: tabBar.height,
           marginHorizontal: tabBar.horizontalInset,
           borderRadius: tabBar.radius,
-          backgroundColor: colors.primary,
-          borderTopWidth: 0,
+          backgroundColor: "transparent",
+          borderWidth: 0,
           elevation: 0,
+          overflow: "hidden",
         },
+        tabBarBackground: () => (
+          <GlassTabBarBackground
+            radius={tabBar.radius}
+            tintColor="rgba(8, 17, 38, 0.45)"
+          />
+        ),
         tabBarItemStyle: {
           paddingVertical: tabBar.height / 2 - tabBar.iconFrame / 1.6,
         },
