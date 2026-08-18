@@ -6,32 +6,24 @@ const rawApiKey = Constants.expoConfig?.extra?.posthogProjectToken as
   | undefined;
 const rawHost = Constants.expoConfig?.extra?.posthogHost as string | undefined;
 
-// Trim and normalize API key and host
-const apiKey = rawApiKey?.trim();
+const projectToken = rawApiKey?.trim();
 const host = rawHost?.trim();
-const isPostHogConfigured =
-  !!apiKey && apiKey !== "" && apiKey !== "phc_your_project_token_here";
+const isPostHogConfigured = Boolean(projectToken);
 
-if (!isPostHogConfigured) {
-  console.warn(
-    "PostHog project token not configured. Analytics will be disabled. " +
-      "Set POSTHOG_PROJECT_TOKEN in your .env file to enable analytics.",
+if (!isPostHogConfigured && __DEV__) {
+  throw new Error(
+    "POSTHOG_PROJECT_TOKEN variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once POSTHOG_PROJECT_TOKEN is configured",
   );
 }
 
-export const posthog = new PostHog(apiKey || "placeholder_key", {
+export const posthog = new PostHog(projectToken as string, {
   ...(host ? { host } : {}),
   disabled: !isPostHogConfigured,
-  captureAppLifecycleEvents: true,
-  debug: __DEV__,
-  flushAt: 20,
-  flushInterval: 10000,
-  maxBatchSize: 100,
-  maxQueueSize: 1000,
-  preloadFeatureFlags: true,
-  sendFeatureFlagEvent: true,
-  featureFlagsRequestTimeoutMs: 10000,
-  requestTimeout: 10000,
-  fetchRetryCount: 3,
-  fetchRetryDelay: 3000,
+  errorTracking: {
+    autocapture: {
+      uncaughtExceptions: true,
+      unhandledRejections: true,
+      console: false,
+    },
+  },
 });

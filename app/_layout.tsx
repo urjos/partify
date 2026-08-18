@@ -9,7 +9,7 @@ import {
   useGlobalSearchParams,
   usePathname,
 } from "expo-router";
-import { PostHogProvider } from "posthog-react-native";
+import { PostHogErrorBoundary, PostHogProvider } from "posthog-react-native";
 import { useEffect, useRef } from "react";
 
 SplashScreen.preventAutoHideAsync();
@@ -80,9 +80,11 @@ export default function RootLayout() {
         propsToCapture: ["testID"],
       }}
     >
-      <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-        <RootLayoutContent />
-      </ClerkProvider>
+      <PostHogErrorBoundary>
+        <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+          <RootLayoutContent />
+        </ClerkProvider>
+      </PostHogErrorBoundary>
     </PostHogProvider>
   );
 }
