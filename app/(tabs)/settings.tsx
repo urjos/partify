@@ -35,7 +35,7 @@ const Settings = () => {
       </Text>
 
       {/* User Profile Section */}
-      <View className="auth-card mb-5">
+      <View className="auth-card">
         <View className="flex-row items-center gap-4 mb-4">
           <Image
             source={user?.imageUrl ? { uri: user.imageUrl } : images.avatar}
@@ -69,7 +69,7 @@ const Settings = () => {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {user?.id?.substring(0, 20)}...
+              {user?.id?.substring(0, 8)}...
             </Text>
           </View>
           <View className="flex-row justify-between items-center py-2">

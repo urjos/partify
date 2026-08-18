@@ -1,5 +1,5 @@
 import "@/global.css";
-import { posthog } from "@/src/config/postdog";
+import { posthog } from "@/src/config/posthog";
 import { ClerkProvider, useAuth } from "@clerk/expo";
 import { tokenCache } from "@clerk/expo/token-cache";
 import { useFonts } from "expo-font";

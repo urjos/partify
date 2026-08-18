@@ -18,10 +18,10 @@ const SubscriptionCard = ({
   plan,
   renewalDate,
   expanded,
+  onPress,
   paymentMethod,
   startDate,
   status,
-  onPress,
 }: SubscriptionCardProps) => {
   return (
     <Pressable
@@ -33,16 +33,17 @@ const SubscriptionCard = ({
         <View className="sub-main">
           <Image source={icon} className="sub-icon" />
           <View className="sub-copy">
-            <Text numberOfLines={2} className="sub-title">
+            <Text numberOfLines={1} className="sub-title">
               {name}
             </Text>
-            <Text numberOfLines={1} className="sub-meta">
+            <Text numberOfLines={1} ellipsizeMode="tail" className="sub-meta">
               {category?.trim() ||
                 plan?.trim() ||
                 (renewalDate ? formatSubscriptionDateTime(renewalDate) : "")}
             </Text>
           </View>
         </View>
+
         <View className="sub-price-box">
           <Text className="sub-price">{formatCurrency(price, currency)}</Text>
           <Text className="sub-billing">{billing}</Text>
@@ -60,11 +61,10 @@ const SubscriptionCard = ({
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {paymentMethod?.trim()}
+                  {paymentMethod?.trim() ?? "Not provided"}
                 </Text>
               </View>
             </View>
-
             <View className="sub-row">
               <View className="sub-row-copy">
                 <Text className="sub-label">Category:</Text>
@@ -73,11 +73,10 @@ const SubscriptionCard = ({
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {category?.trim() || plan?.trim()}
+                  {(category?.trim() || plan?.trim()) ?? "Not provided"}
                 </Text>
               </View>
             </View>
-
             <View className="sub-row">
               <View className="sub-row-copy">
                 <Text className="sub-label">Started:</Text>
@@ -86,11 +85,12 @@ const SubscriptionCard = ({
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {startDate ? formatSubscriptionDateTime(startDate) : ""}
+                  {startDate
+                    ? formatSubscriptionDateTime(startDate)
+                    : "Not provided"}
                 </Text>
               </View>
             </View>
-
             <View className="sub-row">
               <View className="sub-row-copy">
                 <Text className="sub-label">Renewal date:</Text>
@@ -99,11 +99,12 @@ const SubscriptionCard = ({
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {renewalDate ? formatSubscriptionDateTime(renewalDate) : ""}
+                  {renewalDate
+                    ? formatSubscriptionDateTime(renewalDate)
+                    : "Not provided"}
                 </Text>
               </View>
             </View>
-
             <View className="sub-row">
               <View className="sub-row-copy">
                 <Text className="sub-label">Status:</Text>
@@ -112,7 +113,7 @@ const SubscriptionCard = ({
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {status ? formatStatusLabel(status) : ""}
+                  {status ? formatStatusLabel(status) : "Not provided"}
                 </Text>
               </View>
             </View>
@@ -122,5 +123,4 @@ const SubscriptionCard = ({
     </Pressable>
   );
 };
-
 export default SubscriptionCard;
