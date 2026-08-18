@@ -5,17 +5,18 @@
 @import "nativewind/theme";
 
 @theme {
-  --color-background: #fff9e3;
-  --color-foreground: #081126;
-  --color-card: #fff8e7;
-  --color-muted: #f6eecf;
-  --color-muted-foreground: rgba(0, 0, 0, 0.6);
-  --color-primary: #081126;
-  --color-accent: #ea7a53;
-  --color-border: rgba(0, 0, 0, 0.1);
-  --color-success: #16a34a;
-  --color-destructive: #dc2626;
-  --color-subscription: #8fd1bd;
+  --color-background: #0b0b0f;
+  --color-foreground: #f5f4f2;
+  --color-card: #17171d;
+  --color-muted: #212129;
+  --color-muted-foreground: rgba(245, 244, 242, 0.62);
+  --color-primary: #f5f4f2;
+  --color-accent: #b24bfb;
+  --color-accent-pink: #ea4bc8;
+  --color-border: rgba(245, 244, 242, 0.12);
+  --color-success: #22c55e;
+  --color-destructive: #ef4444;
+  --color-subscription: #123d34;
 
   --spacing-0: 0px;
   --spacing-1: 4px;
@@ -46,6 +47,9 @@
 }
 
 @layer components {
+  .page {
+    @apply pr-3 pl-3;
+  }
   .tabs-icon {
     @apply size-12 items-center justify-center;
   }
@@ -63,7 +67,7 @@
   }
 
   .home-header {
-    @apply mb-2.5 flex-row items-center justify-between;
+    @apply mt-3 mb-2.5 flex-row items-center justify-between;
   }
 
   .home-user {
@@ -76,6 +80,14 @@
 
   .home-user-name {
     @apply ml-4 text-2xl font-sans-bold text-primary;
+  }
+
+  .home-greeting {
+    @apply ml-4 text-xl font-sans-bold text-primary;
+  }
+
+  .home-subgreeting {
+    @apply ml-4 text-sm font-sans-medium text-muted-foreground;
   }
 
   .home-add-icon {
@@ -111,7 +123,7 @@
   }
 
   .list-action {
-    @apply rounded-full border border-black/20 px-4 py-1;
+    @apply rounded-full border border-border px-4 py-1;
   }
 
   .list-action-text {
@@ -119,7 +131,7 @@
   }
 
   .upcoming-card {
-    @apply mr-4 w-44 rounded-2xl border border-black/10 bg-background p-4;
+    @apply mr-4 w-44 rounded-2xl border border-border bg-background p-4;
   }
 
   .upcoming-row {
@@ -218,12 +230,84 @@
     @apply bg-primary/35;
   }
 
+  .event-card {
+    @apply overflow-hidden rounded-3xl border border-border bg-card;
+  }
+
+  .event-image-wrap {
+    @apply relative h-40 w-full bg-muted;
+  }
+
+  .event-image {
+    @apply h-full w-full;
+  }
+
+  .event-category-chip {
+    @apply absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1;
+  }
+
+  .event-category-text {
+    @apply text-xs font-sans-bold uppercase tracking-[0.5px] text-primary;
+  }
+
+  .event-body {
+    @apply gap-2 p-4;
+  }
+
+  .event-title {
+    @apply text-lg font-sans-bold text-primary;
+  }
+
+  .event-meta-row {
+    @apply flex-row items-center gap-2;
+  }
+
+  .event-meta-text {
+    @apply text-sm font-sans-medium text-muted-foreground;
+  }
+
+  .event-meta-dot {
+    @apply size-1 rounded-full bg-muted-foreground;
+  }
+
+  .event-footer-row {
+    @apply mt-1 flex-row items-center justify-between;
+  }
+
+  .event-avatar-stack {
+    @apply flex-row items-center;
+  }
+
+  .event-avatar {
+    @apply -ml-2 size-7 rounded-full border-2 border-card bg-muted first:ml-0;
+  }
+
+  .event-attendee-count {
+    @apply ml-2 text-xs font-sans-semibold text-muted-foreground;
+  }
+
+  .event-going-badge {
+    @apply rounded-full bg-accent px-3 py-1.5;
+  }
+
+  .event-going-badge-text {
+    @apply text-xs font-sans-bold text-background;
+  }
+
+  .event-interested-badge {
+    @apply rounded-full border border-border px-3 py-1.5;
+  }
+
+  .event-interested-badge-text {
+    @apply text-xs font-sans-bold text-primary;
+  }
+
   .sub-cancel-text {
     @apply font-sans-bold text-background;
   }
 
   .home-empty-state {
-    @apply py-4 text-sm font-sans-medium text-black/60;
+    @apply py-4 text-sm font-sans-medium text-muted-foreground;
   }
 
   .auth-safe-area {

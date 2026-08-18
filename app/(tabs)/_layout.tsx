@@ -43,6 +43,7 @@ const TabLayout = () => {
           height: tabBar.height,
           marginHorizontal: tabBar.horizontalInset,
           borderRadius: tabBar.radius,
+          borderTopColor: "transparent",
           backgroundColor: "transparent",
           borderWidth: 0,
           elevation: 0,
@@ -51,7 +52,8 @@ const TabLayout = () => {
         tabBarBackground: () => (
           <GlassTabBarBackground
             radius={tabBar.radius}
-            tintColor="rgba(8, 17, 38, 0.45)"
+            tintColor="rgba(23, 23, 29, 0.55)"
+            brandTint="#b24bfb"
           />
         ),
         tabBarItemStyle: {

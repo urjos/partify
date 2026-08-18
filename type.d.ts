@@ -53,6 +53,22 @@ declare global {
   interface ListHeadingProps {
     title: string;
   }
+
+  interface EventItem {
+    id: string;
+    image: ImageSourcePropType;
+    title: string;
+    dateLabel: string;
+    distanceLabel?: string;
+    category: string;
+    attendeeAvatars: ImageSourcePropType[];
+    attendeeCount: number;
+    isGoing?: boolean;
+  }
+
+  interface EventCardProps extends Omit<EventItem, "id"> {
+    onPress: () => void;
+  }
 }
 
 export {};

@@ -1,67 +1,21 @@
-import CreateSubscriptionModal from "@/components/CreateSubscriptionModal";
+import EventCard from "@/components/EventCard";
 import ListHeading from "@/components/ListHeading";
-import MyCard from "@/components/MyCard";
-import SubscriptionCard from "@/components/SubscriptionCard";
-import UpComingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
-import { HOME_BALANCE } from "@/constants/data";
-import { icons } from "@/constants/icons";
 import images from "@/constants/images";
+import { MOCK_EVENTS } from "@/constants/mock-events";
 import "@/global.css";
-import { useSubscriptionStore } from "@/lib/subscriptionStore";
-import { formatCurrency } from "@/lib/utils";
 import { useUser } from "@clerk/expo";
-import dayjs from "dayjs";
 import { styled } from "nativewind";
-import { usePostHog } from "posthog-react-native";
-import { useMemo, useState } from "react";
-import { FlatList, Image, Pressable, Text, View } from "react-native";
+import { FlatList, Image, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function App() {
   const { user } = useUser();
-  const posthog = usePostHog();
-  const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<
-    string | null
-  >(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const { subscriptions, addSubscription, upcomingsubscriptions } =
-    useSubscriptionStore();
 
-  // Get upcoming subscriptions (active subscriptions with renewal date within next 7 days)
-  const upcomingSubscriptions = useMemo(() => {
-    return upcomingsubscriptions;
-  }, [upcomingsubscriptions]);
-
-  const handleSubscriptionPress = (item: Subscription) => {
-    const isExpanding = expandedSubscriptionId !== item.id;
-    setExpandedSubscriptionId((currentId) =>
-      currentId === item.id ? null : item.id,
-    );
-    posthog.capture(
-      isExpanding ? "subscription_expanded" : "subscription_collapsed",
-      {
-        subscription_name: item.name,
-        subscription_id: item.id,
-      },
-    );
-  };
-
-  const handleCreateSubscription = (newSubscription: Subscription) => {
-    addSubscription(newSubscription);
-    posthog.capture("subscription_created", {
-      subscription_name: newSubscription.name,
-      subscription_price: newSubscription.price,
-      subscription_frequency: newSubscription.frequency || "",
-      subscription_category: newSubscription.category || "",
-    });
-  };
-
-  // Get user display name: firstName, fullName, or email
   const displayName = user?.firstName || user?.fullName || "User";
 
   return (
-    <SafeAreaView className="flex-1 bg-background p-5">
+    <SafeAreaView className="flex-1 bg-background page">
       <FlatList
         ListHeaderComponent={() => (
           <>
@@ -73,73 +27,34 @@ export default function App() {
                   }
                   className="home-avatar"
                 />
-                <Text className="home-user-name">{displayName}</Text>
-              </View>
-
-              <Pressable onPress={() => setIsModalVisible(true)}>
-                <Image source={icons.add} className="home-add-icon" />
-              </Pressable>
-            </View>
-
-            <View className="home-balance-card">
-              <Text className="home-balance-label">Balance</Text>
-
-              <View className="home-balance-row">
-                <Text className="home-balance-amount">
-                  {formatCurrency(HOME_BALANCE.amount)}
-                </Text>
-                <Text className="home-balance-date">
-                  {dayjs(HOME_BALANCE.nextRenewalDate).format("MM/DD")}
-                </Text>
-              </View>
-            </View>
-
-            <View className="mb-5">
-              <ListHeading title="Upcoming" />
-
-              <FlatList
-                data={upcomingSubscriptions}
-                renderItem={({ item }) => (
-                  <UpComingSubscriptionCard {...item} />
-                )}
-                keyExtractor={(item) => item.id}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                ListEmptyComponent={
-                  <Text className="home-empty-state">
-                    No upcoming renewals yet.
+                <View>
+                  <Text className="home-greeting">Hey, {displayName}</Text>
+                  <Text className="home-subgreeting">
+                    What's happening nearby
                   </Text>
-                }
-              />
+                </View>
+              </View>
             </View>
 
-            <MyCard />
-
-            <ListHeading title="All Subscriptions" />
+            <ListHeading title="All Events" />
           </>
         )}
-        data={subscriptions}
+        data={MOCK_EVENTS}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <SubscriptionCard
+          <EventCard
             {...item}
-            expanded={expandedSubscriptionId === item.id}
-            onPress={() => handleSubscriptionPress(item)}
+            onPress={() => router.push(`/event/${item.id}`)}
           />
         )}
-        extraData={expandedSubscriptionId}
-        ItemSeparatorComponent={() => <View className="h-4" />}
+        ItemSeparatorComponent={() => <View className="h-2" />}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          <Text className="home-empty-state">No subscriptions yet.</Text>
+          <Text className="home-empty-state">
+            No events nearby yet — be the first to post one.
+          </Text>
         }
         contentContainerClassName="pb-30"
-      />
-
-      <CreateSubscriptionModal
-        visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
-        onSubmit={handleCreateSubscription}
       />
     </SafeAreaView>
   );

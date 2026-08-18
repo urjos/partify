@@ -1,0 +1,48 @@
+import images from "@/constants/images";
+
+export const MOCK_EVENTS: EventItem[] = [
+  {
+    id: "1",
+    image: { uri: "https://picsum.photos/seed/partify-rooftop/800/500" },
+    title: "Rooftop Sunset Session",
+    dateLabel: "Sat, Aug 22 · 9:00 PM",
+    distanceLabel: "1.2 km away",
+    category: "Music",
+    attendeeAvatars: [images.avatar, images.avatar, images.avatar],
+    attendeeCount: 24,
+    isGoing: true,
+  },
+  {
+    id: "2",
+    image: { uri: "https://picsum.photos/seed/partify-warehouse/800/500" },
+    title: "Warehouse Techno Night",
+    dateLabel: "Fri, Aug 28 · 11:00 PM",
+    distanceLabel: "3.4 km away",
+    category: "Nightlife",
+    attendeeAvatars: [images.avatar, images.avatar],
+    attendeeCount: 87,
+    isGoing: false,
+  },
+  {
+    id: "3",
+    image: { uri: "https://picsum.photos/seed/partify-picnic/800/500" },
+    title: "Sunday Park Picnic",
+    dateLabel: "Sun, Aug 30 · 12:00 PM",
+    distanceLabel: "0.6 km away",
+    category: "Outdoors",
+    attendeeAvatars: [images.avatar],
+    attendeeCount: 6,
+    isGoing: false,
+  },
+  {
+    id: "4",
+    image: { uri: "https://picsum.photos/seed/partify-house/800/500" },
+    title: "Backyard House Party",
+    dateLabel: "Sat, Sep 5 · 8:00 PM",
+    distanceLabel: "2.1 km away",
+    category: "House party",
+    attendeeAvatars: [images.avatar, images.avatar, images.avatar],
+    attendeeCount: 15,
+    isGoing: true,
+  },
+];
