@@ -47,6 +47,9 @@
 }
 
 @layer components {
+  .separator {
+    @apply h-[1px] bg-muted flex;
+  }
   .page {
     @apply pr-3 pl-3;
   }
@@ -67,7 +70,7 @@
   }
 
   .home-header {
-    @apply mt-2.5 mb-2 flex-row items-center justify-between;
+    @apply mt-7 mb-5 flex-row items-center justify-between;
   }
 
   .home-user {
@@ -75,15 +78,15 @@
   }
 
   .home-avatar {
-    @apply size-16 rounded-full;
+    @apply size-10 rounded-full;
   }
 
   .home-user-name {
-    @apply ml-4 text-2xl font-sans-bold text-primary;
+    @apply ml-4 text-xl font-sans-bold text-primary;
   }
 
   .home-greeting {
-    @apply ml-4 text-xl font-sans-bold text-primary;
+    @apply ml-4 text-lg font-sans-bold text-primary;
   }
 
   .home-subgreeting {
