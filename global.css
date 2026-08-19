@@ -235,7 +235,7 @@
   }
 
   .event-image-wrap {
-    @apply relative h-40 w-full bg-muted;
+    @apply relative h-40 w-full bg-muted opacity-80;
   }
 
   .event-image {
@@ -513,7 +513,7 @@
   }
 
   .event-detail-header {
-    @apply relative h-[360px] w-full bg-muted;
+    @apply relative h-[360px] w-full bg-muted opacity-80;
   }
 
   .event-detail-image {
@@ -638,5 +638,24 @@
 
   .event-detail-empty-text {
     @apply text-center text-sm font-sans-medium text-muted-foreground;
+  }
+  .event-detail-map-wrap {
+    @apply relative mb-3 h-36 w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-muted;
+  }
+
+  .event-detail-map-image {
+    @apply h-full w-full;
+  }
+
+  .event-detail-map-pin {
+    @apply absolute left-1/2 top-1/2 size-9 -ml-[18px] -mt-[18px] items-center justify-center rounded-full bg-accent;
+  }
+
+  .event-detail-map-label {
+    @apply absolute bottom-2 left-2 rounded-full bg-background/90 px-3 py-1;
+  }
+
+  .event-detail-map-label-text {
+    @apply text-xs font-sans-semibold text-primary;
   }
 }

@@ -64,6 +64,11 @@ export default function EventDetail() {
     if (url) Linking.openURL(url).catch(() => {});
   };
 
+  const staticMapUrl =
+    `https://staticmap.openstreetmap.de/staticmap.php` +
+    `?center=${event.latitude},${event.longitude}` +
+    `&zoom=15&size=600x300`;
+
   const confirmCancel = () => {
     Alert.alert(
       "Cancel this event?",
@@ -159,10 +164,20 @@ export default function EventDetail() {
               color="rgba(245, 244, 242, 0.4)"
             />
           </Pressable>
-          <Pressable
-            className="event-detail-info-row"
-            onPress={openInMaps}
-          ></Pressable>
+
+          <Pressable className="event-detail-map-wrap" onPress={openInMaps}>
+            <Image
+              source={{ uri: staticMapUrl }}
+              className="event-detail-map-image"
+              resizeMode="cover"
+            />
+            <View className="event-detail-map-pin">
+              <Ionicons name="location" size={18} color="#f5f4f2" />
+            </View>
+            <View className="event-detail-map-label">
+              <Text className="event-detail-map-label-text">Open in Maps</Text>
+            </View>
+          </Pressable>
 
           <View className="event-detail-attendance-row">
             <AvatarStack

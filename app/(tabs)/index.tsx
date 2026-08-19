@@ -48,7 +48,7 @@ export default function App() {
             onPress={() => router.push(`/(events)/${item.id}`)}
           />
         )}
-        ItemSeparatorComponent={() => <View className="h-2" />}
+        ItemSeparatorComponent={() => <View className="h-4" />}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <Text className="home-empty-state">
