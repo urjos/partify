@@ -1,6 +1,5 @@
+import AvatarStack from "@/components/AvatarStack";
 import { Image, Pressable, Text, View } from "react-native";
-
-const MAX_VISIBLE_AVATARS = 3;
 
 const EventCard = ({
   image,
@@ -13,9 +12,6 @@ const EventCard = ({
   isGoing,
   onPress,
 }: EventCardProps) => {
-  const visibleAvatars = attendeeAvatars.slice(0, MAX_VISIBLE_AVATARS);
-  const extraCount = attendeeCount - visibleAvatars.length;
-
   return (
     <Pressable onPress={onPress} className="event-card">
       <View className="event-image-wrap">
@@ -45,14 +41,7 @@ const EventCard = ({
         </View>
 
         <View className="event-footer-row">
-          <View className="event-avatar-stack">
-            {visibleAvatars.map((avatar, index) => (
-              <Image key={index} source={avatar} className="event-avatar" />
-            ))}
-            {extraCount > 0 ? (
-              <Text className="event-attendee-count">+{extraCount}</Text>
-            ) : null}
-          </View>
+          <AvatarStack avatars={attendeeAvatars} count={attendeeCount} />
 
           {isGoing ? (
             <View className="event-going-badge">

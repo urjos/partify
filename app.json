@@ -4,7 +4,7 @@
     "slug": "partify",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/partify-logo.jpg",
+    "icon": "./assets/icons/partify-logo.png",
     "scheme": "partify",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

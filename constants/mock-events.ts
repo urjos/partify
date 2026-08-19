@@ -7,9 +7,13 @@ export const MOCK_EVENTS: EventItem[] = [
     title: "Rooftop Sunset Session",
     dateLabel: "Sat, Aug 22 · 9:00 PM",
     distanceLabel: "1.2 km away",
+    location: "Skyline Terrace, 44 Rivera Ave",
+    description:
+      "A laid-back rooftop gathering as the sun goes down — DJ set, good drinks, and a view over the whole city. Dress comfortably, it gets breezy after 10.",
     category: "Music",
     attendeeAvatars: [images.avatar, images.avatar, images.avatar],
     attendeeCount: 24,
+    interestedCount: 41,
     isGoing: true,
   },
   {
@@ -18,9 +22,13 @@ export const MOCK_EVENTS: EventItem[] = [
     title: "Warehouse Techno Night",
     dateLabel: "Fri, Aug 28 · 11:00 PM",
     distanceLabel: "3.4 km away",
+    location: "The Old Warehouse, 12 Industrial Rd",
+    description:
+      "All-night techno lineup across two rooms. Doors at 11, no re-entry after 2 AM. 18+, ID required at the door.",
     category: "Nightlife",
     attendeeAvatars: [images.avatar, images.avatar],
     attendeeCount: 87,
+    interestedCount: 156,
     isGoing: false,
   },
   {
@@ -29,9 +37,13 @@ export const MOCK_EVENTS: EventItem[] = [
     title: "Sunday Park Picnic",
     dateLabel: "Sun, Aug 30 · 12:00 PM",
     distanceLabel: "0.6 km away",
+    location: "Greenfield Park, near the west entrance",
+    description:
+      "Bring a blanket and something to share — we'll have music, frisbee, and snacks. Free and open to everyone, kids and dogs welcome.",
     category: "Outdoors",
     attendeeAvatars: [images.avatar],
     attendeeCount: 6,
+    interestedCount: 13,
     isGoing: false,
   },
   {
@@ -40,9 +52,14 @@ export const MOCK_EVENTS: EventItem[] = [
     title: "Backyard House Party",
     dateLabel: "Sat, Sep 5 · 8:00 PM",
     distanceLabel: "2.1 km away",
+    location: "142 Maple Street (ring the side gate)",
+    description:
+      "Small backyard get-together — bring a drink to share. Music starts at 9, we'll keep it going until the neighbors complain.",
     category: "House party",
     attendeeAvatars: [images.avatar, images.avatar, images.avatar],
     attendeeCount: 15,
+    interestedCount: 9,
     isGoing: true,
+    isOwner: true,
   },
 ];

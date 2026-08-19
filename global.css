@@ -67,7 +67,7 @@
   }
 
   .home-header {
-    @apply mt-3 mb-2.5 flex-row items-center justify-between;
+    @apply mt-2.5 mb-2 flex-row items-center justify-between;
   }
 
   .home-user {
@@ -274,15 +274,19 @@
     @apply mt-1 flex-row items-center justify-between;
   }
 
-  .event-avatar-stack {
+  .avatar-stack {
     @apply flex-row items-center;
   }
 
-  .event-avatar {
+  .avatar-stack-item {
     @apply -ml-2 size-7 rounded-full border-2 border-card bg-muted first:ml-0;
   }
 
-  .event-attendee-count {
+  .avatar-stack-item-md {
+    @apply -ml-2.5 size-9 border-[2.5px] first:ml-0;
+  }
+
+  .avatar-stack-count {
     @apply ml-2 text-xs font-sans-semibold text-muted-foreground;
   }
 
@@ -500,5 +504,139 @@
 
   .category-chip-text-active {
     @apply text-accent;
+  }
+
+  /* Event detail screen */
+
+  .event-detail-container {
+    @apply flex-1 bg-background;
+  }
+
+  .event-detail-header {
+    @apply relative h-[360px] w-full bg-muted;
+  }
+
+  .event-detail-image {
+    @apply h-full w-full;
+  }
+
+  .event-detail-nav-row {
+    @apply absolute inset-x-4 flex-row items-center justify-between;
+  }
+
+  .event-detail-icon-btn {
+    @apply size-11 items-center justify-center overflow-hidden rounded-full;
+  }
+
+  .event-detail-card {
+    @apply -mt-7 rounded-t-[32px] bg-background px-5 pb-4 pt-6;
+  }
+
+  .event-detail-category-chip {
+    @apply mb-3 self-start rounded-full bg-accent/15 px-3 py-1;
+  }
+
+  .event-detail-category-text {
+    @apply text-xs font-sans-bold uppercase tracking-[0.5px] text-accent;
+  }
+
+  .event-detail-title {
+    @apply mb-4 text-2xl font-sans-extrabold text-primary;
+  }
+
+  .event-detail-info-row {
+    @apply mb-3 flex-row items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3;
+  }
+
+  .event-detail-info-icon-wrap {
+    @apply size-9 items-center justify-center rounded-full bg-accent/15;
+  }
+
+  .event-detail-info-text-wrap {
+    @apply flex-1;
+  }
+
+  .event-detail-info-label {
+    @apply text-sm font-sans-semibold text-primary;
+  }
+
+  .event-detail-info-sub {
+    @apply mt-0.5 text-xs font-sans-medium text-muted-foreground;
+  }
+
+  .event-detail-attendance-row {
+    @apply mb-5 mt-2 flex-row items-center justify-between rounded-2xl border border-border bg-card px-4 py-3;
+  }
+
+  .event-detail-attendance-text {
+    @apply ml-3 flex-1 text-sm font-sans-medium text-muted-foreground;
+  }
+
+  .event-detail-section-title {
+    @apply mb-2 mt-1 text-base font-sans-bold text-primary;
+  }
+
+  .event-detail-description {
+    @apply mb-6 text-sm font-sans-medium leading-5 text-muted-foreground;
+  }
+
+  .event-detail-comments-placeholder {
+    @apply mb-6 items-center gap-2 rounded-2xl border border-dashed border-border py-8;
+  }
+
+  .event-detail-comments-placeholder-text {
+    @apply text-sm font-sans-medium text-muted-foreground;
+  }
+
+  .event-detail-action-bar {
+    @apply flex-row items-center gap-3 border-t border-border bg-background px-5 pb-2 pt-3;
+  }
+
+  .event-detail-segment {
+    @apply flex-1 flex-row rounded-2xl border border-border bg-card p-1;
+  }
+
+  .event-detail-segment-btn {
+    @apply flex-1 items-center rounded-xl py-3;
+  }
+
+  .event-detail-segment-btn-active {
+    @apply bg-accent;
+  }
+
+  .event-detail-segment-btn-text {
+    @apply text-sm font-sans-bold text-muted-foreground;
+  }
+
+  .event-detail-segment-btn-text-active {
+    @apply text-primary;
+  }
+
+  .event-detail-owner-row {
+    @apply flex-1 flex-row gap-3;
+  }
+
+  .event-detail-edit-btn {
+    @apply flex-1 items-center rounded-2xl border border-accent/30 bg-accent/10 py-3.5;
+  }
+
+  .event-detail-edit-btn-text {
+    @apply text-sm font-sans-bold text-accent;
+  }
+
+  .event-detail-cancel-btn {
+    @apply flex-1 items-center rounded-2xl border border-destructive/30 bg-destructive/10 py-3.5;
+  }
+
+  .event-detail-cancel-btn-text {
+    @apply text-sm font-sans-bold text-destructive;
+  }
+
+  .event-detail-empty {
+    @apply flex-1 items-center justify-center gap-3 bg-background px-8;
+  }
+
+  .event-detail-empty-text {
+    @apply text-center text-sm font-sans-medium text-muted-foreground;
   }
 }

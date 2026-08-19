@@ -4,6 +4,7 @@ import images from "@/constants/images";
 import { MOCK_EVENTS } from "@/constants/mock-events";
 import "@/global.css";
 import { useUser } from "@clerk/expo";
+import { router } from "expo-router";
 import { styled } from "nativewind";
 import { FlatList, Image, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
@@ -44,7 +45,7 @@ export default function App() {
         renderItem={({ item }) => (
           <EventCard
             {...item}
-            onPress={() => router.push(`/event/${item.id}`)}
+            onPress={() => router.push(`/(events)/${item.id}`)}
           />
         )}
         ItemSeparatorComponent={() => <View className="h-2" />}

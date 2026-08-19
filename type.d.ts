@@ -60,14 +60,27 @@ declare global {
     title: string;
     dateLabel: string;
     distanceLabel?: string;
+    location: string;
+    description: string;
     category: string;
     attendeeAvatars: ImageSourcePropType[];
     attendeeCount: number;
+    interestedCount: number;
     isGoing?: boolean;
+    isOwner?: boolean;
   }
 
   interface EventCardProps extends Omit<EventItem, "id"> {
     onPress: () => void;
+  }
+
+  type AttendanceStatus = "going" | "interested" | null;
+
+  interface AvatarStackProps {
+    avatars: ImageSourcePropType[];
+    count: number;
+    maxVisible?: number;
+    size?: "sm" | "md";
   }
 }
 
