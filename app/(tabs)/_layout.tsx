@@ -1,4 +1,4 @@
-import GlassTabBarBackground from "@/components/GlassTabBarBackground";
+import GlassTabBarBackground from "@/components/nav/GlassTabBarBackground";
 import { tabs } from "@/constants/data";
 import { components } from "@/constants/theme";
 import { useAuth } from "@clerk/expo";

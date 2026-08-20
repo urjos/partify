@@ -1,4 +1,4 @@
-import AvatarStack from "@/components/AvatarStack";
+import AvatarStack from "@/components/event/AvatarStack";
 import { Image, Pressable, Text, View } from "react-native";
 
 const EventCard = ({

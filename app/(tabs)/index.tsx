@@ -1,5 +1,5 @@
-import EventCard from "@/components/EventCard";
-import ListHeading from "@/components/ListHeading";
+import EventCard from "@/components/event/EventCard";
+import ListHeading from "@/components/home/ListHeading";
 import images from "@/constants/images";
 import { MOCK_EVENTS } from "@/constants/mock-events";
 import "@/global.css";

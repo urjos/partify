@@ -1,4 +1,4 @@
-import EventCard from "@/components/EventCard";
+import EventCard from "@/components/event/EventCard";
 import "@/global.css";
 import { useEventStore } from "@/lib/eventStore";
 import { router } from "expo-router";

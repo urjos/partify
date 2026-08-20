@@ -1,4 +1,4 @@
-import AvatarStack from "@/components/AvatarStack";
+import AvatarStack from "@/components/event/AvatarStack";
 import { MOCK_EVENTS } from "@/constants/mock-events";
 import "@/global.css";
 import { Ionicons } from "@expo/vector-icons";
