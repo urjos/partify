@@ -1,6 +1,7 @@
 import EventCard from "@/components/event/EventCard";
+import Separator from "@/components/Separator";
 import "@/global.css";
-import { useEventStore } from "@/lib/eventStore";
+import { useEventStore } from "@/lib/store/eventStore";
 import { router } from "expo-router";
 import { styled } from "nativewind";
 import { useState } from "react";
@@ -35,6 +36,7 @@ export default function Search() {
                 value={searchQuery}
                 onChangeText={setSearchQuery}
               />
+              <Separator />
             </View>
           </>
         }

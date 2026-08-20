@@ -50,7 +50,7 @@
   /* General */
 
   .separator {
-    @apply h-[1px] bg-muted flex;
+    @apply h-[1px] mb-5 bg-muted flex;
   }
   .page-all {
     @apply pr-3 pl-3;
@@ -207,11 +207,15 @@
   }
 
   .home-header {
-    @apply mt-7 mb-5 flex-row items-center justify-between;
+    @apply mt-2 mb-3 flex-row items-center justify-between;
   }
 
-  .home-user {
+  .home-title {
     @apply flex-row items-center;
+  }
+
+  .home-brand {
+    @apply text-3xl font-sans-extrabold text-primary;
   }
 
   .home-avatar {
@@ -220,14 +224,6 @@
 
   .home-user-name {
     @apply ml-4 text-xl font-sans-bold text-primary;
-  }
-
-  .home-greeting {
-    @apply ml-4 text-lg font-sans-bold text-primary;
-  }
-
-  .home-subgreeting {
-    @apply ml-4 text-sm font-sans-medium text-muted-foreground;
   }
 
   .home-add-icon {
@@ -261,7 +257,7 @@
   }
 
   .list-title {
-    @apply text-2xl font-sans-bold text-primary;
+    @apply text-xl font-sans-bold text-primary;
   }
 
   .list-action {
@@ -510,7 +506,7 @@
   /* Search Page*/
 
   .search-header {
-    @apply mt-7 mb-5 flex w-full;
+    @apply mt-2 flex w-full;
   }
 
   .search-input {

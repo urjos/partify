@@ -1,45 +1,22 @@
 import EventCard from "@/components/event/EventCard";
-import ListHeading from "@/components/home/ListHeading";
-import images from "@/constants/images";
+import Header from "@/components/home/header";
+import Separator from "@/components/Separator";
 import { MOCK_EVENTS } from "@/constants/mock-events";
 import "@/global.css";
-import { useUser } from "@clerk/expo";
 import { router } from "expo-router";
 import { styled } from "nativewind";
-import { FlatList, Image, Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function App() {
-  const { user } = useUser();
-
-  const displayName = user?.firstName || user?.fullName || "User";
-
   return (
     <SafeAreaView className="flex-1 bg-background page-all">
       <FlatList
         ListHeaderComponent={() => (
           <>
-            <View className="home-header">
-              <View className="home-user">
-                <Image
-                  source={
-                    user?.imageUrl ? { uri: user.imageUrl } : images.avatar
-                  }
-                  className="home-avatar"
-                />
-                <View>
-                  <Text className="home-greeting">Hey, {displayName}</Text>
-                  <Text className="home-subgreeting">
-                    What's happening nearby
-                  </Text>
-                </View>
-              </View>
-            </View>
-
-            <View className="separator" />
-
-            <ListHeading title="All Events" />
+            <Header />
+            <Separator />
           </>
         )}
         data={MOCK_EVENTS}

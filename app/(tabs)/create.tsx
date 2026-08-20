@@ -6,9 +6,9 @@ const SafeAreaView = styled(RNSafeAreaView);
 
 const CreateEvent = () => {
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <SafeAreaView className="flex-1 bg-background page">
       <View>
-        <Text>Holi</Text>
+        <Text className="text-white">Holi</Text>
       </View>
     </SafeAreaView>
   );
