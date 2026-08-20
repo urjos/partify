@@ -16,7 +16,7 @@ export default function App() {
   const displayName = user?.firstName || user?.fullName || "User";
 
   return (
-    <SafeAreaView className="flex-1 bg-background page">
+    <SafeAreaView className="flex-1 bg-background page-all">
       <FlatList
         ListHeaderComponent={() => (
           <>

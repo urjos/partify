@@ -28,8 +28,8 @@ const Subscriptions = () => {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <View className="px-5 pt-5 ">
-            <Text className="text-3xl font-sans-bold text-dark mb-5">
-              Subscriptions
+            <Text className="text-3xl font-sans-bold text-white mb-5">
+              Events
             </Text>
             <TextInput
               className="bg-card font-sans-medium rounded-xl px-5 py-3 text-dark mb-4"

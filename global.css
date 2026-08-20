@@ -47,10 +47,11 @@
 }
 
 @layer components {
+  /* General */
   .separator {
     @apply h-[1px] bg-muted flex;
   }
-  .page {
+  .page-all {
     @apply pr-3 pl-3;
   }
   .tabs-icon {
@@ -67,6 +68,11 @@
 
   .tabs-glyph {
     @apply size-6;
+  }
+
+  /* Home */
+  .home-empty-state {
+    @apply py-4 text-sm font-sans-medium text-muted-foreground;
   }
 
   .home-header {
@@ -115,6 +121,15 @@
 
   .home-balance-date {
     @apply text-xl font-sans-medium text-white;
+  }
+
+  /* Search Page*/
+  .search-header {
+    @apply mt-7 mb-5 flex w-full;
+  }
+
+  .search-input {
+    @apply pl-5 pr-5 bg-card font-sans-medium rounded-xl text-white mb-4;
   }
 
   .list-head {
@@ -311,10 +326,6 @@
 
   .sub-cancel-text {
     @apply font-sans-bold text-background;
-  }
-
-  .home-empty-state {
-    @apply py-4 text-sm font-sans-medium text-muted-foreground;
   }
 
   .auth-safe-area {

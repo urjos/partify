@@ -163,7 +163,7 @@ const SignIn = () => {
                     <Text className="auth-logo-mark-text">R</Text>
                   </View>
                   <View>
-                    <Text className="auth-wordmark">Recurrly</Text>
+                    <Text className="auth-wordmark">Partify</Text>
                     <Text className="auth-wordmark-sub">SUBSCRIPTIONS</Text>
                   </View>
                 </View>
