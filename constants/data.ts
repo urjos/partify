@@ -2,9 +2,9 @@ import { icons } from "./icons";
 
 export const tabs: AppTab[] = [
   { name: "index", title: "Home", icon: icons.home },
-  { name: "search", title: "Search", icon: icons.activity },
-  { name: "subscriptions", title: "Subscriptions", icon: icons.wallet },
-  { name: "settings", title: "Settings", icon: icons.setting },
+  { name: "search", title: "Search", icon: icons.search },
+  { name: "subscriptions", title: "Subscriptions", icon: icons.user },
+  { name: "settings", title: "Settings", icon: icons.user },
 ];
 
 export const HOME_USER = {
@@ -19,7 +19,7 @@ export const HOME_BALANCE = {
 export const UPCOMING_SUBSCRIPTIONS: UpcomingSubscription[] = [
   {
     id: "spotify",
-    icon: icons.spotify,
+    icon: icons.user,
     name: "Spotify",
     price: 5.99,
     currency: "USD",
@@ -27,7 +27,7 @@ export const UPCOMING_SUBSCRIPTIONS: UpcomingSubscription[] = [
   },
   {
     id: "notion",
-    icon: icons.notion,
+    icon: icons.user,
     name: "Notion",
     price: 12.0,
     currency: "USD",
@@ -35,7 +35,7 @@ export const UPCOMING_SUBSCRIPTIONS: UpcomingSubscription[] = [
   },
   {
     id: "figma",
-    icon: icons.figma,
+    icon: icons.user,
     name: "Figma",
     price: 15.0,
     currency: "USD",
@@ -46,7 +46,7 @@ export const UPCOMING_SUBSCRIPTIONS: UpcomingSubscription[] = [
 export const HOME_SUBSCRIPTIONS: Subscription[] = [
   {
     id: "adobe-creative-cloud",
-    icon: icons.adobe,
+    icon: icons.user,
     name: "Adobe Creative Cloud",
     plan: "Teams Plan",
     category: "Design",
@@ -61,7 +61,7 @@ export const HOME_SUBSCRIPTIONS: Subscription[] = [
   },
   {
     id: "github-pro",
-    icon: icons.github,
+    icon: icons.user,
     name: "GitHub Pro",
     plan: "Developer",
     category: "Developer Tools",
@@ -76,7 +76,7 @@ export const HOME_SUBSCRIPTIONS: Subscription[] = [
   },
   {
     id: "claude-pro",
-    icon: icons.claude,
+    icon: icons.user,
     name: "Claude Pro",
     plan: "Pro Plan",
     category: "AI Tools",
@@ -91,7 +91,7 @@ export const HOME_SUBSCRIPTIONS: Subscription[] = [
   },
   {
     id: "canva-pro",
-    icon: icons.canva,
+    icon: icons.user,
     name: "Canva Pro",
     plan: "Yearly Access",
     category: "Design",

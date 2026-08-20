@@ -16,7 +16,8 @@ export default function Search() {
     (events) =>
       events.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       events.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      events.dateLabel?.toLowerCase().includes(searchQuery.toLowerCase()),
+      events.dateLabel?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      events.category.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
