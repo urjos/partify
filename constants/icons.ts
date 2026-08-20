@@ -1,3 +1,4 @@
+import ellipsis from "@/assets/icons/ellipsis-vertical.png";
 import home from "@/assets/icons/home.png";
 import plus from "@/assets/icons/plus.png";
 import search from "@/assets/icons/search.png";
@@ -10,6 +11,7 @@ export const icons = {
   search,
   user,
   plus,
+  ellipsis,
 } as const;
 
 export type IconKey = keyof typeof icons;

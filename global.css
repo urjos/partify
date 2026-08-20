@@ -210,44 +210,12 @@
     @apply mt-2 mb-3 flex-row items-center justify-between;
   }
 
-  .home-title {
-    @apply flex-row items-center;
-  }
-
-  .home-brand {
+  .home-brand-title {
     @apply text-3xl font-sans-extrabold text-primary;
   }
 
-  .home-avatar {
-    @apply size-10 rounded-full;
-  }
-
-  .home-user-name {
-    @apply ml-4 text-xl font-sans-bold text-primary;
-  }
-
-  .home-add-icon {
-    @apply size-12;
-  }
-
-  .home-balance-card {
-    @apply my-2.5 min-h-50 justify-between gap-5 rounded-bl-4xl rounded-tr-4xl bg-accent p-6;
-  }
-
-  .home-balance-label {
-    @apply text-xl font-sans-semibold text-white/80;
-  }
-
-  .home-balance-row {
-    @apply flex-row items-center justify-between;
-  }
-
-  .home-balance-amount {
-    @apply text-4xl font-sans-extrabold text-white;
-  }
-
-  .home-balance-date {
-    @apply text-xl font-sans-medium text-white;
+  .home-icon-settings {
+    @apply size-6;
   }
 
   /* Home - List Head */
@@ -275,7 +243,7 @@
   }
 
   .event-image-wrap {
-    @apply relative h-40 w-full bg-muted opacity-80;
+    @apply relative h-130 w-full bg-muted opacity-80;
   }
 
   .event-image {
@@ -357,7 +325,7 @@
   }
 
   .event-detail-header {
-    @apply relative h-[360px] w-full bg-muted opacity-80;
+    @apply relative h-[550px] w-full bg-muted;
   }
 
   .event-detail-image {

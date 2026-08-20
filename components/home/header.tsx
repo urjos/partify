@@ -1,5 +1,6 @@
+import { icons } from "@/constants/icons";
 import React from "react";
-import { Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 
 const Header = () => {
   /*
@@ -9,9 +10,10 @@ const Header = () => {
   return (
     <>
       <View className="home-header">
-        <View className="home-title">
-          <Text className="home-brand">Partify</Text>
-        </View>
+        <Text className="home-brand-title">Partify</Text>
+        <Pressable>
+          <Image source={icons.ellipsis} className="home-icon-settings" />
+        </Pressable>
       </View>
     </>
   );

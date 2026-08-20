@@ -3,13 +3,14 @@ import images from "@/constants/images";
 export const MOCK_EVENTS: EventItem[] = [
   {
     id: "1",
-    image: { uri: "https://picsum.photos/seed/partify-rooftop/800/500" },
-    title: "Rooftop Sunset Session",
-    dateLabel: "Sat, Aug 22 · 9:00 PM",
+    image: images.noriel,
+    title: "𝙉𝙊𝙍𝙄𝙀𝙇 🇵🇷 𝙇𝙇𝙀𝙂𝘼 𝘼 𝘿𝙀𝙈𝘽𝙊𝙒 - 𝙇𝙊𝙎 𝙊𝙇𝙄𝙑𝙊𝙎 ",
+    dateLabel: "𝙫𝙞𝙚𝙧𝙣𝙚𝙨, 𝟮𝟴 𝙙𝙚 𝙖𝙜𝙤𝙨𝙩𝙤 · 9:00 PM",
+    author: "DEMBOW.prod",
     distanceLabel: "1.2 km away",
-    location: "Skyline Terrace, 44 Rivera Ave",
+    location: "Club Huayllabamba, Los Olivos",
     description:
-      "A laid-back rooftop gathering as the sun goes down — DJ set, good drinks, and a view over the whole city. Dress comfortably, it gets breezy after 10.",
+      "𝘿𝙚𝙨𝙙𝙚 𝙥𝙪𝙚𝙧𝙩𝙤 𝙋𝙪𝙚𝙧𝙩𝙤 𝙍𝙞𝙘𝙤 🇵🇷 𝙀𝙨𝙩𝙚 𝙫𝙞𝙚𝙧𝙣𝙚𝙨 𝟮𝟴 𝙙𝙚 𝙖𝙜𝙤𝙨𝙩𝙤, 𝘿𝙀𝙈𝘽𝙊𝙒 𝙫𝙪𝙚𝙡𝙫𝙚 𝙖 𝙝𝙖𝙘𝙚𝙧 𝙝𝙞𝙨𝙩𝙤𝙧𝙞𝙖 𝙧𝙚𝙫𝙞𝙫𝙞𝙚𝙣𝙙𝙤 𝙡𝙤𝙨 𝙢𝙚𝙟𝙤𝙧𝙚𝙨 𝙚𝙭𝙞𝙩𝙤𝙨 𝙙𝙚 𝙉𝙊𝙍𝙄𝙀𝙇 🔥🇵🇷",
     category: "Music",
     attendeeAvatars: [images.avatar, images.avatar, images.avatar],
     attendeeCount: 24,
@@ -18,9 +19,10 @@ export const MOCK_EVENTS: EventItem[] = [
   },
   {
     id: "2",
-    image: { uri: "https://picsum.photos/seed/partify-warehouse/800/500" },
+    image: images.darkiel,
     title: "Warehouse Techno Night",
     dateLabel: "Fri, Aug 28 · 11:00 PM",
+    author: "Hoesky",
     distanceLabel: "3.4 km away",
     location: "The Old Warehouse, 12 Industrial Rd",
     description:
@@ -33,9 +35,10 @@ export const MOCK_EVENTS: EventItem[] = [
   },
   {
     id: "3",
-    image: { uri: "https://picsum.photos/seed/partify-picnic/800/500" },
+    image: images.kevvo,
     title: "Sunday Park Picnic",
     dateLabel: "Sun, Aug 30 · 12:00 PM",
+    author: "Cocos Discoteca",
     distanceLabel: "0.6 km away",
     location: "Greenfield Park, near the west entrance",
     description:
@@ -48,9 +51,10 @@ export const MOCK_EVENTS: EventItem[] = [
   },
   {
     id: "4",
-    image: { uri: "https://picsum.photos/seed/partify-house/800/500" },
+    image: images.colors,
     title: "Backyard House Party",
     dateLabel: "Sat, Sep 5 · 8:00 PM",
+    author: "Alu",
     distanceLabel: "2.1 km away",
     location: "142 Maple Street (ring the side gate)",
     description:
