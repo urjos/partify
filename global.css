@@ -482,4 +482,142 @@
   }
 
   /**/
+
+  .location-picker-container {
+    @apply flex-1 bg-background;
+  }
+
+  .location-picker-pin-wrap {
+    @apply absolute left-1/2 top-1/2 -ml-5 -mt-10;
+  }
+
+  .location-picker-top {
+    @apply absolute left-0 right-0 top-0 px-4 pt-2;
+  }
+
+  .location-picker-back-btn {
+    @apply size-11 items-center justify-center rounded-full bg-background/90;
+  }
+
+  .location-picker-bottom {
+    @apply absolute inset-x-0 bottom-0 gap-3 px-5 pb-3 pt-4;
+  }
+
+  .location-picker-address-bar {
+    @apply flex-row items-center gap-2 rounded-2xl border border-border bg-card px-4 py-3;
+  }
+
+  .location-picker-address-text {
+    @apply flex-1 text-sm font-sans-medium text-primary;
+  }
+
+  .location-picker-confirm-btn {
+    @apply items-center rounded-2xl bg-accent py-4;
+  }
+
+  .location-picker-confirm-text {
+    @apply text-sm font-sans-bold text-primary;
+  }
+
+  /* Create event form */
+
+  .form-section-title {
+    @apply mb-2 mt-5 text-base font-sans-bold text-primary first:mt-0;
+  }
+
+  .form-photo-picker {
+    @apply h-44 w-full items-center justify-center gap-2 overflow-hidden rounded-3xl border border-dashed border-border bg-card;
+  }
+
+  .form-photo-preview {
+    @apply h-full w-full;
+  }
+
+  .form-photo-picker-text {
+    @apply text-sm font-sans-semibold text-muted-foreground;
+  }
+
+  .form-photo-remove-btn {
+    @apply absolute right-3 top-3 size-9 items-center justify-center rounded-full bg-background/90;
+  }
+
+  .form-row {
+    @apply flex-row gap-3;
+  }
+
+  .form-picker-btn {
+    @apply flex-1 flex-row items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3;
+  }
+
+  .form-picker-icon-wrap {
+    @apply size-9 items-center justify-center rounded-full bg-accent/15;
+  }
+
+  .form-picker-text-wrap {
+    @apply flex-1;
+  }
+
+  .form-picker-label {
+    @apply text-xs font-sans-medium text-muted-foreground;
+  }
+
+  .form-picker-value {
+    @apply mt-0.5 text-sm font-sans-semibold text-primary;
+  }
+
+  .form-picker-placeholder {
+    @apply mt-0.5 text-sm font-sans-semibold text-muted-foreground;
+  }
+
+  .form-chip-row {
+    @apply flex-row flex-wrap gap-2;
+  }
+
+  .form-chip {
+    @apply rounded-full border border-border bg-card px-4 py-2;
+  }
+
+  .form-chip-active {
+    @apply border-accent bg-accent;
+  }
+
+  .form-chip-text {
+    @apply text-sm font-sans-semibold text-muted-foreground;
+  }
+
+  .form-chip-text-active {
+    @apply text-primary;
+  }
+
+  .form-toggle-row {
+    @apply mb-3 flex-row items-center justify-between rounded-2xl border border-border bg-card px-4 py-3;
+  }
+
+  .form-toggle-label {
+    @apply text-sm font-sans-semibold text-primary;
+  }
+
+  .form-preview-label {
+    @apply mb-2 mt-6 text-base font-sans-bold text-primary;
+  }
+
+  .form-preview-empty {
+    @apply items-center justify-center gap-2 rounded-3xl border border-dashed border-border py-10;
+  }
+
+  .form-preview-empty-text {
+    @apply text-sm font-sans-medium text-muted-foreground;
+  }
+
+  .form-publish-btn {
+    @apply mb-10 mt-6 items-center rounded-2xl bg-accent py-4;
+  }
+
+  .form-publish-btn-disabled {
+    @apply opacity-40;
+  }
+
+  .form-publish-text {
+    @apply text-sm font-sans-bold text-primary;
+  }
 }

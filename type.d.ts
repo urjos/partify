@@ -33,6 +33,7 @@ declare global {
   interface EventItem {
     id: string;
     image: ImageSourcePropType;
+    video?: string;
     title: string;
     dateLabel: string;
     author: string;

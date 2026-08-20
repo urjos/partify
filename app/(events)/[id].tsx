@@ -1,4 +1,5 @@
 import AvatarStack from "@/components/event/AvatarStack";
+import EventMedia from "@/components/event/EventMedia";
 import { MOCK_EVENTS } from "@/constants/mock-events";
 import "@/global.css";
 import { Ionicons } from "@expo/vector-icons";
@@ -91,10 +92,10 @@ export default function EventDetail() {
         contentContainerClassName="pb-6"
       >
         <View className="event-detail-header">
-          <Image
-            source={event.image}
+          <EventMedia
+            image={event.image}
+            video={event.video}
             className="event-detail-image"
-            resizeMode="cover"
           />
           <SafeAreaView edges={["top"]}>
             <View className="event-detail-nav-row mt-2">
