@@ -61,8 +61,8 @@ declare global {
     dateLabel: string;
     distanceLabel?: string;
     location: string;
-    latitude: number;
-    longitude: number;
+    latitude?: number;
+    longitude?: number;
     description: string;
     category: string;
     attendeeAvatars: ImageSourcePropType[];
