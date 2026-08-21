@@ -21,6 +21,11 @@ module.exports = {
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
       package: "com.josjosjos.partify",
+      config: {
+        googleMaps: {
+          apiKey: process.env.GOOGLE_MAPS_API_KEY,
+        },
+      },
     },
     web: {
       output: "static",
@@ -56,6 +61,20 @@ module.exports = {
       "@clerk/expo",
       "expo-secure-store",
       "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          photosPermission:
+            "Partify needs access to your photos so you can add a cover image to your event.",
+        },
+      ],
+      [
+        "expo-location",
+        {
+          locationWhenInUsePermission:
+            "Partify uses your location to help you set the exact spot for your event.",
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,
