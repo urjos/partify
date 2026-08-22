@@ -1,6 +1,5 @@
 import EventCard from "@/components/event/EventCard";
-import Header from "@/components/home/header";
-import Separator from "@/components/Separator";
+import Header from "@/components/home/Header";
 import { MOCK_EVENTS } from "@/constants/mock-events";
 import "@/global.css";
 import { router } from "expo-router";
@@ -15,8 +14,7 @@ export default function App() {
       <FlatList
         ListHeaderComponent={() => (
           <>
-            <Header />
-            <Separator />
+            <Header separator isPressable={true} title="Partify" />
           </>
         )}
         data={MOCK_EVENTS}

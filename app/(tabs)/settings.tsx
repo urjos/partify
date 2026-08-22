@@ -1,3 +1,4 @@
+import Header from "@/components/home/Header";
 import images from "@/constants/images";
 import { useClerk, useUser } from "@clerk/expo";
 import { styled } from "nativewind";
@@ -29,10 +30,8 @@ const Settings = () => {
   const email = user?.emailAddresses[0]?.emailAddress;
 
   return (
-    <SafeAreaView className="flex-1 bg-background p-5">
-      <Text className="text-3xl font-sans-bold text-primary mb-6">
-        Settings
-      </Text>
+    <SafeAreaView className="flex-1 bg-background page-all">
+      <Header separator isPressable={false} title="Settings" />
 
       {/* User Profile Section */}
       <View className="auth-card">

@@ -1,5 +1,5 @@
 import EventCard from "@/components/event/EventCard";
-import Separator from "@/components/Separator";
+import Header from "@/components/home/Header";
 import "@/global.css";
 import { useEventStore } from "@/lib/store/eventStore";
 import { router } from "expo-router";
@@ -28,6 +28,7 @@ export default function Search() {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <>
+            <Header separator={false} isPressable={false} title="Search" />
             <View className="search-header">
               <TextInput
                 className="search-input"
@@ -36,7 +37,6 @@ export default function Search() {
                 value={searchQuery}
                 onChangeText={setSearchQuery}
               />
-              <Separator />
             </View>
           </>
         }
