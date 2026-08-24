@@ -1,14 +1,13 @@
-import AvatarStack from "@/components/event/AvatarStack";
-import EventMedia from "@/components/event/EventMedia";
-import { MOCK_EVENTS } from "@/constants/mock-events";
+import EventMediaCarousel from "@/components/event/EventMediaCarousel";
+import Separator from "@/components/Separator";
 import "@/global.css";
+import { useEventStore } from "@/lib/store/eventStore";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
-  Image,
   Linking,
   Platform,
   Pressable,
@@ -23,7 +22,8 @@ const ICON_COLOR = "#f5f4f2";
 
 export default function EventDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const event = MOCK_EVENTS.find((item) => item.id === id);
+  const events = useEventStore((state) => state.events);
+  const event = events.find((item) => item.id === id);
 
   const [status, setStatus] = useState<AttendanceStatus>(
     event?.isGoing ? "going" : null,
@@ -89,15 +89,14 @@ export default function EventDetail() {
     <View className="event-detail-container">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-6"
+        contentContainerClassName="pb-20"
       >
         <View className="event-detail-header">
-          <EventMedia
-            image={event.image}
-            video={event.video}
+          <EventMediaCarousel
+            media={event.media}
             className="event-detail-image"
           />
-          <SafeAreaView edges={["top"]}>
+          <SafeAreaView>
             <View className="event-detail-nav-row mt-2">
               <Pressable
                 onPress={() => router.back()}
@@ -135,6 +134,11 @@ export default function EventDetail() {
 
           <Text className="event-detail-title">{event.title}</Text>
 
+          <Separator type={"header"} />
+
+          <Text className="event-detail-section-title">About this event</Text>
+          <Text className="event-detail-description">{event.description}</Text>
+
           <View className="event-detail-info-row">
             <View className="event-detail-info-icon-wrap">
               <Ionicons name="calendar-outline" size={17} color="#b24bfb" />
@@ -166,6 +170,7 @@ export default function EventDetail() {
             />
           </Pressable>
 
+          {/*}
           <Pressable className="event-detail-map-wrap" onPress={openInMaps}>
             <Image
               source={{ uri: staticMapUrl }}
@@ -179,20 +184,13 @@ export default function EventDetail() {
               <Text className="event-detail-map-label-text">Open in Maps</Text>
             </View>
           </Pressable>
+          {*/}
 
           <View className="event-detail-attendance-row">
-            <AvatarStack
-              avatars={event.attendeeAvatars}
-              count={goingCount}
-              size="md"
-            />
             <Text className="event-detail-attendance-text">
               {goingCount} going · {interestedCount} interested
             </Text>
           </View>
-
-          <Text className="event-detail-section-title">About this event</Text>
-          <Text className="event-detail-description">{event.description}</Text>
 
           <Text className="event-detail-section-title">Comments</Text>
           <View className="event-detail-comments-placeholder">
@@ -220,6 +218,7 @@ export default function EventDetail() {
               >
                 <Text className="event-detail-edit-btn-text">Edit</Text>
               </Pressable>
+
               <Pressable
                 className="event-detail-cancel-btn"
                 onPress={confirmCancel}

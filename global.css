@@ -52,7 +52,6 @@
   .separator {
     @apply h-[1px] mb-5 mt-5 bg-muted flex;
   }
-
   .separator-component {
     @apply h-[1px] mb-2 mt-2 bg-muted flex;
   }
@@ -243,11 +242,11 @@
   /* Event Card */
 
   .event-card {
-    @apply overflow-hidden rounded-3xl border border-border bg-card;
+    @apply overflow-hidden rounded-3xl border-none border-border bg-card;
   }
 
   .event-image-wrap {
-    @apply relative h-130 w-full bg-muted opacity-80;
+    @apply relative h-130 w-full bg-muted;
   }
 
   .event-image {
@@ -263,7 +262,7 @@
   }
 
   .event-body {
-    @apply gap-2 p-4;
+    @apply w-full flex gap-2 p-4;
   }
 
   .event-title {
@@ -283,7 +282,7 @@
   }
 
   .event-footer-row {
-    @apply mt-1 flex-row items-center justify-between;
+    @apply mt-2 items-end justify-between;
   }
 
   /* Event Card - Avatar */
@@ -293,11 +292,11 @@
   }
 
   .avatar-stack-item {
-    @apply -ml-2 size-7 rounded-full border-2 border-card bg-muted first:ml-0;
+    @apply -ml-2.5 size-6 rounded-full border-2 border-card bg-muted first:ml-0;
   }
 
   .avatar-stack-item-md {
-    @apply -ml-2.5 size-9 border-[2.5px] first:ml-0;
+    @apply -ml-2.5 size-8 border-[2.5px] first:ml-0;
   }
 
   .avatar-stack-count {
@@ -329,7 +328,7 @@
   }
 
   .event-detail-header {
-    @apply relative h-[550px] w-full bg-muted;
+    @apply h-[450px] w-full bg-muted;
   }
 
   .event-detail-image {
@@ -345,7 +344,7 @@
   }
 
   .event-detail-card {
-    @apply -mt-7 rounded-t-[32px] bg-background px-5 pb-4 pt-6;
+    @apply rounded-t-[32px] bg-background px-3 py-5;
   }
 
   .event-detail-category-chip {
@@ -357,11 +356,11 @@
   }
 
   .event-detail-title {
-    @apply mb-4 text-2xl font-sans-extrabold text-primary;
+    @apply text-2xl font-sans-extrabold text-primary;
   }
 
   .event-detail-info-row {
-    @apply mb-3 flex-row items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3;
+    @apply mb-3 flex-row items-center gap-3 rounded-2xl px-4 py-3;
   }
 
   .event-detail-info-icon-wrap {
@@ -381,11 +380,11 @@
   }
 
   .event-detail-attendance-row {
-    @apply mb-5 mt-2 flex-row items-center justify-between rounded-2xl border border-border bg-card px-4 py-3;
+    @apply mb-5 mt-2 w-full flex items-end px-4 py-3;
   }
 
   .event-detail-attendance-text {
-    @apply ml-3 flex-1 text-sm font-sans-medium text-muted-foreground;
+    @apply ml-3 text-sm font-sans-medium text-muted-foreground;
   }
 
   .event-detail-section-title {
@@ -397,7 +396,7 @@
   }
 
   .event-detail-comments-placeholder {
-    @apply mb-6 items-center gap-2 rounded-2xl border border-dashed border-border py-8;
+    @apply items-center gap-2 rounded-2xl border border-dashed border-border py-8;
   }
 
   .event-detail-comments-placeholder-text {
@@ -405,11 +404,11 @@
   }
 
   .event-detail-action-bar {
-    @apply flex-row items-center gap-3 border-t border-border bg-background px-5 pb-2 pt-3;
+    @apply flex-row items-center gap-3 border-none bg-background px-5 pb-2 pt-3;
   }
 
   .event-detail-segment {
-    @apply flex-1 flex-row rounded-2xl border border-border bg-card p-1;
+    @apply flex-1 flex-row rounded-2xl border-none bg-card p-1;
   }
 
   .event-detail-segment-btn {
@@ -557,6 +556,22 @@
     @apply absolute right-3 top-3 size-9 items-center justify-center rounded-full bg-background/90;
   }
 
+  .form-media-thumb {
+    @apply relative size-24 overflow-hidden rounded-2xl border border-border bg-card;
+  }
+
+  .form-media-thumb-media {
+    @apply h-full w-full;
+  }
+
+  .form-media-thumb-remove {
+    @apply absolute right-1 top-1 size-6 items-center justify-center rounded-full bg-background/90;
+  }
+
+  .form-media-add-tile {
+    @apply size-24 items-center justify-center rounded-2xl border border-dashed border-border bg-card;
+  }
+
   .form-row {
     @apply flex-row gap-3;
   }
@@ -647,5 +662,21 @@
 
   .form-publish-text {
     @apply text-sm font-sans-bold text-primary;
+  }
+
+  .event-media-carousel {
+    @apply relative h-full w-full;
+  }
+
+  .event-media-dots {
+    @apply absolute inset-x-0 bottom-2 flex-row items-center justify-center gap-1;
+  }
+
+  .event-media-dot {
+    @apply h-1.5 w-1.5 rounded-full bg-white/40;
+  }
+
+  .event-media-dot-active {
+    @apply w-3.5 bg-white;
   }
 }

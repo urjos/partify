@@ -1,5 +1,5 @@
 import EventCard from "@/components/event/EventCard";
-import EventMedia from "@/components/event/EventMedia";
+import EventMediaCarousel from "@/components/event/EventMediaCarousel";
 import Header from "@/components/home/Header";
 import Separator from "@/components/Separator";
 import { EVENT_CATEGORIES } from "@/constants/categories";
@@ -49,10 +49,9 @@ const CreateEvent = () => {
     (state) => state.clearPickedLocation,
   );
 
-  const [coverMedia, setCoverMedia] = useState<{
-    uri: string;
-    type: "image" | "video";
-  } | null>(null);
+  const [coverMediaList, setCoverMediaList] = useState<
+    { uri: string; type: "image" | "video" }[]
+  >([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState<Date | null>(null);
@@ -71,6 +70,8 @@ const CreateEvent = () => {
   const [price, setPrice] = useState("");
   const [publishing, setPublishing] = useState(false);
 
+  const MAX_MEDIA_ITEMS = 10;
+
   useEffect(() => {
     if (pickedLocation) {
       setLocation(pickedLocation);
@@ -78,30 +79,44 @@ const CreateEvent = () => {
     }
   }, [pickedLocation]);
 
-  const pickCoverImage = async () => {
+  const pickCoverMedia = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
       Alert.alert(
         "Photo access needed",
-        "Enable photo access in your device settings to add a cover photo or video.",
+        "Enable photo access in your device settings to add photos or videos.",
+      );
+      return;
+    }
+
+    const remainingSlots = MAX_MEDIA_ITEMS - coverMediaList.length;
+    if (remainingSlots <= 0) {
+      Alert.alert(
+        "That's enough for now",
+        `You can add up to ${MAX_MEDIA_ITEMS} photos or videos per event.`,
       );
       return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images", "videos"],
-      allowsEditing: false,
+      allowsMultipleSelection: true,
+      selectionLimit: remainingSlots,
       videoMaxDuration: 30,
       quality: 0.8,
     });
 
     if (!result.canceled) {
-      const asset = result.assets[0];
-      setCoverMedia({
+      const picked = result.assets.map((asset) => ({
         uri: asset.uri,
-        type: asset.type === "video" ? "video" : "image",
-      });
+        type: (asset.type === "video" ? "video" : "image") as "image" | "video",
+      }));
+      setCoverMediaList((prev) => [...prev, ...picked]);
     }
+  };
+
+  const removeCoverMedia = (index: number) => {
+    setCoverMediaList((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleDateChange = (_: unknown, selected?: Date) => {
@@ -128,13 +143,21 @@ const CreateEvent = () => {
   const previewEvent: EventItem | null = isValid
     ? {
         id: "preview",
-        image:
-          coverMedia?.type === "image"
-            ? { uri: coverMedia.uri }
-            : {
-                uri: `https://picsum.photos/seed/${encodeURIComponent(title)}/800/500`,
-              },
-        video: coverMedia?.type === "video" ? coverMedia.uri : undefined,
+        media:
+          coverMediaList.length > 0
+            ? coverMediaList.map((item) =>
+                item.type === "video"
+                  ? { type: "video" as const, uri: item.uri }
+                  : { type: "image" as const, source: { uri: item.uri } },
+              )
+            : [
+                {
+                  type: "image" as const,
+                  source: {
+                    uri: `https://picsum.photos/seed/${encodeURIComponent(title)}/800/500`,
+                  },
+                },
+              ],
         title: title.trim(),
         dateLabel: dateLabel!,
         location: location!.address,
@@ -162,7 +185,7 @@ const CreateEvent = () => {
 
     addEvent(newEvent);
     setPublishing(false);
-    router.replace(`/event/${newEvent.id}`);
+    router.replace(`/(events)/${newEvent.id}`);
   };
 
   return (
@@ -174,35 +197,48 @@ const CreateEvent = () => {
         <Header separator isPressable={false} title="New event" />
 
         <View className="mb-4">
-          <Pressable
-            className="form-photo-picker m-form-sec"
-            onPress={pickCoverImage}
-          >
-            {coverMedia ? (
-              <>
-                <EventMedia
-                  image={{ uri: coverMedia.uri }}
-                  video={
-                    coverMedia.type === "video" ? coverMedia.uri : undefined
-                  }
-                  className="form-photo-preview"
-                />
+          <View className="m-form-sec">
+            <Text className="form-section-title">Photos & videos</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerClassName="gap-3"
+            >
+              {coverMediaList.map((item, index) => (
+                <View key={item.uri + index} className="form-media-thumb">
+                  <EventMediaCarousel
+                    media={[
+                      item.type === "video"
+                        ? { type: "video", uri: item.uri }
+                        : { type: "image", source: { uri: item.uri } },
+                    ]}
+                    className="form-media-thumb-media"
+                  />
+                  <Pressable
+                    className="form-media-thumb-remove"
+                    onPress={() => removeCoverMedia(index)}
+                  >
+                    <Ionicons name="close" size={14} color="#f5f4f2" />
+                  </Pressable>
+                </View>
+              ))}
+
+              {coverMediaList.length < MAX_MEDIA_ITEMS && (
                 <Pressable
-                  className="form-photo-remove-btn"
-                  onPress={() => setCoverMedia(null)}
+                  className="form-media-add-tile"
+                  onPress={pickCoverMedia}
                 >
-                  <Ionicons name="close" size={18} color="#f5f4f2" />
+                  <Ionicons name="add" size={22} color="#b24bfb" />
                 </Pressable>
-              </>
-            ) : (
-              <>
-                <Ionicons name="camera-outline" size={26} color="#b24bfb" />
-                <Text className="form-photo-picker-text">
-                  Add a cover photo or video
-                </Text>
-              </>
+              )}
+            </ScrollView>
+            {coverMediaList.length === 0 && (
+              <Text className="form-photo-picker-text mt-2">
+                Add up to {MAX_MEDIA_ITEMS} photos or videos — the first one
+                becomes the cover.
+              </Text>
             )}
-          </Pressable>
+          </View>
 
           <Separator type="component" />
 

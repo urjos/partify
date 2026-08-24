@@ -30,10 +30,13 @@ declare global {
     title: string;
   }
 
+  type EventMediaItem =
+    | { type: "image"; source: ImageSourcePropType }
+    | { type: "video"; uri: string };
+
   interface EventItem {
     id: string;
-    image: ImageSourcePropType;
-    video?: string;
+    media: EventMediaItem[];
     title: string;
     dateLabel: string;
     author: string;
@@ -60,7 +63,7 @@ declare global {
     avatars: ImageSourcePropType[];
     count: number;
     maxVisible?: number;
-    size?: "sm" | "md";
+    size?: "sm" | "md" | "xs";
   }
 }
 

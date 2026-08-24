@@ -1,10 +1,9 @@
 import AvatarStack from "@/components/event/AvatarStack";
-import EventMedia from "@/components/event/EventMedia";
+import EventMediaCarousel from "@/components/event/EventMediaCarousel";
 import { Pressable, Text, View } from "react-native";
 
 const EventCard = ({
-  image,
-  video,
+  media,
   title,
   dateLabel,
   distanceLabel,
@@ -17,14 +16,14 @@ const EventCard = ({
   return (
     <Pressable onPress={onPress} className="event-card">
       <View className="event-image-wrap">
-        <EventMedia image={image} video={video} className="event-image" />
+        <EventMediaCarousel media={media} className="event-image" />
         <View className="event-category-chip">
           <Text className="event-category-text">{category}</Text>
         </View>
       </View>
 
       <View className="event-body">
-        <Text numberOfLines={1} className="event-title">
+        <Text numberOfLines={2} className="event-title">
           {title}
         </Text>
 
@@ -44,16 +43,6 @@ const EventCard = ({
 
         <View className="event-footer-row">
           <AvatarStack avatars={attendeeAvatars} count={attendeeCount} />
-
-          {isGoing ? (
-            <View className="event-going-badge">
-              <Text className="event-going-badge-text">Going</Text>
-            </View>
-          ) : (
-            <View className="event-interested-badge">
-              <Text className="event-interested-badge-text">Interested</Text>
-            </View>
-          )}
         </View>
       </View>
     </Pressable>

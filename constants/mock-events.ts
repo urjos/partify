@@ -3,7 +3,13 @@ import images from "@/constants/images";
 export const MOCK_EVENTS: EventItem[] = [
   {
     id: "1",
-    image: images.noriel,
+    media: [
+      { type: "image", source: images.noriel },
+      {
+        type: "video",
+        uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      },
+    ],
     title: "𝙉𝙊𝙍𝙄𝙀𝙇 🇵🇷 𝙇𝙇𝙀𝙂𝘼 𝘼 𝘿𝙀𝙈𝘽𝙊𝙒 - 𝙇𝙊𝙎 𝙊𝙇𝙄𝙑𝙊𝙎 ",
     dateLabel: "𝙫𝙞𝙚𝙧𝙣𝙚𝙨, 𝟮𝟴 𝙙𝙚 𝙖𝙜𝙤𝙨𝙩𝙤 · 9:00 PM",
     author: "DEMBOW.prod",
@@ -19,7 +25,7 @@ export const MOCK_EVENTS: EventItem[] = [
   },
   {
     id: "2",
-    image: images.darkiel,
+    media: [{ type: "image", source: images.darkiel }],
     title: "Warehouse Techno Night",
     dateLabel: "Fri, Aug 28 · 11:00 PM",
     author: "Hoesky",
@@ -35,7 +41,7 @@ export const MOCK_EVENTS: EventItem[] = [
   },
   {
     id: "3",
-    image: images.kevvo,
+    media: [{ type: "image", source: images.kevvo }],
     title: "Sunday Park Picnic",
     dateLabel: "Sun, Aug 30 · 12:00 PM",
     author: "Cocos Discoteca",
@@ -51,7 +57,7 @@ export const MOCK_EVENTS: EventItem[] = [
   },
   {
     id: "4",
-    image: images.colors,
+    media: [{ type: "image", source: images.colors }],
     title: "Backyard House Party",
     dateLabel: "Sat, Sep 5 · 8:00 PM",
     author: "Alu",
