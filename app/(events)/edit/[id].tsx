@@ -34,7 +34,9 @@ export default function EditEvent() {
 
   const handleSubmit = (draft: Omit<EventItem, "id">) => {
     updateEvent(event.id, draft);
-    router.replace(`../(events)/${event.id}`);
+    if (router.canGoBack()) {
+      router.back();
+    }
   };
 
   return (

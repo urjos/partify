@@ -3,13 +3,7 @@ import images from "@/constants/images";
 export const MOCK_EVENTS: EventItem[] = [
   {
     id: "1",
-    media: [
-      { type: "image", source: images.noriel },
-      {
-        type: "video",
-        uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      },
-    ],
+    media: [{ type: "image", source: images.noriel }],
     title: "𝙉𝙊𝙍𝙄𝙀𝙇 🇵🇷 𝙇𝙇𝙀𝙂𝘼 𝘼 𝘿𝙀𝙈𝘽𝙊𝙒 - 𝙇𝙊𝙎 𝙊𝙇𝙄𝙑𝙊𝙎 ",
     dateLabel: "𝙫𝙞𝙚𝙧𝙣𝙚𝙨, 𝟮𝟴 𝙙𝙚 𝙖𝙜𝙤𝙨𝙩𝙤 · 9:00 PM",
     author: "DEMBOW.prod",
@@ -18,7 +12,7 @@ export const MOCK_EVENTS: EventItem[] = [
     description:
       "𝘿𝙚𝙨𝙙𝙚 𝙥𝙪𝙚𝙧𝙩𝙤 𝙋𝙪𝙚𝙧𝙩𝙤 𝙍𝙞𝙘𝙤 🇵🇷 𝙀𝙨𝙩𝙚 𝙫𝙞𝙚𝙧𝙣𝙚𝙨 𝟮𝟴 𝙙𝙚 𝙖𝙜𝙤𝙨𝙩𝙤, 𝘿𝙀𝙈𝘽𝙊𝙒 𝙫𝙪𝙚𝙡𝙫𝙚 𝙖 𝙝𝙖𝙘𝙚𝙧 𝙝𝙞𝙨𝙩𝙤𝙧𝙞𝙖 𝙧𝙚𝙫𝙞𝙫𝙞𝙚𝙣𝙙𝙤 𝙡𝙤𝙨 𝙢𝙚𝙟𝙤𝙧𝙚𝙨 𝙚𝙭𝙞𝙩𝙤𝙨 𝙙𝙚 𝙉𝙊𝙍𝙄𝙀𝙇 🔥🇵🇷",
     category: "Music",
-    attendeeAvatars: [images.avatar, images.avatar, images.avatar],
+    attendeeAvatars: images.avatars.map((img) => img),
     attendeeCount: 24,
     interestedCount: 41,
     isGoing: true,
@@ -34,7 +28,7 @@ export const MOCK_EVENTS: EventItem[] = [
     description:
       "All-night techno lineup across two rooms. Doors at 11, no re-entry after 2 AM. 18+, ID required at the door.",
     category: "Nightlife",
-    attendeeAvatars: [images.avatar, images.avatar],
+    attendeeAvatars: images.avatars.map((img) => img).reverse(),
     attendeeCount: 87,
     interestedCount: 156,
     isGoing: false,
@@ -50,7 +44,7 @@ export const MOCK_EVENTS: EventItem[] = [
     description:
       "Bring a blanket and something to share — we'll have music, frisbee, and snacks. Free and open to everyone, kids and dogs welcome.",
     category: "Outdoors",
-    attendeeAvatars: [images.avatar],
+    attendeeAvatars: images.avatars.map((img) => img),
     attendeeCount: 6,
     interestedCount: 13,
     isGoing: false,
@@ -66,7 +60,7 @@ export const MOCK_EVENTS: EventItem[] = [
     description:
       "Small backyard get-together — bring a drink to share. Music starts at 9, we'll keep it going until the neighbors complain.",
     category: "House party",
-    attendeeAvatars: [images.avatar, images.avatar, images.avatar],
+    attendeeAvatars: images.avatars.map((img) => img).reverse(),
     attendeeCount: 15,
     interestedCount: 9,
     isGoing: true,
