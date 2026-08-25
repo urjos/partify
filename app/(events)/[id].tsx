@@ -212,8 +212,8 @@ export default function EventDetail() {
             <View className="event-detail-owner-row">
               <Pressable
                 className="event-detail-edit-btn"
-                onPress={() =>
-                  Alert.alert("Edit event", "Editing isn't wired up yet.")
+                onPress={() => () =>
+                  router.push(`/(events)/(edit)/${event.id}`)
                 }
               >
                 <Text className="event-detail-edit-btn-text">Edit</Text>

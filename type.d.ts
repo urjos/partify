@@ -39,6 +39,7 @@ declare global {
     media: EventMediaItem[];
     title: string;
     dateLabel: string;
+    startAt?: string;
     author: string;
     distanceLabel?: string;
     location: string;
@@ -49,6 +50,9 @@ declare global {
     attendeeAvatars: ImageSourcePropType[];
     attendeeCount: number;
     interestedCount: number;
+    capacity?: number;
+    price?: number;
+    isFreeEvent?: boolean;
     isGoing?: boolean;
     isOwner?: boolean;
   }

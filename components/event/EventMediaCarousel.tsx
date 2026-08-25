@@ -7,6 +7,7 @@ import {
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Pressable,
   View,
 } from "react-native";
 
@@ -28,9 +29,6 @@ const VideoSlide = ({ uri, width, className }: VideoSlideProps) => {
     p.play();
   });
 
-  // `loop` por sí solo puede fallar en reproducir de nuevo en algunos
-  // dispositivos/versiones — este listener es el respaldo: en cuanto el
-  // video llega al final, lo reiniciamos manualmente.
   useEffect(() => {
     const subscription = player.addListener("playToEnd", () => {
       player.currentTime = 0;
@@ -55,9 +53,14 @@ const VideoSlide = ({ uri, width, className }: VideoSlideProps) => {
 type EventMediaCarouselProps = {
   media: EventMediaItem[];
   className?: string;
+  onPress?: () => void;
 };
 
-const EventMediaCarousel = ({ media, className }: EventMediaCarouselProps) => {
+const EventMediaCarousel = ({
+  media,
+  className,
+  onPress,
+}: EventMediaCarouselProps) => {
   const [width, setWidth] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -88,18 +91,24 @@ const EventMediaCarousel = ({ media, className }: EventMediaCarouselProps) => {
             offset: width * index,
             index,
           })}
-          renderItem={({ item }) =>
-            item.type === "video" ? (
-              <VideoSlide uri={item.uri} width={width} className={className} />
-            ) : (
-              <Image
-                source={item.source}
-                style={{ width }}
-                className={className}
-                resizeMode="cover"
-              />
-            )
-          }
+          renderItem={({ item }) => (
+            <Pressable onPress={onPress} style={{ width }}>
+              {item.type === "video" ? (
+                <VideoSlide
+                  uri={item.uri}
+                  width={width}
+                  className={className}
+                />
+              ) : (
+                <Image
+                  source={item.source}
+                  style={{ width }}
+                  className={className}
+                  resizeMode="cover"
+                />
+              )}
+            </Pressable>
+          )}
         />
       )}
 

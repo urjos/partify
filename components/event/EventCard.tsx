@@ -14,15 +14,19 @@ const EventCard = ({
   onPress,
 }: EventCardProps) => {
   return (
-    <Pressable onPress={onPress} className="event-card">
+    <View className="event-card">
       <View className="event-image-wrap">
-        <EventMediaCarousel media={media} className="event-image" />
+        <EventMediaCarousel
+          media={media}
+          className="event-image"
+          onPress={onPress}
+        />
         <View className="event-category-chip">
           <Text className="event-category-text">{category}</Text>
         </View>
       </View>
 
-      <View className="event-body">
+      <Pressable onPress={onPress} className="event-body">
         <Text numberOfLines={2} className="event-title">
           {title}
         </Text>
@@ -44,8 +48,8 @@ const EventCard = ({
         <View className="event-footer-row">
           <AvatarStack avatars={attendeeAvatars} count={attendeeCount} />
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 };
 
