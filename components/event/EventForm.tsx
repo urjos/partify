@@ -45,7 +45,7 @@ type EventFormProps = {
   submitLabel: string;
   submittingLabel: string;
   initialEvent?: EventItem;
-  onSubmit: (draft: Omit<EventItem, "id">) => void;
+  onSubmit: (draft: Omit<EventItem, "id">) => Promise<void>;
 };
 
 const EventForm = ({
@@ -220,11 +220,14 @@ const EventForm = ({
       }
     : null;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isValid || !previewDraft) return;
     setSubmitting(true);
-    onSubmit(previewDraft);
-    setSubmitting(false);
+    try {
+      await onSubmit(previewDraft);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (

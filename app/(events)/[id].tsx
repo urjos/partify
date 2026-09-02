@@ -1,6 +1,7 @@
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
 import Separator from "@/components/Separator";
 import "@/global.css";
+import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
@@ -22,7 +23,10 @@ const ICON_COLOR = "#f5f4f2";
 
 export default function EventDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const api = useApi();
   const events = useEventStore((state) => state.events);
+  const removeEvent = useEventStore((state) => state.removeEvent);
+  const setAttendanceAction = useEventStore((state) => state.setAttendance);
   const event = events.find((item) => item.id === id);
 
   const [status, setStatus] = useState<AttendanceStatus>(
@@ -51,8 +55,20 @@ export default function EventDetail() {
   const interestedCount =
     event.interestedCount + (status === "interested" ? 1 : 0);
 
-  const toggleStatus = (next: Exclude<AttendanceStatus, null>) => {
-    setStatus((current) => (current === next ? null : next));
+  const toggleStatus = async (next: Exclude<AttendanceStatus, null>) => {
+    const previous = status;
+    const nextStatus = previous === next ? null : next;
+    setStatus(nextStatus); // optimista, se revierte si falla la llamada
+
+    try {
+      await setAttendanceAction(api, event.id, nextStatus);
+    } catch (error) {
+      setStatus(previous);
+      Alert.alert(
+        "Couldn't update your RSVP",
+        error instanceof Error ? error.message : "Try again in a moment.",
+      );
+    }
   };
 
   const openInMaps = () => {
@@ -79,7 +95,19 @@ export default function EventDetail() {
         {
           text: "Cancel event",
           style: "destructive",
-          onPress: () => router.back(),
+          onPress: async () => {
+            try {
+              await removeEvent(api, event.id);
+              router.replace("/(tabs)");
+            } catch (error) {
+              Alert.alert(
+                "Couldn't cancel event",
+                error instanceof Error
+                  ? error.message
+                  : "Try again in a moment.",
+              );
+            }
+          },
         },
       ],
     );

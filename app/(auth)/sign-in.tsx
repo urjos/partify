@@ -1,9 +1,11 @@
+import { icons } from "@/constants/icons";
 import { useSignIn } from "@clerk/expo";
 import { Link, useRouter, type Href } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
 import { useState } from "react";
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -249,18 +251,11 @@ const SignIn = () => {
             {/* Branding */}
             <View className="auth-brand-block">
               <View className="auth-logo-wrap">
-                <View className="auth-logo-mark">
-                  <Text className="auth-logo-mark-text">R</Text>
-                </View>
-                <View>
-                  <Text className="auth-wordmark">Recurrly</Text>
-                  <Text className="auth-wordmark-sub">SUBSCRIPTIONS</Text>
-                </View>
+                <Image source={icons.logowb} className="auth-logo" />
+                <Text className="auth-wordmark">Partify</Text>
               </View>
               <Text className="auth-title">Welcome back</Text>
-              <Text className="auth-subtitle">
-                Sign in to continue managing your subscriptions
-              </Text>
+              <Text className="auth-subtitle">Sign in to continue</Text>
             </View>
 
             {/* Sign-In Form */}

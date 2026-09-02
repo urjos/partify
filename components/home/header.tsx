@@ -21,6 +21,7 @@ const Header = ({ title, isPressable, separator }: HeaderProps) => {
         ${separator ? "home-header" : "mb-5 home-header"} 
       `}
       >
+        {/*}<Image source={icons.logowb} className="auth-logo" />{*/}
         <Text className="home-brand-title">{title}</Text>
         {isPressable && (
           <Pressable>

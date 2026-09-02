@@ -1,5 +1,7 @@
 import ellipsis from "@/assets/icons/ellipsis-vertical.png";
 import home from "@/assets/icons/home.png";
+import logowb from "@/assets/icons/partify-logo-2.png";
+import logo from "@/assets/icons/partify-logo.png";
 import plus from "@/assets/icons/plus.png";
 import search from "@/assets/icons/search.png";
 import setting from "@/assets/icons/setting.png";
@@ -12,6 +14,8 @@ export const icons = {
   user,
   plus,
   ellipsis,
+  logo,
+  logowb,
 } as const;
 
 export type IconKey = keyof typeof icons;
