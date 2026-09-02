@@ -100,11 +100,11 @@
   }
 
   .auth-logo-wrap {
-    @apply flex-row justify-center items-center;
+    @apply flex-row justify-center items-center gap-2;
   }
 
   .auth-logo {
-    @apply size-12;
+    @apply size-7;
   }
   .auth-wordmark {
     @apply text-3xl font-sans-extrabold text-primary;
@@ -139,7 +139,7 @@
   }
 
   .auth-input {
-    @apply rounded-2xl border border-border bg-card pl-3 pr-3 text-base font-sans-medium text-primary;
+    @apply rounded-2xl border-none bg-card p-3 text-base font-sans-medium text-primary;
   }
 
   .auth-input-error {
@@ -155,7 +155,7 @@
   }
 
   .auth-button {
-    @apply mt-1 items-center rounded-2xl bg-accent py-4;
+    @apply items-center rounded-2xl bg-accent py-3;
   }
 
   .auth-button-disabled {
@@ -171,7 +171,7 @@
   }
 
   .auth-secondary-button-text {
-    @apply text-sm font-sans-semibold text-accent;
+    @apply text-base font-sans-semibold text-accent;
   }
 
   .auth-divider-row {
@@ -205,7 +205,7 @@
   }
 
   .home-header {
-    @apply mt-2 flex-row items-center justify-between;
+    @apply mt-2 flex-row items-center;
   }
 
   .home-brand-title {
@@ -214,6 +214,10 @@
 
   .home-icon-settings {
     @apply size-6;
+  }
+
+  .home-logo {
+    @apply size-7;
   }
 
   /* Home - List Head */

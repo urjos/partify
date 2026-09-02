@@ -23,7 +23,7 @@ export default function App() {
       <FlatList
         ListHeaderComponent={() => (
           <>
-            <Header separator isPressable={true} title="Partify" />
+            <Header separator isPressable={true} logo={true} title="Partify" />
           </>
         )}
         data={events}

@@ -1,6 +1,6 @@
 import { icons } from "@/constants/icons";
 import { useSignIn } from "@clerk/expo";
-import { useRouter, type Href } from "expo-router";
+import { Link, useRouter, type Href } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
 import { useState } from "react";
@@ -251,7 +251,7 @@ const SignIn = () => {
             {/* Branding */}
             <View className="auth-brand-block">
               <View className="auth-logo-wrap">
-                <Image source={icons.logowb} className="auth-logo" />
+                <Image source={icons.logowb2} className="auth-logo" />
                 <Text className="auth-wordmark">Partify</Text>
               </View>
               <View className="gap-2">
@@ -318,6 +318,15 @@ const SignIn = () => {
                   </Text>
                 </Pressable>
               </View>
+            </View>
+            {/* Sign-Up Link */}
+            <View className="auth-link-row">
+              <Text className="auth-link-copy">Don't have an account?</Text>
+              <Link href="/(auth)/sign-up" asChild>
+                <Pressable>
+                  <Text className="auth-link">Create Account</Text>
+                </Pressable>
+              </Link>
             </View>
           </View>
         </ScrollView>

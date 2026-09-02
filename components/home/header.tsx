@@ -7,9 +7,10 @@ interface HeaderProps {
   title: string;
   isPressable: boolean;
   separator: boolean;
+  logo?: boolean;
 }
 
-const Header = ({ title, isPressable, separator }: HeaderProps) => {
+const Header = ({ title, isPressable, separator, logo }: HeaderProps) => {
   /*
   const { user } = useUser();
   const displayName = user?.firstName || user?.fullName || "User";
@@ -18,11 +19,13 @@ const Header = ({ title, isPressable, separator }: HeaderProps) => {
     <>
       <View
         className={`
-        ${separator ? "home-header" : "mb-5 home-header"} 
+        ${separator ? "home-header justify-between" : "mb-5 home-header"} 
       `}
       >
-        {/*}<Image source={icons.logowb} className="auth-logo" />{*/}
-        <Text className="home-brand-title">{title}</Text>
+        <View className="flex-row items-center gap-3">
+          {logo && <Image source={icons.logowb2} className="home-logo" />}
+          <Text className="home-brand-title">{title}</Text>
+        </View>
         {isPressable && (
           <Pressable>
             <Image source={icons.ellipsis} className="home-icon-settings" />

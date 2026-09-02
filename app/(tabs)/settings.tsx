@@ -41,7 +41,10 @@ const Settings = () => {
             className="size-16 rounded-full"
           />
           <View className="flex-1">
-            <Text className="text-lg font-sans-bold text-primary">
+            <Text
+              numberOfLines={1}
+              className="text-lg font-sans-bold text-primary"
+            >
               {displayName}
             </Text>
             {email && (

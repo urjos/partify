@@ -129,7 +129,7 @@ const SignUp = () => {
               {/* Branding */}
               <View className="auth-brand-block">
                 <View className="auth-logo-wrap">
-                  <Image source={icons.logowb} className="auth-logo" />
+                  <Image source={icons.logowb2} className="auth-logo" />
                   <Text className="auth-wordmark">Partify</Text>
                 </View>
                 <View className="gap-2">
@@ -161,27 +161,29 @@ const SignUp = () => {
                     )}
                   </View>
 
-                  <Pressable
-                    className={`auth-button ${(!code || fetchStatus === "fetching") && "auth-button-disabled"}`}
-                    onPress={handleVerify}
-                    disabled={!code || fetchStatus === "fetching"}
-                  >
-                    <Text className="auth-button-text">
-                      {fetchStatus === "fetching"
-                        ? "Verifying..."
-                        : "Verify Email"}
-                    </Text>
-                  </Pressable>
+                  <View className="gap-4">
+                    <Pressable
+                      className={`auth-button ${(!code || fetchStatus === "fetching") && "auth-button-disabled"}`}
+                      onPress={handleVerify}
+                      disabled={!code || fetchStatus === "fetching"}
+                    >
+                      <Text className="auth-button-text">
+                        {fetchStatus === "fetching"
+                          ? "Verifying..."
+                          : "Verify Email"}
+                      </Text>
+                    </Pressable>
 
-                  <Pressable
-                    className="auth-secondary-button"
-                    onPress={() => signUp.verifications.sendEmailCode()}
-                    disabled={fetchStatus === "fetching"}
-                  >
-                    <Text className="auth-secondary-button-text">
-                      Resend Code
-                    </Text>
-                  </Pressable>
+                    <Pressable
+                      className="auth-secondary-button"
+                      onPress={() => signUp.verifications.sendEmailCode()}
+                      disabled={fetchStatus === "fetching"}
+                    >
+                      <Text className="auth-secondary-button-text">
+                        Resend Code
+                      </Text>
+                    </Pressable>
+                  </View>
                 </View>
               </View>
             </View>
@@ -207,25 +209,22 @@ const SignUp = () => {
             {/* Branding */}
             <View className="auth-brand-block">
               <View className="auth-logo-wrap">
-                <View className="auth-logo-mark">
-                  <Text className="auth-logo-mark-text">R</Text>
-                </View>
-                <View>
-                  <Text className="auth-wordmark">Recurrly</Text>
-                  <Text className="auth-wordmark-sub">SUBSCRIPTIONS</Text>
-                </View>
+                <Image source={icons.logowb2} className="auth-logo" />
+                <Text className="auth-wordmark">Partify</Text>
               </View>
-              <Text className="auth-title">Create your account</Text>
-              <Text className="auth-subtitle">
-                Start tracking your subscriptions and never miss a payment
-              </Text>
+              <View className="gap-2">
+                <Text className="auth-title">Create your account</Text>
+                <Text className="auth-subtitle">
+                  Start your journey with Partify
+                </Text>
+              </View>
             </View>
 
             {/* Sign-Up Form */}
             <View className="auth-card">
               <View className="auth-form">
                 <View className="auth-field">
-                  <Text className="auth-label">Email Address</Text>
+                  <Text className="auth-label">Email</Text>
                   <TextInput
                     className={`auth-input ${emailTouched && !emailValid && "auth-input-error"}`}
                     autoCapitalize="none"
@@ -267,11 +266,6 @@ const SignUp = () => {
                   {errors.fields.password && (
                     <Text className="auth-error">
                       {errors.fields.password.message}
-                    </Text>
-                  )}
-                  {!passwordTouched && (
-                    <Text className="auth-helper">
-                      Minimum 8 characters required
                     </Text>
                   )}
                 </View>
