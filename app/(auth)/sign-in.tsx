@@ -1,6 +1,6 @@
 import { icons } from "@/constants/icons";
 import { useSignIn } from "@clerk/expo";
-import { Link, useRouter, type Href } from "expo-router";
+import { useRouter, type Href } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
 import { useState } from "react";
@@ -254,21 +254,22 @@ const SignIn = () => {
                 <Image source={icons.logowb} className="auth-logo" />
                 <Text className="auth-wordmark">Partify</Text>
               </View>
-              <Text className="auth-title">Welcome back</Text>
-              <Text className="auth-subtitle">Sign in to continue</Text>
+              <View className="gap-2">
+                <Text className="auth-title">Welcome back</Text>
+                <Text className="auth-subtitle">Sign in to continue</Text>
+              </View>
             </View>
 
             {/* Sign-In Form */}
             <View className="auth-card">
               <View className="auth-form">
                 <View className="auth-field">
-                  <Text className="auth-label">Email Address</Text>
+                  <Text className="auth-label">Email</Text>
                   <TextInput
                     className={`auth-input ${emailTouched && !emailValid && "auth-input-error"}`}
                     autoCapitalize="none"
                     value={emailAddress}
                     placeholder="name@example.com"
-                    placeholderTextColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={setEmailAddress}
                     onBlur={() => setEmailTouched(true)}
                     keyboardType="email-address"
@@ -292,7 +293,6 @@ const SignIn = () => {
                     className={`auth-input ${passwordTouched && !passwordValid && "auth-input-error"}`}
                     value={password}
                     placeholder="Enter your password"
-                    placeholderTextColor="rgba(0, 0, 0, 0.4)"
                     secureTextEntry
                     onChangeText={setPassword}
                     onBlur={() => setPasswordTouched(true)}
@@ -318,16 +318,6 @@ const SignIn = () => {
                   </Text>
                 </Pressable>
               </View>
-            </View>
-
-            {/* Sign-Up Link */}
-            <View className="auth-link-row">
-              <Text className="auth-link-copy">Don't have an account?</Text>
-              <Link href="/(auth)/sign-up" asChild>
-                <Pressable>
-                  <Text className="auth-link">Create Account</Text>
-                </Pressable>
-              </Link>
             </View>
           </View>
         </ScrollView>

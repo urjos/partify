@@ -1,9 +1,11 @@
+import { icons } from "@/constants/icons";
 import { useAuth, useSignUp } from "@clerk/expo";
 import { Link, useRouter, type Href } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
 import { useState } from "react";
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -127,18 +129,15 @@ const SignUp = () => {
               {/* Branding */}
               <View className="auth-brand-block">
                 <View className="auth-logo-wrap">
-                  <View className="auth-logo-mark">
-                    <Text className="auth-logo-mark-text">R</Text>
-                  </View>
-                  <View>
-                    <Text className="auth-wordmark">Partify</Text>
-                    <Text className="auth-wordmark-sub">SUBSCRIPTIONS</Text>
-                  </View>
+                  <Image source={icons.logowb} className="auth-logo" />
+                  <Text className="auth-wordmark">Partify</Text>
                 </View>
-                <Text className="auth-title">Verify your email</Text>
-                <Text className="auth-subtitle">
-                  We sent a verification code to {emailAddress}
-                </Text>
+                <View className="gap-2">
+                  <Text className="auth-title">Verify your email</Text>
+                  <Text className="auth-subtitle">
+                    We sent a verification code to {emailAddress}
+                  </Text>
+                </View>
               </View>
 
               {/* Verification Form */}
@@ -150,7 +149,6 @@ const SignUp = () => {
                       className="auth-input"
                       value={code}
                       placeholder="Enter 6-digit code"
-                      placeholderTextColor="rgba(0, 0, 0, 0.4)"
                       onChangeText={setCode}
                       keyboardType="number-pad"
                       autoComplete="one-time-code"
@@ -233,7 +231,6 @@ const SignUp = () => {
                     autoCapitalize="none"
                     value={emailAddress}
                     placeholder="name@example.com"
-                    placeholderTextColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={setEmailAddress}
                     onBlur={() => setEmailTouched(true)}
                     keyboardType="email-address"
@@ -257,7 +254,6 @@ const SignUp = () => {
                     className={`auth-input ${passwordTouched && !passwordValid && "auth-input-error"}`}
                     value={password}
                     placeholder="Create a strong password"
-                    placeholderTextColor="rgba(0, 0, 0, 0.4)"
                     secureTextEntry
                     onChangeText={setPassword}
                     onBlur={() => setPasswordTouched(true)}

@@ -96,11 +96,11 @@
   }
 
   .auth-brand-block {
-    @apply mt-2 items-center;
+    @apply mt-2 flex gap-5;
   }
 
   .auth-logo-wrap {
-    @apply mb-7 flex-row items-center;
+    @apply flex-row justify-center items-center;
   }
 
   .auth-logo {
@@ -115,19 +115,19 @@
   }
 
   .auth-title {
-    @apply text-3xl font-sans-bold text-primary;
+    @apply text-4xl font-sans-bold text-primary text-center;
   }
 
   .auth-subtitle {
-    @apply mt-2 max-w-[320px] text-center text-base font-sans-medium text-muted-foreground;
+    @apply text-base font-sans-medium text-muted-foreground text-center;
   }
 
   .auth-card {
-    @apply mt-8 rounded-3xl border border-border bg-card p-5;
+    @apply mt-8 rounded-3xl border-none bg-card p-5;
   }
 
   .auth-form {
-    @apply gap-4;
+    @apply gap-7;
   }
 
   .auth-field {
@@ -135,7 +135,7 @@
   }
 
   .auth-label {
-    @apply text-base font-sans-bold text-primary mt-5;
+    @apply text-base font-sans-bold text-primary mb-2;
   }
 
   .auth-input {
@@ -191,11 +191,11 @@
   }
 
   .auth-link-copy {
-    @apply text-sm font-sans-medium text-muted-foreground;
+    @apply text-xs font-sans-medium text-muted-foreground;
   }
 
   .auth-link {
-    @apply text-sm font-sans-bold text-accent;
+    @apply text-xs font-sans-bold text-accent;
   }
 
   /* Home */
