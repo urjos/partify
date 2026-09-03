@@ -1,4 +1,5 @@
 import EventCard from "@/components/event/EventCard";
+import EventFeedSkeleton from "@/components/event/EventFeedSkeleton";
 import Header from "@/components/home/Header";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
@@ -7,7 +8,7 @@ import { useAuth } from "@clerk/expo";
 import { router } from "expo-router";
 import { styled } from "nativewind";
 import { useEffect } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 const SafeAreaView = styled(RNSafeAreaView);
 
@@ -17,6 +18,9 @@ export default function App() {
   const { events, loading, error, fetchEvents } = useEventStore();
 
   useEffect(() => {
+    // No dispares el fetch hasta que Clerk confirme que hay sesión —
+    // si no, getToken() puede devolver null justo después de iniciar
+    // sesión (el token todavía no está listo) y el backend responde 401.
     if (isLoaded && isSignedIn) {
       fetchEvents(api);
     }
@@ -44,9 +48,7 @@ export default function App() {
         refreshing={loading}
         ListEmptyComponent={
           loading || !isLoaded || !isSignedIn ? (
-            <View className="py-10 items-center">
-              <ActivityIndicator color="#b24bfb" />
-            </View>
+            <EventFeedSkeleton />
           ) : error ? (
             <Text className="home-empty-state">
               Couldn't load events: {error}
