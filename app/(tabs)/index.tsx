@@ -3,6 +3,7 @@ import Header from "@/components/home/Header";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
+import { useAuth } from "@clerk/expo";
 import { router } from "expo-router";
 import { styled } from "nativewind";
 import { useEffect } from "react";
@@ -12,11 +13,14 @@ const SafeAreaView = styled(RNSafeAreaView);
 
 export default function App() {
   const api = useApi();
+  const { isLoaded, isSignedIn } = useAuth();
   const { events, loading, error, fetchEvents } = useEventStore();
 
   useEffect(() => {
-    fetchEvents(api);
-  }, []);
+    if (isLoaded && isSignedIn) {
+      fetchEvents(api);
+    }
+  }, [isLoaded, isSignedIn]);
 
   return (
     <SafeAreaView className="flex-1 bg-background page-all">
@@ -39,7 +43,7 @@ export default function App() {
         onRefresh={() => fetchEvents(api)}
         refreshing={loading}
         ListEmptyComponent={
-          loading ? (
+          loading || !isLoaded || !isSignedIn ? (
             <View className="py-10 items-center">
               <ActivityIndicator color="#b24bfb" />
             </View>

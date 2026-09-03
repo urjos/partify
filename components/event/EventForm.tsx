@@ -465,19 +465,22 @@ const EventForm = ({
             <AnimatedToggle value={isFree} onValueChange={setIsFree} />
           </View>
           {!isFree && (
-            <View className="form-field-extra">
-              <View className="form-field-extra-sub">
-                <Text className="form-section-subtitle">Price</Text>
-                <TextInput
-                  className="auth-input"
-                  placeholder="e.g. 15"
-                  placeholderTextColor="rgba(245, 244, 242, 0.4)"
-                  value={price}
-                  keyboardType="decimal-pad"
-                  onChangeText={setPrice}
-                />
+            <>
+              <View className="form-field-extra"></View>
+              <View className="form-field-extra">
+                <View className="form-field-extra-sub">
+                  <Text className="form-section-subtitle">Price</Text>
+                  <TextInput
+                    className="auth-input"
+                    placeholder="e.g. 15"
+                    placeholderTextColor="rgba(245, 244, 242, 0.4)"
+                    value={price}
+                    keyboardType="decimal-pad"
+                    onChangeText={setPrice}
+                  />
+                </View>
               </View>
-            </View>
+            </>
           )}
         </View>
 
