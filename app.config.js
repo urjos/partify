@@ -45,19 +45,6 @@ module.exports = {
           },
         },
       ],
-      [
-        "expo-font",
-        {
-          fonts: [
-            "./assets/fonts/PlusJakartaSans-Regular.ttf",
-            "./assets/fonts/PlusJakartaSans-SemiBold.ttf",
-            "./assets/fonts/PlusJakartaSans-Bold.ttf",
-            "./assets/fonts/PlusJakartaSans-ExtraBold.ttf",
-            "./assets/fonts/PlusJakartaSans-Light.ttf",
-            "./assets/fonts/PlusJakartaSans-Medium.ttf",
-          ],
-        },
-      ],
       "@clerk/expo",
       "expo-secure-store",
       "expo-web-browser",
