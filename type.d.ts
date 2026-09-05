@@ -10,6 +10,7 @@ declare global {
   interface TabIconProps {
     focused: boolean;
     icon: ImageSourcePropType;
+    title?: string;
   }
 
   interface ListHeadingProps {

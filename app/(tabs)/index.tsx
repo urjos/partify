@@ -27,7 +27,10 @@ export default function App() {
   }, [isLoaded, isSignedIn]);
 
   return (
-    <SafeAreaView className="flex-1 bg-background page-all">
+    <SafeAreaView
+      edges={["top", "left", "right"]}
+      className="flex-1 bg-background page-all"
+    >
       <FlatList
         ListHeaderComponent={() => (
           <>
@@ -59,7 +62,7 @@ export default function App() {
             </Text>
           )
         }
-        contentContainerClassName="pb-30"
+        contentContainerClassName="pb-6"
       />
     </SafeAreaView>
   );

@@ -1,4 +1,5 @@
 import { icons } from "@/constants/icons";
+import { router } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import Separator from "../Separator";
@@ -8,9 +9,16 @@ interface HeaderProps {
   isPressable: boolean;
   separator: boolean;
   logo?: boolean;
+  onPress?: () => void;
 }
 
-const Header = ({ title, isPressable, separator, logo }: HeaderProps) => {
+const Header = ({
+  title,
+  isPressable,
+  separator,
+  logo,
+  onPress,
+}: HeaderProps) => {
   /*
   const { user } = useUser();
   const displayName = user?.firstName || user?.fullName || "User";
@@ -27,8 +35,8 @@ const Header = ({ title, isPressable, separator, logo }: HeaderProps) => {
           <Text className="home-brand-title">{title}</Text>
         </View>
         {isPressable && (
-          <Pressable>
-            <Image source={icons.ellipsis} className="home-icon-settings" />
+          <Pressable onPress={onPress ?? (() => router.push("/(tabs)/create"))}>
+            <Image source={icons.plus} className="home-icon-settings" />
           </Pressable>
         )}
       </View>

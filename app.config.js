@@ -13,10 +13,8 @@ module.exports = {
     },
     android: {
       adaptiveIcon: {
-        backgroundColor: "#E6F4FE",
-        foregroundImage: "./assets/images/android-icon-foreground.png",
-        backgroundImage: "./assets/images/android-icon-background.png",
-        monochromeImage: "./assets/images/android-icon-monochrome.png",
+        backgroundColor: "#0b0b0f",
+        foregroundImage: "./assets/icons/partify-logo-3.png",
       },
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,

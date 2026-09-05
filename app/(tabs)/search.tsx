@@ -22,7 +22,10 @@ export default function Search() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-background page-all">
+    <SafeAreaView
+      edges={["top", "left", "right"]}
+      className="flex-1 bg-background page-all"
+    >
       <FlatList
         data={filteredEvents}
         keyExtractor={(item) => item.id}
@@ -50,7 +53,7 @@ export default function Search() {
         keyboardShouldPersistTaps="handled"
         ItemSeparatorComponent={() => <View className="h-4" />}
         keyboardDismissMode="on-drag"
-        contentContainerClassName="pb-30"
+        contentContainerClassName="pb-6"
       />
     </SafeAreaView>
   );

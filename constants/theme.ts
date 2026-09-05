@@ -12,6 +12,11 @@ export const colors = {
   subscription: "#8fd1bd",
 } as const;
 
+export const Colors = {
+  light: colors,
+  dark: colors,
+};
+
 export const spacing = {
   0: 0,
   1: 4,

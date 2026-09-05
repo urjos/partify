@@ -1,23 +1,10 @@
-import GlassTabBarBackground from "@/components/nav/GlassTabBarBackground";
 import { tabs } from "@/constants/data";
-import { components } from "@/constants/theme";
 import { useAuth } from "@clerk/expo";
 import clsx from "clsx";
 import { Redirect, Tabs } from "expo-router";
-import { Image, View } from "react-native";
+import { Image, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const tabBar = components.tabBar;
-
-const TabIcon = ({ focused, icon }: TabIconProps) => {
-  return (
-    <View className="tabs-icon">
-      <View className={clsx("tabs-pill", focused && "tabs-active")}>
-        <Image source={icon} resizeMode="contain" className="tabs-glyph" />
-      </View>
-    </View>
-  );
-};
 const TabLayout = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const insets = useSafeAreaInsets();
@@ -36,33 +23,27 @@ const TabLayout = () => {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
+        tabBarActiveTintColor: "#ffffff",
+        tabBarInactiveTintColor: "rgba(245, 244, 242, 0.42)",
         tabBarStyle: {
-          position: "absolute",
-          bottom: Math.max(insets.bottom, tabBar.horizontalInset),
-          height: tabBar.height,
-          marginHorizontal: tabBar.horizontalInset,
-          borderRadius: tabBar.radius,
-          borderTopColor: "transparent",
-          backgroundColor: "transparent",
-          borderWidth: 0,
+          backgroundColor: "#0b0b0f",
+          borderTopWidth: 0,
+          height: 60 + insets.bottom,
+          marginTop: 0,
+          marginBottom: 0,
+          paddingTop: 2,
+          paddingBottom: insets.bottom > 0 ? insets.bottom : 6,
           elevation: 0,
-          overflow: "hidden",
         },
-        tabBarBackground: () => (
-          <GlassTabBarBackground
-            radius={tabBar.radius}
-            tintColor="rgba(23, 23, 29, 0.55)"
-            brandTint="#b24bfb"
-          />
-        ),
         tabBarItemStyle: {
-          paddingVertical: tabBar.height / 2 - tabBar.iconFrame / 1.6,
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          paddingHorizontal: 2,
         },
         tabBarIconStyle: {
-          width: tabBar.iconFrame,
-          height: tabBar.iconFrame,
-          alignItems: "center",
+          marginBottom: 1,
         },
       }}
     >
@@ -73,11 +54,38 @@ const TabLayout = () => {
           options={{
             title: tab.title,
             tabBarIcon: ({ focused }) => (
-              <TabIcon focused={focused} icon={tab.icon} />
+              <Image
+                source={tab.icon}
+                resizeMode="contain"
+                style={{
+                  tintColor: focused ? "#ffffff" : "rgba(245, 244, 242, 0.42)",
+                  width: 20,
+                  height: 20,
+                }}
+              />
+            ),
+            tabBarLabel: ({ focused, color }) => (
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={{ color }}
+                className={clsx(
+                  "text-[11px] text-center",
+                  focused ? "font-sans-semibold" : "font-sans-medium",
+                )}
+              >
+                {tab.title}
+              </Text>
             ),
           }}
         />
       ))}
+      <Tabs.Screen
+        name="create"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 };
