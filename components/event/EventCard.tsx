@@ -11,21 +11,15 @@ const EventCard = ({
   location,
   category,
   author,
-  attendeeAvatars,
-  attendeeCount,
-  isGoing,
   onPress,
 }: EventCardProps) => {
   return (
-    <Pressable
-      onPress={onPress}
-      className="event-card relative overflow-hidden rounded-[32px] bg-card mt-6"
-    >
-      <View className="relative h-[500px] w-full">
+    <Pressable onPress={onPress} className="event-card">
+      <View className="event-image-wrap">
         {/* Background Image/Carousel */}
         <EventMediaCarousel
           media={media}
-          className="absolute inset-0 h-full w-full"
+          className="event-image"
           onPress={onPress}
         />
 
@@ -33,88 +27,75 @@ const EventCard = ({
         <LinearGradient
           colors={["transparent", "rgba(0,0,0,0.8)", "rgba(0,0,0,1)"]}
           locations={[0.3, 0.7, 1]}
-          className="absolute inset-0"
+          className="event-overlay-gradient"
           pointerEvents="none"
         />
 
         {/* Content Wrapper */}
-        <View className="absolute bottom-0 left-0 right-0 p-5 pb-6">
+        <View className="event-content">
           {/* Category & Location */}
-          <View className="flex-row items-center gap-3 mb-2">
-            <View className="bg-accent px-3 py-1 rounded-xl">
-              <Text className="text-xs font-sans-bold text-background uppercase tracking-[0.5px]">
-                {category}
-              </Text>
+          <View className="event-header-row">
+            <View className="event-category-chip">
+              <Text className="event-category-text">{category}</Text>
             </View>
-            <Text className="text-base font-sans-medium text-gray-200">
+            <Text className="event-location-text">
               {distanceLabel || location}
             </Text>
           </View>
 
           {/* Title */}
-          <Text
-            numberOfLines={2}
-            className="text-3xl font-sans-bold text-white mb-4"
-          >
+          <Text numberOfLines={2} className="event-title">
             {title}
           </Text>
 
           {/* Meta & Actions */}
-          <View className="flex-row items-end justify-between">
+          <View className="event-footer-row">
             {/* Left: Author & Time */}
-            <View className="gap-2">
-              <View className="flex-row items-center gap-1.5">
+            <View className="event-meta-stack">
+              <View className="event-meta-row">
                 <Image
                   source={icons.verified}
-                  className="size-4"
+                  className="event-meta-icon"
                   tintColor="#ea4bc8"
                   resizeMode="contain"
                 />
-                <Text className="text-sm font-sans-medium text-gray-200">
-                  {author}
-                </Text>
-                <View>
-                  <Text className="text-sm font-sans-bold text-accent-pink ml-1">
-                    4.9
-                  </Text>
+                <Text className="event-meta-text">{author}</Text>
+                <View className="event-rating-row">
+                  <Text className="event-rating-text">4.9</Text>
                   <Image
                     source={icons.star}
-                    className="size-4"
+                    className="event-meta-icon"
                     tintColor="#ea4bc8"
                     resizeMode="contain"
                   />
                 </View>
               </View>
-              <View className="flex-row items-center gap-1.5">
+              <View className="event-meta-row">
                 <Image
                   source={icons.clock}
-                  className="size-4"
+                  className="event-meta-icon"
                   tintColor="#d1d5db"
                   resizeMode="contain"
                 />
-                <Text className="text-sm font-sans-medium text-gray-300">
-                  {dateLabel}
-                </Text>
+                <Text className="event-time-text">{dateLabel}</Text>
               </View>
             </View>
 
             {/* Right: Actions */}
-            <View className="flex-row items-center gap-3">
-              <Pressable className="flex-row items-center gap-2 bg-[#2c2c2e]/90 px-4 py-3 rounded-full">
+            <View className="event-actions-row">
+              <Pressable className="event-contact-btn">
                 <Image
                   source={icons.messageSquareText}
-                  className="size-4"
+                  className="event-meta-icon"
                   tintColor="#e5e7eb"
                   resizeMode="contain"
                 />
-                <Text className="text-sm font-sans-bold text-gray-200">
-                  Contactar
-                </Text>
+                <Text className="event-contact-text">Contactar</Text>
               </Pressable>
-              <Pressable className="bg-[#1c1c1e]/90 p-3 rounded-full">
+              <Pressable className="event-bookmark-btn">
                 <Image
                   source={icons.bookmark}
-                  className="size-5"
+                  className="event-bookmark-icon"
                   tintColor="#e5e7eb"
                   resizeMode="contain"
                 />

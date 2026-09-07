@@ -3,21 +3,21 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 export default function HostBanner() {
   return (
-    <View className="mb-4 flex-row items-center justify-between rounded-3xl bg-card p-5">
-      <View className="flex-1 gap-2">
-        <Text className="mb-1 text-lg font-sans-bold text-primary">
+    <View className="host-banner">
+      <View className="host-banner-content">
+        <Text className="host-banner-title">
           ¿Tienes un espacio único?
         </Text>
-        <Text className="text-sm font-sans-medium text-muted-foreground leading-5">
+        <Text className="host-banner-subtitle">
           Crea tu evento seguro, controla el aforo y gana dinero.
         </Text>
       </View>
       <TouchableOpacity
         onPress={() => router.push("/create")}
         activeOpacity={0.8}
-        className="rounded-2xl bg-muted px-5 py-3"
+        className="host-banner-btn"
       >
-        <Text className="text-sm font-sans-bold text-primary">Empezar</Text>
+        <Text className="host-banner-btn-text">Empezar</Text>
       </TouchableOpacity>
     </View>
   );

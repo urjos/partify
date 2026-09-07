@@ -235,50 +235,128 @@
     @apply text-lg font-sans-semibold text-primary;
   }
 
+  /* Host Banner */
+
+  .host-banner {
+    @apply mb-4 flex-row items-center justify-between rounded-3xl bg-card p-5;
+  }
+
+  .host-banner-content {
+    @apply flex-1 gap-2;
+  }
+
+  .host-banner-title {
+    @apply mb-1 text-lg font-sans-bold text-primary;
+  }
+
+  .host-banner-subtitle {
+    @apply text-sm font-sans-medium text-muted-foreground leading-5;
+  }
+
+  .host-banner-btn {
+    @apply rounded-2xl bg-muted px-5 py-3;
+  }
+
+  .host-banner-btn-text {
+    @apply text-sm font-sans-bold text-primary;
+  }
+
   /* Event Card */
 
   .event-card {
-    @apply overflow-hidden rounded-3xl border-none border-border bg-card mt-6;
+    @apply relative overflow-hidden rounded-[32px] bg-card mt-6;
   }
 
   .event-image-wrap {
-    @apply relative h-130 w-full bg-muted;
+    @apply relative h-[500px] w-full;
   }
 
   .event-image {
-    @apply h-full w-full;
+    @apply absolute inset-0 h-full w-full;
+  }
+
+  .event-overlay-light {
+    @apply absolute inset-0 bg-black/30;
+  }
+
+  .event-overlay-gradient {
+    @apply absolute inset-0;
+  }
+
+  .event-content {
+    @apply absolute bottom-0 left-0 right-0 p-5 pb-6;
+  }
+
+  .event-header-row {
+    @apply flex-row items-center gap-3 mb-2;
   }
 
   .event-category-chip {
-    @apply absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1;
+    @apply bg-accent px-3 py-1 rounded-xl;
   }
 
   .event-category-text {
-    @apply text-xs font-sans-bold uppercase tracking-[0.5px] text-primary;
+    @apply text-xs font-sans-bold text-background uppercase tracking-[0.5px];
   }
 
-  .event-body {
-    @apply w-full flex gap-2 p-4;
+  .event-location-text {
+    @apply text-base font-sans-medium text-gray-200;
   }
 
   .event-title {
-    @apply text-lg font-sans-bold text-primary;
-  }
-
-  .event-meta-row {
-    @apply flex-row items-center gap-2;
-  }
-
-  .event-meta-text {
-    @apply text-sm font-sans-medium text-muted-foreground;
-  }
-
-  .event-meta-dot {
-    @apply size-1 rounded-full bg-muted-foreground;
+    @apply text-3xl font-sans-bold text-white mb-4;
   }
 
   .event-footer-row {
-    @apply mt-2 items-end justify-between;
+    @apply flex-row items-end justify-between;
+  }
+
+  .event-meta-stack {
+    @apply gap-2;
+  }
+
+  .event-meta-row {
+    @apply flex-row items-center gap-1.5;
+  }
+
+  .event-meta-icon {
+    @apply size-4;
+  }
+
+  .event-meta-text {
+    @apply text-sm font-sans-medium text-gray-200;
+  }
+
+  .event-rating-row {
+    @apply flex-row items-center;
+  }
+
+  .event-rating-text {
+    @apply text-sm font-sans-bold text-accent-pink ml-1;
+  }
+
+  .event-time-text {
+    @apply text-sm font-sans-medium text-gray-300;
+  }
+
+  .event-actions-row {
+    @apply flex-row items-center gap-3;
+  }
+
+  .event-contact-btn {
+    @apply flex-row items-center gap-2 bg-[#2c2c2e]/90 px-4 py-3 rounded-full;
+  }
+
+  .event-contact-text {
+    @apply text-sm font-sans-bold text-gray-200;
+  }
+
+  .event-bookmark-btn {
+    @apply bg-[#1c1c1e]/90 p-3 rounded-full;
+  }
+
+  .event-bookmark-icon {
+    @apply size-5;
   }
 
   /* Event Card - Avatar */
