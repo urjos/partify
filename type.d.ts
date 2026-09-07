@@ -36,6 +36,7 @@ declare global {
     category: string;
     attendeeAvatars: ImageSourcePropType[];
     attendeeCount: number;
+    rating: number;
     interestedCount: number;
     capacity?: number;
     price?: number;

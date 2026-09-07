@@ -216,7 +216,6 @@
     @apply size-6;
   }
 
-
   /* Home - List Head */
 
   .list-head {
@@ -264,7 +263,7 @@
   /* Event Card */
 
   .event-card {
-    @apply relative overflow-hidden rounded-[32px] bg-card mt-6;
+    @apply relative overflow-hidden rounded-[32px] bg-card;
   }
 
   .event-image-wrap {
@@ -320,7 +319,7 @@
   }
 
   .event-meta-icon {
-    @apply size-4;
+    @apply size-5;
   }
 
   .event-meta-text {
@@ -328,27 +327,23 @@
   }
 
   .event-rating-row {
-    @apply flex-row items-center;
+    @apply flex-row items-center gap-1;
   }
 
   .event-rating-text {
     @apply text-sm font-sans-bold text-accent-pink ml-1;
   }
 
-  .event-time-text {
+  .event-time-textf {
     @apply text-sm font-sans-medium text-gray-300;
   }
 
   .event-actions-row {
-    @apply flex-row items-center gap-3;
+    @apply flex-row items-center gap-2;
   }
 
   .event-contact-btn {
-    @apply flex-row items-center gap-2 bg-[#2c2c2e]/90 px-4 py-3 rounded-full;
-  }
-
-  .event-contact-text {
-    @apply text-sm font-sans-bold text-gray-200;
+    @apply size-10 items-center justify-center overflow-hidden rounded-full;
   }
 
   .event-bookmark-btn {

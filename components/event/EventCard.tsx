@@ -11,19 +11,18 @@ const EventCard = ({
   location,
   category,
   author,
+  rating,
   onPress,
 }: EventCardProps) => {
   return (
     <Pressable onPress={onPress} className="event-card">
       <View className="event-image-wrap">
-        {/* Background Image/Carousel */}
         <EventMediaCarousel
           media={media}
           className="event-image"
           onPress={onPress}
         />
 
-        {/* Dark Overlays for text readability */}
         <LinearGradient
           colors={["transparent", "rgba(0,0,0,0.8)", "rgba(0,0,0,1)"]}
           locations={[0.3, 0.7, 1]}
@@ -31,9 +30,7 @@ const EventCard = ({
           pointerEvents="none"
         />
 
-        {/* Content Wrapper */}
         <View className="event-content">
-          {/* Category & Location */}
           <View className="event-header-row">
             <View className="event-category-chip">
               <Text className="event-category-text">{category}</Text>
@@ -43,14 +40,11 @@ const EventCard = ({
             </Text>
           </View>
 
-          {/* Title */}
-          <Text numberOfLines={2} className="event-title">
+          <Text numberOfLines={1} className="event-title">
             {title}
           </Text>
 
-          {/* Meta & Actions */}
           <View className="event-footer-row">
-            {/* Left: Author & Time */}
             <View className="event-meta-stack">
               <View className="event-meta-row">
                 <Image
@@ -61,7 +55,7 @@ const EventCard = ({
                 />
                 <Text className="event-meta-text">{author}</Text>
                 <View className="event-rating-row">
-                  <Text className="event-rating-text">4.9</Text>
+                  <Text className="event-rating-text">{rating}</Text>
                   <Image
                     source={icons.star}
                     className="event-meta-icon"
@@ -81,7 +75,6 @@ const EventCard = ({
               </View>
             </View>
 
-            {/* Right: Actions */}
             <View className="event-actions-row">
               <Pressable className="event-contact-btn">
                 <Image
@@ -90,7 +83,6 @@ const EventCard = ({
                   tintColor="#e5e7eb"
                   resizeMode="contain"
                 />
-                <Text className="event-contact-text">Contactar</Text>
               </Pressable>
               <Pressable className="event-bookmark-btn">
                 <Image
