@@ -5,7 +5,7 @@
 @import "nativewind/theme";
 
 @theme {
-  --color-background: #0b0b0f;
+  --color-background: #000000;
   --color-foreground: #f5f4f2;
   --color-card: #17171d;
   --color-muted: #212129;
@@ -267,7 +267,7 @@
   }
 
   .event-image-wrap {
-    @apply relative h-[600px] w-full;
+    @apply relative aspect-[4/5] w-full;
   }
 
   .event-image {
