@@ -7,7 +7,6 @@ const EventCard = ({
   media,
   title,
   dateLabel,
-  distanceLabel,
   location,
   category,
   author,
@@ -35,8 +34,8 @@ const EventCard = ({
             <View className="event-category-chip">
               <Text className="event-category-text">{category}</Text>
             </View>
-            <Text className="event-location-text">
-              {distanceLabel || location}
+            <Text numberOfLines={1} className="event-location-text">
+              {location}
             </Text>
           </View>
 
@@ -79,7 +78,7 @@ const EventCard = ({
               <Pressable className="event-contact-btn">
                 <Image
                   source={icons.messageSquareText}
-                  className="event-meta-icon"
+                  className="event-message-icon"
                   tintColor="#e5e7eb"
                   resizeMode="contain"
                 />

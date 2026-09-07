@@ -56,7 +56,7 @@
     @apply h-[1px] mb-2 mt-2 bg-muted flex;
   }
   .page-all {
-    @apply pr-5 pl-5;
+    @apply pr-3 pl-3;
   }
 
   /* NavBar */
@@ -267,7 +267,7 @@
   }
 
   .event-image-wrap {
-    @apply relative h-[500px] w-full;
+    @apply relative h-[600px] w-full;
   }
 
   .event-image {
@@ -299,11 +299,11 @@
   }
 
   .event-location-text {
-    @apply text-base font-sans-medium text-gray-200;
+    @apply text-base font-sans-medium text-gray-300;
   }
 
   .event-title {
-    @apply text-3xl font-sans-bold text-white mb-4;
+    @apply text-2xl font-sans-bold text-white mb-4;
   }
 
   .event-footer-row {
@@ -319,11 +319,15 @@
   }
 
   .event-meta-icon {
-    @apply size-5;
+    @apply size-4;
   }
 
   .event-meta-text {
-    @apply text-sm font-sans-medium text-gray-200;
+    @apply text-sm font-sans-medium text-gray-300;
+  }
+
+  .event-time-text {
+    @apply text-sm font-sans-medium text-gray-300;
   }
 
   .event-rating-row {
@@ -332,10 +336,6 @@
 
   .event-rating-text {
     @apply text-sm font-sans-bold text-accent-pink ml-1;
-  }
-
-  .event-time-textf {
-    @apply text-sm font-sans-medium text-gray-300;
   }
 
   .event-actions-row {
@@ -348,6 +348,10 @@
 
   .event-bookmark-btn {
     @apply bg-[#1c1c1e]/90 p-3 rounded-full;
+  }
+
+  .event-message-icon {
+    @apply size-5;
   }
 
   .event-bookmark-icon {

@@ -4,11 +4,11 @@ export const MOCK_EVENTS: EventItem[] = [
   {
     id: "1",
     media: [{ type: "image", source: images.noriel }],
-    title: "𝙉𝙊𝙍𝙄𝙀𝙇 🇵🇷 𝙇𝙇𝙀𝙂𝘼 𝘼 𝘿𝙀𝙈𝘽𝙊𝙒 - 𝙇𝙊𝙎 𝙊𝙇𝙄𝙑𝙊𝙎 ",
+    title: "Noriel Llega a Los Olivos",
     dateLabel: "28 de agosto · 21:00",
-    author: "DEMBOW.prod",
+    author: "Dembow",
     distanceLabel: "1.2 km away",
-    location: "Club Huayllabamba, Los Olivos",
+    location: "Los Olivos",
     description:
       "𝘿𝙚𝙨𝙙𝙚 𝙥𝙪𝙚𝙧𝙩𝙤 𝙋𝙪𝙚𝙧𝙩𝙤 𝙍𝙞𝙘𝙤 🇵🇷 𝙀𝙨𝙩𝙚 𝙫𝙞𝙚𝙧𝙣𝙚𝙨 𝟮𝟴 𝙙𝙚 𝙖𝙜𝙤𝙨𝙩𝙤, 𝘿𝙀𝙈𝘽𝙊𝙒 𝙫𝙪𝙚𝙡𝙫𝙚 𝙖 𝙝𝙖𝙘𝙚𝙧 𝙝𝙞𝙨𝙩𝙤𝙧𝙞𝙖 𝙧𝙚𝙫𝙞𝙫𝙞𝙚𝙣𝙙𝙤 𝙡𝙤𝙨 𝙢𝙚𝙟𝙤𝙧𝙚𝙨 𝙚𝙭𝙞𝙩𝙤𝙨 𝙙𝙚 𝙉𝙊𝙍𝙄𝙀𝙇 🔥🇵🇷",
     category: "Music",
@@ -25,7 +25,7 @@ export const MOCK_EVENTS: EventItem[] = [
     dateLabel: "Fri, Aug 28 · 23:00",
     author: "Hoesky",
     distanceLabel: "3.4 km away",
-    location: "The Old Warehouse, 12 Industrial Rd",
+    location: "San Miguel",
     description:
       "All-night techno lineup across two rooms. Doors at 11, no re-entry after 2 AM. 18+, ID required at the door.",
     category: "Nightlife",
@@ -42,7 +42,7 @@ export const MOCK_EVENTS: EventItem[] = [
     dateLabel: "Sun, Aug 30 · 22:00",
     author: "Cocos Discoteca",
     distanceLabel: "0.6 km away",
-    location: "Greenfield Park, near the west entrance",
+    location: "Surco",
     description:
       "Bring a blanket and something to share — we'll have music, frisbee, and snacks. Free and open to everyone, kids and dogs welcome.",
     category: "Outdoors",
@@ -59,7 +59,7 @@ export const MOCK_EVENTS: EventItem[] = [
     dateLabel: "Sat, Sep 5 · 8:00 PM",
     author: "Alu",
     distanceLabel: "2.1 km away",
-    location: "142 Maple Street (ring the side gate)",
+    location: "San Miguel",
     description:
       "Small backyard get-together — bring a drink to share. Music starts at 9, we'll keep it going until the neighbors complain.",
     category: "House party",
