@@ -1,6 +1,8 @@
 import EventCard from "@/components/event/EventCard";
 import EventFeedSkeleton from "@/components/event/EventFeedSkeleton";
 import Header from "@/components/home/Header";
+import HostBanner from "@/components/home/HostBanner";
+import { MOCK_EVENTS } from "@/constants/mock-events";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
@@ -34,10 +36,10 @@ export default function App() {
       <FlatList
         ListHeaderComponent={() => (
           <>
-            <Header separator isPressable={true} logo={true} title="Partify" />
+            <Header isPressable={true} logo={true} title="Partify" />
           </>
         )}
-        data={events}
+        data={MOCK_EVENTS}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <EventCard
@@ -45,7 +47,7 @@ export default function App() {
             onPress={() => router.push(`/(events)/${item.id}`)}
           />
         )}
-        ItemSeparatorComponent={() => <View className="h-4" />}
+        ItemSeparatorComponent={() => <View className="h-5" />}
         showsVerticalScrollIndicator={false}
         onRefresh={() => fetchEvents(api)}
         refreshing={loading}
@@ -63,6 +65,13 @@ export default function App() {
           )
         }
         contentContainerClassName="pb-6"
+        ListFooterComponent={
+          <>
+            <View className="mt-6">
+              <HostBanner />
+            </View>
+          </>
+        }
       />
     </SafeAreaView>
   );

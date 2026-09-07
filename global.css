@@ -38,8 +38,8 @@
   --spacing-24: 96px;
   --spacing-30: 120px;
 
-  --font-sans: sans-regular;
   --font-sans-light: sans-light;
+  --font-sans: sans-regular;
   --font-sans-medium: sans-medium;
   --font-sans-semibold: sans-semibold;
   --font-sans-bold: sans-bold;
@@ -56,7 +56,7 @@
     @apply h-[1px] mb-2 mt-2 bg-muted flex;
   }
   .page-all {
-    @apply pr-3 pl-3;
+    @apply pr-5 pl-5;
   }
 
   /* NavBar */
@@ -209,16 +209,13 @@
   }
 
   .home-brand-title {
-    @apply text-3xl font-sans-extrabold text-primary;
+    @apply text-3xl font-sans-bold text-primary;
   }
 
   .home-icon-settings {
     @apply size-6;
   }
 
-  .home-logo {
-    @apply size-7;
-  }
 
   /* Home - List Head */
 
@@ -241,7 +238,7 @@
   /* Event Card */
 
   .event-card {
-    @apply overflow-hidden rounded-3xl border-none border-border bg-card;
+    @apply overflow-hidden rounded-3xl border-none border-border bg-card mt-6;
   }
 
   .event-image-wrap {

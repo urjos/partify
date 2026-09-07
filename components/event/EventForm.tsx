@@ -231,12 +231,15 @@ const EventForm = ({
   };
 
   return (
-    <SafeAreaView className="flex-1 page-all bg-background">
+    <SafeAreaView 
+      edges={["top", "left", "right"]}
+      className="flex-1 page-all bg-background"
+    >
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerClassName="pb-20"
       >
-        <Header separator isPressable={false} title={screenTitle} />
+        <Header isPressable={false} title={screenTitle} />
 
         <View className="mb-4">
           <View className="m-form-sec">

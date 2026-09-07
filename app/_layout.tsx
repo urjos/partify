@@ -2,14 +2,6 @@ import "@/global.css";
 import { posthog } from "@/src/config/posthog";
 import { ClerkProvider, useAuth } from "@clerk/expo";
 import { tokenCache } from "@clerk/expo/token-cache";
-import {
-  Manrope_300Light,
-  Manrope_400Regular,
-  Manrope_500Medium,
-  Manrope_600SemiBold,
-  Manrope_700Bold,
-  Manrope_800ExtraBold,
-} from "@expo-google-fonts/manrope";
 import { useFonts } from "expo-font";
 import {
   SplashScreen,
@@ -57,12 +49,12 @@ function RootLayoutContent() {
   }, [pathname, params]);
 
   const [fontsLoaded] = useFonts({
-    "sans-light": Manrope_300Light,
-    "sans-regular": Manrope_400Regular,
-    "sans-medium": Manrope_500Medium,
-    "sans-semibold": Manrope_600SemiBold,
-    "sans-bold": Manrope_700Bold,
-    "sans-extrabold": Manrope_800ExtraBold,
+    "sans-light": require("../assets/fonts/Inter-Light.ttf"),
+    "sans-regular": require("../assets/fonts/Inter-Regular.ttf"),
+    "sans-medium": require("../assets/fonts/Inter-Medium.ttf"),
+    "sans-semibold": require("../assets/fonts/Inter-SemiBold.ttf"),
+    "sans-bold": require("../assets/fonts/Inter-Bold.ttf"),
+    "sans-extrabold": require("../assets/fonts/Inter-ExtraBold.ttf"),
   });
 
   useEffect(() => {
