@@ -18,7 +18,7 @@ declare global {
   }
 
   type EventMediaItem =
-    | { type: "image"; source: ImageSourcePropType }
+    | { type: "image"; source: ImageSourcePropType; base64?: string }
     | { type: "video"; uri: string };
 
   interface EventItem {

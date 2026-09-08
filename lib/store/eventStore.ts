@@ -7,9 +7,11 @@ import { create } from "zustand";
 
 interface EventStore {
   events: EventItem[];
+  activeFilter: string;
   loading: boolean;
   error: string | null;
-  fetchEvents: (api: ApiClient) => Promise<void>;
+  setActiveFilter: (filter: string) => void;
+  fetchEvents: (api: ApiClient, params?: { lat?: number; lng?: number }) => Promise<void>;
   addEvent: (
     api: ApiClient,
     draft: Omit<EventItem, "id">,
@@ -29,13 +31,21 @@ interface EventStore {
 
 export const useEventStore = create<EventStore>((set, get) => ({
   events: [],
+  activeFilter: "todos",
   loading: false,
   error: null,
 
-  fetchEvents: async (api) => {
+  setActiveFilter: (filter) => set({ activeFilter: filter }),
+
+  fetchEvents: async (api, params) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.get<{ data: any[] }>("/events");
+      let url = "/events";
+      if (params?.lat && params?.lng) {
+        url += `?lat=${params.lat}&lng=${params.lng}`;
+      }
+      
+      const { data } = await api.get<{ data: any[] }>(url);
       set({ events: data.map(mapApiEventToEventItem), loading: false });
     } catch (error) {
       set({

@@ -4,6 +4,8 @@ import Header from "@/components/home/Header";
 import Separator from "@/components/Separator";
 import { EVENT_CATEGORIES } from "@/constants/categories";
 import { useLocationPickerStore } from "@/lib/store/locationPickerStore";
+import { supabase } from "@/lib/supabase";
+import { decode } from "base64-arraybuffer";
 import { useUser } from "@clerk/expo";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -138,13 +140,14 @@ const EventForm = ({
       selectionLimit: remainingSlots,
       videoMaxDuration: 30,
       quality: 0.8,
+      base64: true,
     });
 
     if (!result.canceled) {
       const picked: EventMediaItem[] = result.assets.map((asset) =>
         asset.type === "video"
           ? { type: "video", uri: asset.uri }
-          : { type: "image", source: { uri: asset.uri } },
+          : { type: "image", source: { uri: asset.uri }, base64: asset.base64 ?? undefined },
       );
       setMediaItems((prev) => [...prev, ...picked]);
     }
@@ -221,11 +224,66 @@ const EventForm = ({
       }
     : null;
 
+  const uploadMediaToSupabase = async (uri: string, isVideo: boolean, base64?: string) => {
+    try {
+      if (uri.startsWith('http')) return uri; // Already remote
+      
+      const ext = uri.split('.').pop() || (isVideo ? 'mp4' : 'jpg');
+      const filename = `${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
+      
+      let blobOrArrayBuffer: any;
+      let contentType = isVideo ? 'video/mp4' : 'image/jpeg';
+      
+      if (base64) {
+        blobOrArrayBuffer = decode(base64);
+      } else {
+        // Fallback for videos or if base64 is missing
+        const response = await fetch(uri);
+        blobOrArrayBuffer = await response.blob();
+      }
+      
+      const { error } = await supabase.storage
+        .from('events-media')
+        .upload(filename, blobOrArrayBuffer, {
+          contentType,
+        });
+        
+      if (error) throw error;
+      
+      const { data } = supabase.storage
+        .from('events-media')
+        .getPublicUrl(filename);
+        
+      return data.publicUrl;
+    } catch (e) {
+      console.error("Error uploading to Supabase:", e);
+      return uri; // Fallback to local if error
+    }
+  };
+
   const handleSubmit = async () => {
     if (!isValid || !previewDraft) return;
     setSubmitting(true);
     try {
-      await onSubmit(previewDraft);
+      const uploadedMedia = await Promise.all(
+        previewDraft.media.map(async (item) => {
+          if (item.type === 'video') {
+             const url = await uploadMediaToSupabase(item.uri, true);
+             return { type: 'video', uri: url } as EventMediaItem;
+          } else {
+             const uri = typeof item.source === 'object' && 'uri' in item.source ? item.source.uri : undefined;
+             const base64 = item.base64;
+             if (uri) {
+                const url = await uploadMediaToSupabase(uri, false, base64);
+                return { type: 'image', source: { uri: url } } as EventMediaItem;
+             }
+             return item;
+          }
+        })
+      );
+      
+      const finalDraft = { ...previewDraft, media: uploadedMedia };
+      await onSubmit(finalDraft);
     } finally {
       setSubmitting(false);
     }

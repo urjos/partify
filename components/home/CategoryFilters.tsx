@@ -1,24 +1,16 @@
-import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
+import { useEventStore } from "@/lib/store/eventStore";
 
-const filtersInitialState = [
-  { id: "hoy", label: "Hoy", active: true },
-  { id: "manana", label: "Mañana", active: false },
-  { id: "finde", label: "Fin de semana", active: false },
-  { id: "cerca", label: "Cerca de ti", active: false },
+const filtersConfig = [
+  { id: "todos", label: "Todos" },
+  { id: "hoy", label: "Hoy" },
+  { id: "manana", label: "Mañana" },
+  { id: "finde", label: "Fin de semana" },
+  { id: "cerca", label: "Cerca de ti" },
 ];
 
 export default function CategoryFilters() {
-  const [filters, setFilters] = useState(filtersInitialState);
-
-  const handleFilter = (id: string) => {
-    setFilters(
-      filters.map((filter) => ({
-        ...filter,
-        active: filter.id === id,
-      })),
-    );
-  };
+  const { activeFilter, setActiveFilter } = useEventStore();
 
   return (
     <View className="home-filters-wrap">
@@ -27,19 +19,22 @@ export default function CategoryFilters() {
         showsHorizontalScrollIndicator={false}
         contentContainerClassName="home-filters-scroll"
       >
-        {filters.map((filter) => (
-          <Pressable
-            onPress={() => handleFilter(filter.id)}
-            key={filter.id}
-            className={`home-filter-chip ${filter.active ? "home-filter-chip-active" : ""}`}
-          >
-            <Text
-              className={`home-filter-text ${filter.active ? "home-filter-text-active" : ""}`}
+        {filtersConfig.map((filter) => {
+          const isActive = filter.id === activeFilter;
+          return (
+            <Pressable
+              onPress={() => setActiveFilter(filter.id)}
+              key={filter.id}
+              className={`home-filter-chip ${isActive ? "home-filter-chip-active" : ""}`}
             >
-              {filter.label}
-            </Text>
-          </Pressable>
-        ))}
+              <Text
+                className={`home-filter-text ${isActive ? "home-filter-text-active" : ""}`}
+              >
+                {filter.label}
+              </Text>
+            </Pressable>
+          );
+        })}
       </ScrollView>
     </View>
   );
