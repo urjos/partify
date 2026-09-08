@@ -3,6 +3,7 @@ import clock from "@/assets/icons/clock.png";
 import ellipsis from "@/assets/icons/ellipsis-vertical.png";
 import home from "@/assets/icons/home.png";
 import messageSquareText from "@/assets/icons/message-square-text.png";
+import navigation from "@/assets/icons/navigation.png";
 import logowb from "@/assets/icons/partify-logo-2.png";
 import logowb2 from "@/assets/icons/partify-logo-3.png";
 import logo from "@/assets/icons/partify-logo.png";
@@ -24,6 +25,7 @@ export const icons = {
   logowb,
   logowb2,
   messageSquareText,
+  navigation,
   bookmark,
   star,
   verified,

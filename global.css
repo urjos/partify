@@ -205,7 +205,7 @@
   }
 
   .home-header {
-    @apply mt-2 flex-row items-center;
+    @apply mt-2 mb-2 flex-row items-center;
   }
 
   .home-brand-title {
@@ -214,6 +214,50 @@
 
   .home-icon-settings {
     @apply size-6;
+  }
+
+  /* Home - Location Filter */
+
+  .home-location-wrap {
+    @apply mt-1 mb-4;
+  }
+
+  .home-location-btn {
+    @apply flex-row items-center self-start gap-2 rounded-full bg-muted px-4 py-2.5;
+  }
+
+  .home-location-icon {
+    @apply size-4;
+  }
+
+  .home-location-text {
+    @apply text-base font-sans-bold text-primary;
+  }
+
+  /* Home - Category Filters */
+
+  .home-filters-wrap {
+    @apply mb-4;
+  }
+
+  .home-filters-scroll {
+    @apply gap-2;
+  }
+
+  .home-filter-chip {
+    @apply flex-row items-center rounded-full bg-muted px-5 py-2.5;
+  }
+
+  .home-filter-chip-active {
+    @apply bg-primary;
+  }
+
+  .home-filter-text {
+    @apply text-sm font-sans-bold text-primary;
+  }
+
+  .home-filter-text-active {
+    @apply text-muted;
   }
 
   /* Home - List Head */
@@ -291,11 +335,11 @@
   }
 
   .event-category-chip {
-    @apply bg-accent px-3 py-1 rounded-xl;
+    @apply bg-accent-pink px-3 py-1 rounded-xl;
   }
 
   .event-category-text {
-    @apply text-xs font-sans-bold text-background uppercase tracking-[0.5px];
+    @apply text-xs font-sans-bold text-muted uppercase tracking-[0.5px];
   }
 
   .event-location-text {
@@ -303,7 +347,7 @@
   }
 
   .event-title {
-    @apply text-2xl font-sans-bold text-white mb-4;
+    @apply text-2xl font-sans-bold text-white;
   }
 
   .event-footer-row {
@@ -347,7 +391,7 @@
   }
 
   .event-bookmark-btn {
-    @apply bg-[#1c1c1e]/90 p-3 rounded-full;
+    @apply size-10 items-center justify-center overflow-hidden rounded-full;
   }
 
   .event-message-icon {

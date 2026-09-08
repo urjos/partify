@@ -39,9 +39,20 @@ const EventCard = ({
             </Text>
           </View>
 
-          <Text numberOfLines={1} className="event-title">
-            {title}
-          </Text>
+          <View className="pb-4 flex-row gap-2 items-center">
+            <Text numberOfLines={1} className="event-title">
+              {title}
+            </Text>
+            <View className="event-rating-row">
+              <Text className="event-rating-text">{rating}</Text>
+              <Image
+                source={icons.star}
+                className="event-meta-icon"
+                tintColor="#ea4bc8"
+                resizeMode="contain"
+              />
+            </View>
+          </View>
 
           <View className="event-footer-row">
             <View className="event-meta-stack">
@@ -53,15 +64,6 @@ const EventCard = ({
                   resizeMode="contain"
                 />
                 <Text className="event-meta-text">{author}</Text>
-                <View className="event-rating-row">
-                  <Text className="event-rating-text">{rating}</Text>
-                  <Image
-                    source={icons.star}
-                    className="event-meta-icon"
-                    tintColor="#ea4bc8"
-                    resizeMode="contain"
-                  />
-                </View>
               </View>
               <View className="event-meta-row">
                 <Image

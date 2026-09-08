@@ -1,5 +1,6 @@
 import EventCard from "@/components/event/EventCard";
 import EventFeedSkeleton from "@/components/event/EventFeedSkeleton";
+import CategoryFilters from "@/components/home/CategoryFilters";
 import Header from "@/components/home/Header";
 import HostBanner from "@/components/home/HostBanner";
 import { MOCK_EVENTS } from "@/constants/mock-events";
@@ -7,6 +8,7 @@ import "@/global.css";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
 import { useAuth } from "@clerk/expo";
+import clsx from "clsx";
 import { router } from "expo-router";
 import { styled } from "nativewind";
 import { useEffect } from "react";
@@ -20,9 +22,6 @@ export default function App() {
   const { events, loading, error, fetchEvents } = useEventStore();
 
   useEffect(() => {
-    // No dispares el fetch hasta que Clerk confirme que hay sesión —
-    // si no, getToken() puede devolver null justo después de iniciar
-    // sesión (el token todavía no está listo) y el backend responde 401.
     if (isLoaded && isSignedIn) {
       fetchEvents(api);
     }
@@ -31,12 +30,14 @@ export default function App() {
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
-      className="flex-1 bg-background page-all"
+      className={clsx("flex-1", "bg-background", "page-all")}
     >
       <FlatList
         ListHeaderComponent={() => (
           <>
             <Header isPressable={true} logo={true} title="Partify" />
+            {/*<LocationFilter />*/}
+            <CategoryFilters />
           </>
         )}
         data={MOCK_EVENTS}
