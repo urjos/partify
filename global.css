@@ -7,16 +7,21 @@
 @theme {
   --color-background: #000000;
   --color-foreground: #f5f4f2;
-  --color-card: #17171d;
+  --color-card: #1b1b1f;
   --color-muted: #212129;
   --color-muted-foreground: rgba(245, 244, 242, 0.62);
+
   --color-primary: #f5f4f2;
+
   --color-accent: #b24bfb;
   --color-accent-pink: #ea4bc8;
+  --color-accent-icon: #e2b6ff;
+
+  --color-money: #4ae176;
+
   --color-border: rgba(245, 244, 242, 0.12);
   --color-success: #22c55e;
   --color-destructive: #ef4444;
-  --color-subscription: #123d34;
 
   --spacing-0: 0px;
   --spacing-1: 4px;
@@ -352,11 +357,11 @@
   }
 
   .event-location-text {
-    @apply text-base font-sans-medium text-gray-300;
+    @apply text-base font-sans-medium text-muted-foreground;
   }
 
   .event-title {
-    @apply text-2xl font-sans-bold text-white text-justify;
+    @apply text-2xl font-sans-bold text-primary text-justify;
   }
 
   .event-footer-row {
@@ -372,11 +377,11 @@
   }
 
   .event-meta-text {
-    @apply text-sm font-sans-medium text-gray-300;
+    @apply text-sm font-sans-medium text-muted-foreground;
   }
 
   .event-time-text {
-    @apply text-sm font-sans-medium text-gray-300;
+    @apply text-sm font-sans-medium text-muted-foreground;
   }
 
   .event-rating-row {
@@ -803,5 +808,82 @@
 
   .event-media-dot-active {
     @apply w-3.5 bg-white;
+  }
+
+  /* Search Screen */
+  .search-header-container {
+    @apply mb-0 flex flex-col gap-2 pb-4;
+  }
+
+  .search-back-btn {
+    @apply w-10 h-8 justify-center;
+  }
+
+  .search-icon {
+    @apply w-6 h-6;
+  }
+
+  .search-bar-row {
+    @apply flex-row items-center gap-3;
+  }
+
+  .search-input-container {
+    @apply flex-1 bg-card rounded-full flex-row items-center px-5 h-14;
+  }
+
+  .search-input-icon {
+    @apply size-5;
+  }
+
+  .search-input {
+    @apply flex-1 text-primary text-base h-full font-sans-medium;
+  }
+
+  .search-clear-btn {
+    @apply p-2 -mr-2;
+  }
+
+  .search-clear-icon {
+    @apply size-5;
+  }
+
+  .search-filter-badge {
+    @apply absolute top-3 right-[14px] w-[10px] h-[10px] bg-accent-pink rounded-full;
+  }
+
+  .search-map-container {
+    @apply flex-1 w-full overflow-hidden border-none bg-background;
+  }
+
+  .search-map-container-loading {
+    @apply items-center justify-center bg-background;
+  }
+
+  .search-map-marker {
+    @apply flex-row items-center bg-card border border-border rounded-full p-1.5 shadow-lg max-w-[150px];
+  }
+
+  .search-map-marker-icon-wrap {
+    @apply items-center justify-center rounded-full bg-accent/20 p-1.5 mr-1;
+  }
+
+  .search-map-marker-details {
+    @apply flex-col mr-2;
+  }
+
+  .search-map-marker-title {
+    @apply text-xs font-sans-bold text-primary;
+  }
+
+  .search-map-marker-meta {
+    @apply text-[10px] font-sans-medium text-money;
+  }
+
+  .search-filter-btn {
+    @apply w-14 h-14 bg-card rounded-full items-center justify-center relative;
+  }
+
+  .search-filter-icon {
+    @apply size-5;
   }
 }

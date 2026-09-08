@@ -1,15 +1,17 @@
 export const colors = {
-  background: "#fff9e3",
-  foreground: "#081126",
-  card: "#fff8e7",
-  muted: "#f6eecf",
-  mutedForeground: "rgba(0, 0, 0, 0.6)",
-  primary: "#081126",
-  accent: "#ea7a53",
-  border: "rgba(0, 0, 0, 0.1)",
-  success: "#16a34a",
-  destructive: "#dc2626",
-  subscription: "#8fd1bd",
+  background: "#000000",
+  card: "#1b1b1f",
+  muted: "#212129",
+  mutedForeground: "rgba(245, 244, 242, 0.62)",
+  primary: "#f5f4f2",
+  accent: "#b24bfb",
+  accentPink: "#ea4bc8",
+  accentIcon: "#e2b6ff",
+  border: "rgba(245, 244, 242, 0.12)",
+  success: "#22c55e",
+  destructive: "#ef4444",
+  subscription: "#123d34",
+  money: "#4AE176",
 } as const;
 
 export const Colors = {

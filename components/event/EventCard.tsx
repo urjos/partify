@@ -1,6 +1,7 @@
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
+import { colors } from "@/constants/theme";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { LinearGradient } from "expo-linear-gradient";
@@ -57,7 +58,7 @@ const EventCard = ({
               <Image
                 source={icons.star}
                 className="event-meta-icon"
-                tintColor="#ea4bc8"
+                tintColor={colors.accentPink}
                 resizeMode="contain"
               />
             </View>
@@ -75,7 +76,7 @@ const EventCard = ({
               <Image
                 source={icons.verified}
                 className="event-meta-icon"
-                tintColor="#ea4bc8"
+                tintColor={colors.accentPink}
                 resizeMode="contain"
               />
             </View>
@@ -83,7 +84,7 @@ const EventCard = ({
               <Image
                 source={icons.clock}
                 className="event-meta-icon"
-                tintColor="#d1d5db"
+                tintColor={colors.mutedForeground}
                 resizeMode="contain"
               />
               <Text className="event-time-text">
@@ -99,7 +100,7 @@ const EventCard = ({
               <Image
                 source={icons.messageSquareText}
                 className="event-message-icon"
-                tintColor="#e5e7eb"
+                tintColor={colors.foreground}
                 resizeMode="contain"
               />
             </Pressable>
@@ -107,7 +108,7 @@ const EventCard = ({
               <Image
                 source={icons.bookmark}
                 className="event-bookmark-icon"
-                tintColor="#e5e7eb"
+                tintColor={colors.foreground}
                 resizeMode="contain"
               />
             </Pressable>

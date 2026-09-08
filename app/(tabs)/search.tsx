@@ -1,12 +1,14 @@
-import EventCard from "@/components/event/EventCard";
-import Header from "@/components/home/Header";
+import SearchMap from "@/components/search/SearchMap";
+import { icons } from "@/constants/icons";
+import { colors } from "@/constants/theme";
 import "@/global.css";
 import { useEventStore } from "@/lib/store/eventStore";
 import { router } from "expo-router";
 import { styled } from "nativewind";
 import { useState } from "react";
-import { FlatList, TextInput, View } from "react-native";
+import { Image, Pressable, TextInput, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
+
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function Search() {
@@ -22,39 +24,64 @@ export default function Search() {
   );
 
   return (
-    <SafeAreaView
-      edges={["top", "left", "right"]}
-      className="flex-1 bg-background page-all"
-    >
-      <FlatList
-        data={filteredEvents}
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={
-          <>
-            <Header separator={false} isPressable={false} title="Search" />
-            <View className="search-header">
+    <View className="flex-1 bg-background">
+      <SafeAreaView
+        edges={["top", "left", "right"]}
+        className="absolute top-0 left-0 right-0 z-10 bg-background/80"
+      >
+        <View className="search-header-container">
+          <Pressable
+            onPress={() => router.back()}
+            className="search-back-btn page-all"
+          >
+            <Image
+              source={icons.back}
+              className="search-icon"
+              tintColor={colors.primary}
+              resizeMode="contain"
+            />
+          </Pressable>
+          <View className="search-bar-row page-all">
+            <View className="search-input-container">
+              <Image
+                source={icons.search}
+                className="search-input-icon"
+                tintColor={colors.primary}
+                resizeMode="contain"
+              />
               <TextInput
+                numberOfLines={1}
                 className="search-input"
-                placeholder="Search events..."
-                placeholderTextColor="#666"
+                placeholder="Busca tu evento..."
+                placeholderTextColor={colors.mutedForeground}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
+                selectionColor={colors.accentPink}
               />
+              <Pressable
+                onPress={() => setSearchQuery("")}
+                className="search-clear-btn"
+              >
+                <Image
+                  source={icons.x}
+                  className="search-clear-icon"
+                  tintColor={colors.primary}
+                  resizeMode="contain"
+                />
+              </Pressable>
             </View>
-          </>
-        }
-        renderItem={({ item }) => (
-          <EventCard
-            {...item}
-            onPress={() => router.push(`/(events)/${item.id}`)}
-          />
-        )}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        ItemSeparatorComponent={() => <View className="h-4" />}
-        keyboardDismissMode="on-drag"
-        contentContainerClassName="pb-6"
-      />
-    </SafeAreaView>
+            <Pressable className="search-filter-btn">
+              <Image
+                source={icons.filter}
+                className="search-filter-icon"
+                tintColor={colors.primary}
+                resizeMode="contain"
+              />
+            </Pressable>
+          </View>
+        </View>
+      </SafeAreaView>
+      <SearchMap events={filteredEvents} />
+    </View>
   );
 }
