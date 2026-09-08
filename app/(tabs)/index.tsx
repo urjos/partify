@@ -3,7 +3,6 @@ import EventFeedSkeleton from "@/components/event/EventFeedSkeleton";
 import CategoryFilters from "@/components/home/CategoryFilters";
 import Header from "@/components/home/Header";
 import HostBanner from "@/components/home/HostBanner";
-import { MOCK_EVENTS } from "@/constants/mock-events";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
@@ -40,7 +39,7 @@ export default function App() {
             <CategoryFilters />
           </>
         )}
-        data={MOCK_EVENTS}
+        data={events}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <EventCard

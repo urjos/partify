@@ -31,7 +31,7 @@ const Settings = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-background page-all">
-      <Header separator isPressable={false} title="Settings" />
+      <Header isPressable={false} title="Settings" />
 
       {/* User Profile Section */}
       <View className="auth-card">

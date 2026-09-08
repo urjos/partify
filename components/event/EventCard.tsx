@@ -1,7 +1,12 @@
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
 import { icons } from "@/constants/icons";
+import images from "@/constants/images";
+import dayjs from "dayjs";
+import "dayjs/locale/es";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image, Pressable, Text, View } from "react-native";
+
+dayjs.locale("es");
 
 const EventCard = ({
   media,
@@ -9,7 +14,9 @@ const EventCard = ({
   dateLabel,
   location,
   category,
+  startAt,
   author,
+  authorAvatar,
   rating,
   onPress,
 }: EventCardProps) => {
@@ -35,7 +42,7 @@ const EventCard = ({
             <Text className="event-category-text">{category}</Text>
           </View>
           <Text numberOfLines={1} className="event-location-text">
-            {location}
+            {location?.split(",").slice(-2, -1)[0]?.trim() || location}
           </Text>
         </View>
 
@@ -44,20 +51,26 @@ const EventCard = ({
           <Text numberOfLines={1} className="event-title">
             {title}
           </Text>
-          <View className="event-rating-row">
-            <Text className="event-rating-text">{rating}</Text>
-            <Image
-              source={icons.star}
-              className="event-meta-icon"
-              tintColor="#ea4bc8"
-              resizeMode="contain"
-            />
-          </View>
+          {rating && (
+            <View className="event-rating-row">
+              <Text className="event-rating-text">{rating}</Text>
+              <Image
+                source={icons.star}
+                className="event-meta-icon"
+                tintColor="#ea4bc8"
+                resizeMode="contain"
+              />
+            </View>
+          )}
         </View>
 
         <View className="event-footer-row">
           <View className="event-meta-stack">
             <View className="event-meta-row">
+              <Image
+                source={authorAvatar ? { uri: authorAvatar } : images.avatar}
+                className="w-5 h-5 rounded-full"
+              />
               <Text className="event-meta-text">{author}</Text>
               <Image
                 source={icons.verified}
@@ -73,7 +86,11 @@ const EventCard = ({
                 tintColor="#d1d5db"
                 resizeMode="contain"
               />
-              <Text className="event-time-text">{dateLabel}</Text>
+              <Text className="event-time-text">
+                {dateLabel
+                  ? `${dayjs(startAt).format("D [de] MMMM")} • ${dayjs(startAt).format("h:mm a")}`
+                  : "Sin fecha"}
+              </Text>
             </View>
           </View>
 

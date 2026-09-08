@@ -207,8 +207,8 @@ const EventForm = ({
         longitude: location!.longitude,
         description: description.trim(),
         category: category!,
-        author:
-          initialEvent?.author || user?.firstName || user?.fullName || "You",
+        author: initialEvent?.author || user?.fullName || "You",
+        authorAvatar: initialEvent?.authorAvatar || user?.imageUrl,
         attendeeAvatars: initialEvent?.attendeeAvatars ?? [],
         attendeeCount: initialEvent?.attendeeCount ?? 0,
         interestedCount: initialEvent?.interestedCount ?? 0,
@@ -217,6 +217,7 @@ const EventForm = ({
         isFreeEvent: isFree,
         isGoing: initialEvent?.isGoing ?? true,
         isOwner: true,
+        rating: 0,
       }
     : null;
 
@@ -231,7 +232,7 @@ const EventForm = ({
   };
 
   return (
-    <SafeAreaView 
+    <SafeAreaView
       edges={["top", "left", "right"]}
       className="flex-1 page-all bg-background"
     >

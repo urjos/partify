@@ -17,16 +17,15 @@ type ApiEvent = {
   isFreeEvent: boolean;
   price: number;
   author: string;
+  authorAvatar?: string;
   attendeeAvatars: string[];
   attendeeCount: number;
   interestedCount: number;
   isGoing?: boolean;
   isOwner?: boolean;
+  rating: number;
 };
-// El backend guarda media como { type, url }. El frontend (EventCard,
-// EventForm, el carrusel) espera { type: "video", uri } o
-// { type: "image", source: { uri } } — son formas distintas a propósito,
-// para poder usar require() de imágenes locales en los mocks.
+
 export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   id: apiEvent.id,
   media: apiEvent.media.map((item) =>
@@ -46,11 +45,13 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   isFreeEvent: apiEvent.isFreeEvent,
   price: apiEvent.price,
   author: apiEvent.author,
+  authorAvatar: apiEvent.authorAvatar,
   attendeeAvatars: apiEvent.attendeeAvatars.map((uri) => ({ uri })),
   attendeeCount: apiEvent.attendeeCount,
   interestedCount: apiEvent.interestedCount,
   isGoing: apiEvent.isGoing,
   isOwner: apiEvent.isOwner,
+  rating: apiEvent.rating,
 });
 
 const getImageUri = (source: ImageSourcePropType): string | undefined => {
