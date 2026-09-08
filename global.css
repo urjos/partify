@@ -106,6 +106,7 @@
   .auth-logo {
     @apply size-7;
   }
+
   .auth-wordmark {
     @apply text-3xl font-sans-extrabold text-primary;
   }
@@ -196,6 +197,14 @@
 
   .auth-link {
     @apply text-xs font-sans-bold text-accent;
+  }
+
+  .auth-google-button {
+    @apply flex-row items-center justify-center gap-3 rounded-2xl border border-border bg-card py-3;
+  }
+
+  .auth-google-button-text {
+    @apply text-base font-sans-semibold text-foreground;
   }
 
   /* Home */

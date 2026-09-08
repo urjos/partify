@@ -1,5 +1,7 @@
+import GoogleIcon from "@/components/auth/GoogleIcon";
 import { icons } from "@/constants/icons";
 import { useAuth, useSignUp } from "@clerk/expo";
+import { useSSO } from "@clerk/expo/experimental";
 import { Link, useRouter, type Href } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
@@ -21,8 +23,29 @@ const SafeAreaView = styled(RNSafeAreaView);
 const SignUp = () => {
   const { signUp, errors, fetchStatus } = useSignUp();
   const { isSignedIn } = useAuth();
+  const { startSSOFlow } = useSSO();
   const router = useRouter();
   const posthog = usePostHog();
+
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const handleGoogleSignUp = async () => {
+    setGoogleLoading(true);
+    try {
+      const { createdSessionId } = await startSSOFlow({
+        strategy: "oauth_google",
+      });
+
+      if (createdSessionId) {
+        posthog.capture("user_signed_in", { method: "google" });
+        router.replace("/(tabs)" as Href);
+      }
+    } catch (error) {
+      console.error("Google sign-up error:", error);
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
 
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
@@ -279,6 +302,23 @@ const SignUp = () => {
                     {fetchStatus === "fetching"
                       ? "Creating Account..."
                       : "Create Account"}
+                  </Text>
+                </Pressable>
+
+                <View className="auth-divider-row">
+                  <View className="auth-divider-line" />
+                  <Text className="auth-divider-text">or</Text>
+                  <View className="auth-divider-line" />
+                </View>
+
+                <Pressable
+                  className={`auth-google-button ${googleLoading && "auth-button-disabled"}`}
+                  onPress={handleGoogleSignUp}
+                  disabled={googleLoading}
+                >
+                  <GoogleIcon size={18} />
+                  <Text className="auth-google-button-text">
+                    {googleLoading ? "Signing up..." : "Continue with Google"}
                   </Text>
                 </Pressable>
               </View>
