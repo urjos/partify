@@ -307,19 +307,19 @@
   /* Event Card */
 
   .event-card {
-    @apply relative overflow-hidden rounded-[32px] bg-card;
+    @apply relative overflow-hidden bg-card;
   }
 
   .event-image-wrap {
-    @apply relative aspect-[4/5] w-full;
+    @apply relative aspect-4/5 w-full;
   }
 
   .event-image {
-    @apply absolute inset-0 h-full w-full;
+    @apply absolute inset-0 h-full;
   }
 
   .event-overlay-light {
-    @apply absolute inset-0 bg-black/30;
+    @apply absolute inset-0 bg-background;
   }
 
   .event-overlay-gradient {
@@ -327,11 +327,11 @@
   }
 
   .event-content {
-    @apply absolute bottom-0 left-0 right-0 p-5 pb-6;
+    @apply p-1 pt-3 gap-2 bg-background relative;
   }
 
   .event-header-row {
-    @apply flex-row items-center gap-3 mb-2;
+    @apply flex-row items-center gap-2;
   }
 
   .event-category-chip {
@@ -347,7 +347,7 @@
   }
 
   .event-title {
-    @apply text-2xl font-sans-bold text-white;
+    @apply text-2xl font-sans-bold text-white text-justify;
   }
 
   .event-footer-row {
@@ -359,11 +359,7 @@
   }
 
   .event-meta-row {
-    @apply flex-row items-center gap-1.5;
-  }
-
-  .event-meta-icon {
-    @apply size-4;
+    @apply flex-row items-center gap-1;
   }
 
   .event-meta-text {
@@ -375,11 +371,14 @@
   }
 
   .event-rating-row {
-    @apply flex-row items-center gap-1;
+    @apply flex-row items-center text-center gap-1;
   }
 
   .event-rating-text {
-    @apply text-sm font-sans-bold text-accent-pink ml-1;
+    @apply text-sm font-sans-bold text-accent-pink;
+  }
+  .event-meta-icon {
+    @apply size-4;
   }
 
   .event-actions-row {

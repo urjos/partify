@@ -4,7 +4,7 @@ export const MOCK_EVENTS: EventItem[] = [
   {
     id: "1",
     media: [{ type: "image", source: images.noriel }],
-    title: "Noriel Llega a Los Olivos",
+    title: "Noriel Llega a LOS OLIVOS",
     dateLabel: "28 de agosto · 21:00",
     author: "Dembow",
     distanceLabel: "1.2 km away",
