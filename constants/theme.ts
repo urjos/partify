@@ -1,6 +1,7 @@
 export const colors = {
   background: "#000000",
   card: "#1b1b1f",
+  modalBackground: "#0c0c0c",
   muted: "#212129",
   mutedForeground: "rgba(245, 244, 242, 0.62)",
   primary: "#f5f4f2",

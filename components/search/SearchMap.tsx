@@ -8,13 +8,14 @@ import { Image, Text, View } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
 
 interface SearchMapProps {
-  events: EventItem[];
+  events: any[]; // Or EventItem[] if imported
+  onEventPress?: (event: any) => void;
 }
 
 // Un delta pequeño significa que el mapa está "acercado" (zoomed in).
 const ZOOM_THRESHOLD = 0.05;
 
-export default function SearchMap({ events }: SearchMapProps) {
+export default function SearchMap({ events, onEventPress }: SearchMapProps) {
   const [location, setLocation] = useState<Region | null>(null);
   const [isZoomedIn, setIsZoomedIn] = useState(false);
 
@@ -69,12 +70,13 @@ export default function SearchMap({ events }: SearchMapProps) {
   return (
     <View className="search-map-container">
       <MapView
-        style={{ flex: 1, marginBottom: -30 }}
+        style={{ flex: 1 }}
         initialRegion={location}
         showsUserLocation={true}
         onRegionChangeComplete={handleRegionChangeComplete}
         userInterfaceStyle="dark"
         customMapStyle={darkMapStyle}
+        mapPadding={{ top: 145, right: 8, left: 0, bottom: 100 }}
       >
         {events.map((event) => {
           if (!event.latitude || !event.longitude) return null;
@@ -93,8 +95,14 @@ export default function SearchMap({ events }: SearchMapProps) {
                 latitude: event.latitude,
                 longitude: event.longitude,
               }}
-              onCalloutPress={() => router.push(`/(events)/${event.id}`)}
-              onPress={() => router.push(`/(events)/${event.id}`)}
+              onCalloutPress={() => {
+                if (onEventPress) onEventPress(event);
+                else router.push(`/(events)/${event.id}`);
+              }}
+              onPress={() => {
+                if (onEventPress) onEventPress(event);
+                else router.push(`/(events)/${event.id}`);
+              }}
             >
               <View className="search-map-marker">
                 <View className="search-map-marker-icon-wrap">

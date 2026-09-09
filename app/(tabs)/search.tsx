@@ -1,3 +1,4 @@
+import MapEventModal from "@/components/search/MapEventModal";
 import SearchMap from "@/components/search/SearchMap";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
@@ -13,6 +14,7 @@ const SafeAreaView = styled(RNSafeAreaView);
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const { events } = useEventStore();
 
   const filteredEvents = events.filter(
@@ -27,7 +29,7 @@ export default function Search() {
     <View className="flex-1 bg-background">
       <SafeAreaView
         edges={["top", "left", "right"]}
-        className="absolute top-0 left-0 right-0 z-10 bg-background/80"
+        className="absolute top-0 left-0 right-0 z-10 "
       >
         <View className="search-header-container">
           <Pressable
@@ -81,7 +83,24 @@ export default function Search() {
           </View>
         </View>
       </SafeAreaView>
-      <SearchMap events={filteredEvents} />
+      <SearchMap
+        key="search-map-component"
+        events={filteredEvents}
+        onEventPress={setSelectedEvent}
+      />
+      <MapEventModal
+        key="map-event-modal"
+        event={selectedEvent}
+        visible={!!selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+        onDetailsPress={(id) => {
+          setSelectedEvent(null);
+          router.push(`/(events)/${id}`);
+        }}
+        onContactPress={() => {
+          // Acción del contacto
+        }}
+      />
     </View>
   );
 }

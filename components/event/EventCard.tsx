@@ -100,7 +100,7 @@ const EventCard = ({
               <Image
                 source={icons.messageSquareText}
                 className="event-message-icon"
-                tintColor={colors.foreground}
+                tintColor={colors.primary}
                 resizeMode="contain"
               />
             </Pressable>
@@ -108,7 +108,7 @@ const EventCard = ({
               <Image
                 source={icons.bookmark}
                 className="event-bookmark-icon"
-                tintColor={colors.foreground}
+                tintColor={colors.primary}
                 resizeMode="contain"
               />
             </Pressable>
