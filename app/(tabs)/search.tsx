@@ -19,26 +19,50 @@ const DEFAULT_FILTERS: SearchFilters = {
   distance: 25,
   category: null,
   schedule: "todos",
-  priceMin: "",
-  priceMax: "",
+  priceMin: "0",
+  priceMax: "0",
   instantConfirm: false,
   openBar: false,
   corkageFree: false,
 };
 
+function getDistanceInKm(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+): number {
+  const R = 6371; // Radio de la Tierra en km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [filterVisible, setFilterVisible] = useState(false);
+  const [userLocation, setUserLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
   const [activeFilters, setActiveFilters] =
     useState<SearchFilters>(DEFAULT_FILTERS);
   const { events } = useEventStore();
 
   const hasActiveFilters =
+    activeFilters.distance !== DEFAULT_FILTERS.distance ||
     activeFilters.category !== null ||
     activeFilters.schedule !== "todos" ||
-    activeFilters.priceMin !== "" ||
-    activeFilters.priceMax !== "" ||
+    (activeFilters.priceMin !== "" && activeFilters.priceMin !== "0") ||
+    (activeFilters.priceMax !== "" && activeFilters.priceMax !== "0") ||
     activeFilters.instantConfirm ||
     activeFilters.openBar ||
     activeFilters.corkageFree;
@@ -58,12 +82,14 @@ export default function Search() {
       !activeFilters.category || event.category === activeFilters.category;
 
     // Filtro de precio mínimo
-    const minPrice = activeFilters.priceMin
-      ? parseFloat(activeFilters.priceMin)
-      : null;
-    const maxPrice = activeFilters.priceMax
-      ? parseFloat(activeFilters.priceMax)
-      : null;
+    const minPrice =
+      activeFilters.priceMin && activeFilters.priceMin !== "0"
+        ? parseFloat(activeFilters.priceMin)
+        : null;
+    const maxPrice =
+      activeFilters.priceMax && activeFilters.priceMax !== "0"
+        ? parseFloat(activeFilters.priceMax)
+        : null;
     const eventPrice =
       typeof event.price === "number"
         ? event.price
@@ -71,8 +97,28 @@ export default function Search() {
     const matchesMinPrice = minPrice === null || eventPrice >= minPrice;
     const matchesMaxPrice = maxPrice === null || eventPrice <= maxPrice;
 
+    // Filtro de radio de distancia
+    let matchesDistance = true;
+    if (
+      userLocation &&
+      typeof event.latitude === "number" &&
+      typeof event.longitude === "number"
+    ) {
+      const distanceInKm = getDistanceInKm(
+        userLocation.latitude,
+        userLocation.longitude,
+        event.latitude,
+        event.longitude,
+      );
+      matchesDistance = distanceInKm <= activeFilters.distance;
+    }
+
     return (
-      matchesQuery && matchesCategory && matchesMinPrice && matchesMaxPrice
+      matchesQuery &&
+      matchesCategory &&
+      matchesMinPrice &&
+      matchesMaxPrice &&
+      matchesDistance
     );
   });
 
@@ -140,6 +186,9 @@ export default function Search() {
       <SearchMap
         key="search-map-component"
         events={filteredEvents}
+        userLocation={userLocation}
+        radiusKm={activeFilters.distance}
+        onLocationReady={setUserLocation}
         onEventPress={setSelectedEvent}
       />
       <MapEventModal

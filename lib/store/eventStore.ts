@@ -11,7 +11,7 @@ interface EventStore {
   loading: boolean;
   error: string | null;
   setActiveFilter: (filter: string) => void;
-  fetchEvents: (api: ApiClient, params?: { lat?: number; lng?: number }) => Promise<void>;
+  fetchEvents: (api: ApiClient, params?: { lat?: number; lng?: number; radiusKm?: number }) => Promise<void>;
   addEvent: (
     api: ApiClient,
     draft: Omit<EventItem, "id">,
@@ -40,10 +40,16 @@ export const useEventStore = create<EventStore>((set, get) => ({
   fetchEvents: async (api, params) => {
     set({ loading: true, error: null });
     try {
-      let url = "/events";
-      if (params?.lat && params?.lng) {
-        url += `?lat=${params.lat}&lng=${params.lng}`;
+      const queryParams = new URLSearchParams();
+      if (params?.lat !== undefined && params?.lng !== undefined) {
+        queryParams.append("lat", params.lat.toString());
+        queryParams.append("lng", params.lng.toString());
       }
+      if (params?.radiusKm !== undefined) {
+        queryParams.append("radiusKm", params.radiusKm.toString());
+      }
+      const queryString = queryParams.toString();
+      const url = `/events${queryString ? `?${queryString}` : ""}`;
       
       const { data } = await api.get<{ data: any[] }>(url);
       set({ events: data.map(mapApiEventToEventItem), loading: false });
