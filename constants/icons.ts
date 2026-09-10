@@ -5,6 +5,7 @@ import ellipsis from "@/assets/icons/ellipsis-vertical.png";
 import filter from "@/assets/icons/filter.png";
 import flame from "@/assets/icons/flame.png";
 import home from "@/assets/icons/home.png";
+import loader from "@/assets/icons/loader.png";
 import mapPin from "@/assets/icons/map-pin.png";
 import martini from "@/assets/icons/martini.png";
 import messageSquareText from "@/assets/icons/message-square-text.png";
@@ -44,6 +45,7 @@ export const icons = {
   martini,
   right,
   mapPin,
+  loader,
 } as const;
 
 export type IconKey = keyof typeof icons;

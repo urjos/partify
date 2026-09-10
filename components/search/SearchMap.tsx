@@ -4,7 +4,7 @@ import { colors } from "@/constants/theme";
 import * as Location from "expo-location";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Animated, Easing, Image, View } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
 
 interface SearchMapProps {
@@ -18,12 +18,12 @@ const ZOOM_THRESHOLD = 0.05;
 export default function SearchMap({ events, onEventPress }: SearchMapProps) {
   const [location, setLocation] = useState<Region | null>(null);
   const [isZoomedIn, setIsZoomedIn] = useState(false);
+  const spinValue = React.useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        // Fallback a un centro por defecto (Lima)
         setLocation({
           latitude: -12.0464,
           longitude: -77.0428,
@@ -42,7 +42,6 @@ export default function SearchMap({ events, onEventPress }: SearchMapProps) {
           longitudeDelta: 0.0421,
         });
       } catch (error) {
-        // Fallback en caso de error de gps
         setLocation({
           latitude: -12.0464,
           longitude: -77.0428,
@@ -51,7 +50,20 @@ export default function SearchMap({ events, onEventPress }: SearchMapProps) {
         });
       }
     })();
-  }, []);
+    Animated.loop(
+      Animated.timing(spinValue, {
+        toValue: 1,
+        duration: 1000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    ).start();
+  }, [spinValue]);
+
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
 
   const handleRegionChangeComplete = (region: Region) => {
     setIsZoomedIn(region.latitudeDelta < ZOOM_THRESHOLD);
@@ -60,9 +72,13 @@ export default function SearchMap({ events, onEventPress }: SearchMapProps) {
   if (!location) {
     return (
       <View className="search-map-container-loading">
-        <Text className="text-muted-foreground font-sans-medium">
-          Cargando...
-        </Text>
+        <Animated.View style={{ transform: [{ rotate: spin }] }}>
+          <Image
+            source={icons.loader}
+            className="size-10"
+            tintColor={colors.primary}
+          />
+        </Animated.View>
       </View>
     );
   }
@@ -95,10 +111,6 @@ export default function SearchMap({ events, onEventPress }: SearchMapProps) {
                 latitude: event.latitude,
                 longitude: event.longitude,
               }}
-              onCalloutPress={() => {
-                if (onEventPress) onEventPress(event);
-                else router.push(`/(events)/${event.id}`);
-              }}
               onPress={() => {
                 if (onEventPress) onEventPress(event);
                 else router.push(`/(events)/${event.id}`);
@@ -113,21 +125,6 @@ export default function SearchMap({ events, onEventPress }: SearchMapProps) {
                     resizeMode="contain"
                   />
                 </View>
-
-                {isZoomedIn && (
-                  <View className="search-map-marker-details">
-                    <Text className="search-map-marker-title" numberOfLines={1}>
-                      {event.title}
-                    </Text>
-                    <Text className="search-map-marker-meta">
-                      {event.isFreeEvent
-                        ? "Gratis"
-                        : event.price
-                          ? `S/ ${event.price}`
-                          : timeString}
-                    </Text>
-                  </View>
-                )}
               </View>
             </Marker>
           );

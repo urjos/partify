@@ -4,8 +4,10 @@ import { colors } from "@/constants/theme";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
+  Animated,
+  Dimensions,
   Image,
   Modal,
   Pressable,
@@ -29,6 +31,31 @@ export default function MapEventModal({
   onDetailsPress,
   onContactPress,
 }: MapEventModalProps) {
+  const { height } = Dimensions.get("window");
+  const slideAnim = useRef(new Animated.Value(height)).current;
+
+  useEffect(() => {
+    if (visible) {
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      slideAnim.setValue(height);
+    }
+  }, [visible, slideAnim, height]);
+
+  const handleClose = () => {
+    Animated.timing(slideAnim, {
+      toValue: height,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      onClose();
+    });
+  };
+
   if (!event) return null;
 
   const formattedDateTime = event.dateLabel
@@ -49,28 +76,21 @@ export default function MapEventModal({
     <Modal
       visible={visible}
       transparent={true}
-      animationType="slide"
-      onRequestClose={onClose}
+      animationType="fade"
+      onRequestClose={handleClose}
     >
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View className="map-modal-overlay">
+      <TouchableWithoutFeedback onPress={handleClose}>
+        <View
+          className="map-modal-overlay"
+          style={{ backgroundColor: colors.BackgroundModal }}
+        >
           <TouchableWithoutFeedback onPress={() => {}}>
-            <View className="map-modal-container">
+            <Animated.View
+              className="map-modal-container"
+              style={{ transform: [{ translateY: slideAnim }] }}
+            >
               <View className="map-modal-handle-wrap">
                 <View className="map-modal-handle" />
-              </View>
-
-              <View className="map-modal-header">
-                <Text className="map-modal-title">Evento cerca de ti</Text>
-                <Pressable onPress={onClose} className="map-modal-view-all">
-                  <Text className="map-modal-view-all-text">Ver todos</Text>
-                  <Image
-                    source={icons.right}
-                    className="map-modal-view-all-icon"
-                    tintColor={colors.accentPink}
-                    resizeMode="contain"
-                  />
-                </Pressable>
               </View>
 
               <View className="map-modal-card">
@@ -152,12 +172,17 @@ export default function MapEventModal({
                   <View className="map-modal-actions">
                     <Pressable
                       className="map-modal-btn-contact"
-                      onPress={onContactPress}
+                      onPress={() => {
+                        if (onContactPress) {
+                          handleClose();
+                          onContactPress();
+                        }
+                      }}
                     >
                       <Image
                         source={icons.messageSquareText}
                         className="size-4"
-                        tintColor="#FFFFFF"
+                        tintColor={colors.primary}
                         resizeMode="contain"
                       />
                       <Text className="map-modal-btn-contact-text">
@@ -167,10 +192,13 @@ export default function MapEventModal({
 
                     <Pressable
                       className="map-modal-btn-details"
-                      onPress={() => onDetailsPress(event.id)}
+                      onPress={() => {
+                        handleClose();
+                        onDetailsPress(event.id);
+                      }}
                     >
                       <Text className="map-modal-btn-details-text">
-                        Ver Detalles
+                        Ver detalles
                       </Text>
                       <Image
                         source={icons.right}
@@ -182,7 +210,7 @@ export default function MapEventModal({
                   </View>
                 </View>
               </View>
-            </View>
+            </Animated.View>
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>

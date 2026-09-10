@@ -1,8 +1,9 @@
 export const colors = {
   background: "#000000",
+  BackgroundModal: "rgba(0, 0, 0, 0.6)",
   card: "#1b1b1f",
   modalBackground: "#0c0c0c",
-  muted: "#212129",
+  muted: "#27272a",
   mutedForeground: "rgba(245, 244, 242, 0.62)",
   primary: "#f5f4f2",
   accent: "#b24bfb",
