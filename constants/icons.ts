@@ -9,6 +9,7 @@ import loader from "@/assets/icons/loader.png";
 import mapPin from "@/assets/icons/map-pin.png";
 import martini from "@/assets/icons/martini.png";
 import messageSquareText from "@/assets/icons/message-square-text.png";
+import minus from "@/assets/icons/minus.png";
 import navigation from "@/assets/icons/navigation.png";
 import logowb from "@/assets/icons/partify-logo-2.png";
 import logowb2 from "@/assets/icons/partify-logo-3.png";
@@ -46,6 +47,7 @@ export const icons = {
   right,
   mapPin,
   loader,
+  minus,
 } as const;
 
 export type IconKey = keyof typeof icons;

@@ -1,7 +1,8 @@
-import { Pressable, ScrollView, Text, View } from "react-native";
+import HorizontalChips from "@/components/shared/HorizontalChips";
 import { useEventStore } from "@/lib/store/eventStore";
+import { View } from "react-native";
 
-const filtersConfig = [
+export const SCHEDULE_FILTERS = [
   { id: "todos", label: "Todos" },
   { id: "hoy", label: "Hoy" },
   { id: "manana", label: "Mañana" },
@@ -14,28 +15,11 @@ export default function CategoryFilters() {
 
   return (
     <View className="home-filters-wrap">
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerClassName="home-filters-scroll"
-      >
-        {filtersConfig.map((filter) => {
-          const isActive = filter.id === activeFilter;
-          return (
-            <Pressable
-              onPress={() => setActiveFilter(filter.id)}
-              key={filter.id}
-              className={`home-filter-chip ${isActive ? "home-filter-chip-active" : ""}`}
-            >
-              <Text
-                className={`home-filter-text ${isActive ? "home-filter-text-active" : ""}`}
-              >
-                {filter.label}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
+      <HorizontalChips
+        items={SCHEDULE_FILTERS}
+        selected={activeFilter}
+        onSelect={setActiveFilter}
+      />
     </View>
   );
 }

@@ -1,3 +1,4 @@
+import { colors } from "@/constants/theme";
 import { useEffect, useRef } from "react";
 import { Animated, Pressable } from "react-native";
 
@@ -30,7 +31,7 @@ const AnimatedToggle = ({ value, onValueChange }: AnimatedToggleProps) => {
 
   const trackColor = progress.interpolate({
     inputRange: [0, 1],
-    outputRange: ["#2a2a33", "#b24bfb"],
+    outputRange: [colors.card, colors.accentPink],
   });
 
   return (

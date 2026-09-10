@@ -261,7 +261,7 @@
   }
 
   .home-filter-chip {
-    @apply flex-row items-center rounded-full bg-muted px-5 py-2.5;
+    @apply flex-row items-center rounded-full bg-card px-5 py-2.5;
   }
 
   .home-filter-chip-active {
@@ -269,7 +269,7 @@
   }
 
   .home-filter-text {
-    @apply text-sm font-sans-bold text-primary;
+    @apply text-sm font-sans-bold text-muted-foreground;
   }
 
   .home-filter-text-active {
@@ -745,11 +745,11 @@
   }
 
   .form-chip {
-    @apply rounded-full border border-border bg-card px-4 py-2;
+    @apply rounded-full border-none bg-card px-4 py-2;
   }
 
   .form-chip-active {
-    @apply border-accent bg-accent;
+    @apply bg-primary;
   }
 
   .form-chip-text {
@@ -757,7 +757,7 @@
   }
 
   .form-chip-text-active {
-    @apply text-primary;
+    @apply text-muted;
   }
 
   .form-toggle-row {
@@ -964,5 +964,22 @@
   }
   .map-modal-btn-details-text {
     @apply text-sm font-sans-bold text-modal-background;
+  }
+
+  /* Search Filter Modal */
+  .sf-modal-overlay {
+    @apply flex-1 justify-end;
+  }
+  .sf-modal-container {
+    @apply bg-modal-background rounded-t-3xl shadow-lg flex-1 max-h-[60%] px-4 pt-4 pb-6;
+  }
+  .sf-modal-scroll {
+    @apply flex-1;
+  }
+  .sf-modal-section {
+    @apply mb-6;
+  }
+  .sf-modal-section-title {
+    @apply mb-3 text-base font-sans-bold text-primary;
   }
 }
