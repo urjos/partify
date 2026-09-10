@@ -94,7 +94,7 @@ export default function SearchMap({
 
   if (!location) {
     return (
-      <View className="search-map-container-loading">
+      <View key="map-loading" className="search-map-container-loading">
         <Animated.View style={{ transform: [{ rotate: spin }] }}>
           <Image
             source={icons.loader}
@@ -113,7 +113,7 @@ export default function SearchMap({
       : null);
 
   return (
-    <View className="search-map-container">
+    <View key="map-ready" className="search-map-container">
       <MapView
         style={{ flex: 1 }}
         initialRegion={location}
