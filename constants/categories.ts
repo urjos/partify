@@ -1,11 +1,28 @@
 export const EVENT_CATEGORIES = [
-  "Cumpleaños",
+  "Rooftop",
+  "Fiesta en Casa",
+  "Underground",
+  "After",
   "Discoteca",
   "Pool party",
-  "En casa",
-  "Evento",
+  "Cumpleaños",
   "After office",
-  "Boliche",
-  "Promo",
   "Fiesta electrónica",
+] as const;
+
+export const MUSIC_TYPES = [
+  "Pop",
+  "Salsa",
+  "Rock",
+  "Reggaeton",
+  "Reggaeton Old School",
+  "Trap",
+  "R&B",
+  "Latin pop",
+  "Timba",
+  "Bachata",
+  "Cumbia",
+  "Indie",
+  "Hip hop",
+  "Electrónica",
 ] as const;

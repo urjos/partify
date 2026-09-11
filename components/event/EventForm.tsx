@@ -1,21 +1,25 @@
+import DateTimeCard from "@/components/event/DateTimeCard";
 import EventCard from "@/components/event/EventCard";
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
-import Header from "@/components/home/Header";
-import Separator from "@/components/Separator";
+import LocationPrivacyCard from "@/components/event/LocationPrivacyCard";
+import MusicTypeSelector from "@/components/event/MusicTypeSelector";
+import PaymentMethodCard from "@/components/event/PaymentMethodCard";
+import PricingAforoSection from "@/components/event/PricingAforoSection";
 import { EVENT_CATEGORIES } from "@/constants/categories";
+import { icons } from "@/constants/icons";
+import { colors } from "@/constants/theme";
 import { useLocationPickerStore } from "@/lib/store/locationPickerStore";
 import { supabase } from "@/lib/supabase";
-import { decode } from "base64-arraybuffer";
 import { useUser } from "@clerk/expo";
 import { Ionicons } from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { decode } from "base64-arraybuffer";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { styled } from "nativewind";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
-  Platform,
+  Image,
   Pressable,
   ScrollView,
   Text,
@@ -23,40 +27,26 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
-import AnimatedToggle from "../AnimatedToggle";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
-const MAX_MEDIA_ITEMS = 10;
-
-const formatDate = (date: Date) =>
-  date.toLocaleDateString(undefined, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-  });
-
-const formatTime = (date: Date) =>
-  date.toLocaleTimeString(undefined, {
-    hour: "numeric",
-    minute: "2-digit",
-  });
+const MAX_MEDIA_ITEMS = 3;
 
 type EventFormProps = {
-  screenTitle: string;
-  submitLabel: string;
-  submittingLabel: string;
+  screenTitle?: string;
+  submitLabel?: string;
+  submittingLabel?: string;
   initialEvent?: EventItem;
   onSubmit: (draft: Omit<EventItem, "id">) => Promise<void>;
 };
 
-const EventForm = ({
-  screenTitle,
-  submitLabel,
-  submittingLabel,
+export default function EventForm({
+  screenTitle = "Crear Evento",
+  submitLabel = "Publicar evento",
+  submittingLabel = "Publicando...",
   initialEvent,
   onSubmit,
-}: EventFormProps) => {
+}: EventFormProps) {
   const { user } = useUser();
   const pickedLocation = useLocationPickerStore(
     (state) => state.pickedLocation,
@@ -65,21 +55,44 @@ const EventForm = ({
     (state) => state.clearPickedLocation,
   );
 
-  const initialDate = initialEvent?.startAt
-    ? new Date(initialEvent.startAt)
-    : null;
-
+  // Estados de Multimedia
   const [mediaItems, setMediaItems] = useState<EventMediaItem[]>(
     initialEvent?.media ?? [],
   );
+
+  // Estados de Información Básica
   const [title, setTitle] = useState(initialEvent?.title ?? "");
+  const [category, setCategory] = useState<string>(
+    initialEvent?.category ?? EVENT_CATEGORIES[0],
+  );
+  const [musicTypes, setMusicTypes] = useState<string[]>(
+    initialEvent?.typeMusic
+      ? initialEvent.typeMusic.split(",").map((s) => s.trim())
+      : ["Reggaeton", "Techno"],
+  );
   const [description, setDescription] = useState(
     initialEvent?.description ?? "",
   );
-  const [date, setDate] = useState<Date | null>(initialDate);
-  const [time, setTime] = useState<Date | null>(initialDate);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+
+  // Estados de Fecha y Horarios
+  const [date, setDate] = useState<Date>(
+    initialEvent?.startAt ? new Date(initialEvent.startAt) : new Date(),
+  );
+  const [startTime, setStartTime] = useState<Date>(() => {
+    if (initialEvent?.startAt) return new Date(initialEvent.startAt);
+    const d = new Date();
+    d.setHours(18, 30, 0, 0);
+    return d;
+  });
+  const [endTime, setEndTime] = useState<Date>(() => {
+    if (initialEvent?.closingAt) return new Date(initialEvent.closingAt);
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    d.setHours(3, 30, 0, 0);
+    return d;
+  });
+
+  // Estados de Ubicación y Privacidad
   const [location, setLocation] = useState<{
     address: string;
     latitude: number;
@@ -88,26 +101,42 @@ const EventForm = ({
     initialEvent
       ? {
           address: initialEvent.location,
-          latitude: initialEvent.latitude ?? 0,
-          longitude: initialEvent.longitude ?? 0,
+          latitude: initialEvent.latitude ?? -12.0464,
+          longitude: initialEvent.longitude ?? -77.0428,
         }
       : null,
   );
-  const [category, setCategory] = useState<string | null>(
-    initialEvent?.category ?? null,
+  const [hideExactAddress, setHideExactAddress] = useState(
+    initialEvent?.hideExactAddress ?? false,
   );
-  const [unlimitedCapacity, setUnlimitedCapacity] = useState(
-    !initialEvent?.capacity,
+
+  // Estados de Aforo y Precios
+  const [isFree, setIsFree] = useState(initialEvent?.isFreeEvent ?? false);
+  const [isMultiplePrices, setIsMultiplePrices] = useState(
+    initialEvent?.isMultiplePrices ?? false,
   );
-  const [capacity, setCapacity] = useState(
-    initialEvent?.capacity ? String(initialEvent.capacity) : "",
+  const [priceMen, setPriceMen] = useState(
+    initialEvent?.price ? String(initialEvent.price) : "45.00",
   );
-  const [isFree, setIsFree] = useState(initialEvent?.isFreeEvent !== false);
-  const [price, setPrice] = useState(
-    initialEvent?.price ? String(initialEvent.price) : "",
+  const [priceWomen, setPriceWomen] = useState(
+    initialEvent?.priceWomen ? String(initialEvent.priceWomen) : "35.00",
   );
+  const [capacity, setCapacity] = useState(initialEvent?.capacity ?? 40);
+
+  // Estados de Medios de Pago
+  const [paymentMethod, setPaymentMethod] = useState<"chat" | "external">(
+    initialEvent?.paymentMethod ?? "chat",
+  );
+  const [contactPhone, setContactPhone] = useState(
+    initialEvent?.contactPhone ?? "",
+  );
+  const [externalTicketUrl, setExternalTicketUrl] = useState(
+    initialEvent?.externalTicketUrl ?? "",
+  );
+
   const [submitting, setSubmitting] = useState(false);
 
+  // Escucha cambios de ubicación seleccionada
   useEffect(() => {
     if (pickedLocation) {
       setLocation(pickedLocation);
@@ -115,12 +144,13 @@ const EventForm = ({
     }
   }, [pickedLocation]);
 
+  // Selección de fotos y videos
   const pickCoverMedia = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
       Alert.alert(
-        "Photo access needed",
-        "Enable photo access in your device settings to add photos or videos.",
+        "Permiso necesario",
+        "Concede acceso a tus fotos para añadir imágenes o videos.",
       );
       return;
     }
@@ -128,8 +158,8 @@ const EventForm = ({
     const remainingSlots = MAX_MEDIA_ITEMS - mediaItems.length;
     if (remainingSlots <= 0) {
       Alert.alert(
-        "That's enough for now",
-        `You can add up to ${MAX_MEDIA_ITEMS} photos or videos per event.`,
+        "Límite alcanzado",
+        `Puedes añadir hasta ${MAX_MEDIA_ITEMS} fotos o videos con el plan Free.`,
       );
       return;
     }
@@ -147,9 +177,13 @@ const EventForm = ({
       const picked: EventMediaItem[] = result.assets.map((asset) =>
         asset.type === "video"
           ? { type: "video", uri: asset.uri }
-          : { type: "image", source: { uri: asset.uri }, base64: asset.base64 ?? undefined },
+          : {
+              type: "image",
+              source: { uri: asset.uri },
+              base64: asset.base64 ?? undefined,
+            },
       );
-      setMediaItems((prev) => [...prev, ...picked]);
+      setMediaItems((prev) => [...prev, ...picked].slice(0, MAX_MEDIA_ITEMS));
     }
   };
 
@@ -157,131 +191,155 @@ const EventForm = ({
     setMediaItems((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleDateChange = (_: unknown, selected?: Date) => {
-    setShowDatePicker(Platform.OS === "ios");
-    if (selected) setDate(selected);
-  };
-
-  const handleTimeChange = (_: unknown, selected?: Date) => {
-    setShowTimePicker(Platform.OS === "ios");
-    if (selected) setTime(selected);
-  };
-
-  const dateLabel =
-    date && time
-      ? `${formatDate(date)} · ${formatTime(time)}`
-      : date
-        ? formatDate(date)
-        : null;
-
-  const isValid = Boolean(
-    title.trim() && description.trim() && date && time && location && category,
-  );
-
-  const combinedStartAt =
-    date && time
-      ? new Date(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          time.getHours(),
-          time.getMinutes(),
-        ).toISOString()
-      : undefined;
-
-  const previewDraft: Omit<EventItem, "id"> | null = isValid
-    ? {
-        media:
-          mediaItems.length > 0
-            ? mediaItems
-            : [
-                {
-                  type: "image",
-                  source: {
-                    uri: `https://picsum.photos/seed/${encodeURIComponent(title)}/800/500`,
-                  },
-                },
-              ],
-        title: title.trim(),
-        dateLabel: dateLabel!,
-        startAt: combinedStartAt,
-        location: location!.address,
-        latitude: location!.latitude,
-        longitude: location!.longitude,
-        description: description.trim(),
-        category: category!,
-        author: initialEvent?.author || user?.fullName || "You",
-        authorAvatar: initialEvent?.authorAvatar || user?.imageUrl,
-        attendeeAvatars: initialEvent?.attendeeAvatars ?? [],
-        attendeeCount: initialEvent?.attendeeCount ?? 0,
-        interestedCount: initialEvent?.interestedCount ?? 0,
-        capacity: unlimitedCapacity ? undefined : Number(capacity) || undefined,
-        price: isFree ? undefined : Number(price) || undefined,
-        isFreeEvent: isFree,
-        isGoing: initialEvent?.isGoing ?? true,
-        isOwner: true,
-        rating: 0,
-      }
-    : null;
-
-  const uploadMediaToSupabase = async (uri: string, isVideo: boolean, base64?: string) => {
+  // Subida a Supabase Storage
+  const uploadMediaToSupabase = async (
+    uri: string,
+    isVideo: boolean,
+    base64?: string,
+  ) => {
     try {
-      if (uri.startsWith('http')) return uri; // Already remote
-      
-      const ext = uri.split('.').pop() || (isVideo ? 'mp4' : 'jpg');
+      if (uri.startsWith("http")) return uri;
+
+      const ext = uri.split(".").pop() || (isVideo ? "mp4" : "jpg");
       const filename = `${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
-      
+
       let blobOrArrayBuffer: any;
-      let contentType = isVideo ? 'video/mp4' : 'image/jpeg';
-      
+      let contentType = isVideo ? "video/mp4" : "image/jpeg";
+
       if (base64) {
         blobOrArrayBuffer = decode(base64);
       } else {
-        // Fallback for videos or if base64 is missing
         const response = await fetch(uri);
         blobOrArrayBuffer = await response.blob();
       }
-      
+
       const { error } = await supabase.storage
-        .from('events-media')
+        .from("events-media")
         .upload(filename, blobOrArrayBuffer, {
           contentType,
         });
-        
+
       if (error) throw error;
-      
+
       const { data } = supabase.storage
-        .from('events-media')
+        .from("events-media")
         .getPublicUrl(filename);
-        
+
       return data.publicUrl;
     } catch (e) {
-      console.error("Error uploading to Supabase:", e);
-      return uri; // Fallback to local if error
+      console.error("Error al subir multimedia a Supabase:", e);
+      return uri;
     }
   };
 
+  // Fecha y hora combinada
+  const combinedStartAt = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    startTime.getHours(),
+    startTime.getMinutes(),
+  ).toISOString();
+
+  const isClosingNextDay =
+    endTime.getHours() * 60 + endTime.getMinutes() <=
+    startTime.getHours() * 60 + startTime.getMinutes();
+
+  const closingDate = new Date(date);
+  if (isClosingNextDay) closingDate.setDate(closingDate.getDate() + 1);
+
+  const combinedClosingAt = new Date(
+    closingDate.getFullYear(),
+    closingDate.getMonth(),
+    closingDate.getDate(),
+    endTime.getHours(),
+    endTime.getMinutes(),
+  ).toISOString();
+
+  const dateLabel = date.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+
+  const isValid = Boolean(title.trim() && location);
+
+  // Borrador para Live Preview
+  const previewDraft: Omit<EventItem, "id"> = {
+    media:
+      mediaItems.length > 0
+        ? mediaItems
+        : [
+            {
+              type: "image",
+              source: {
+                uri: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80",
+              },
+            },
+          ],
+    title: title.trim() || "Título del evento",
+    dateLabel,
+    startAt: combinedStartAt,
+    closingAt: combinedClosingAt,
+    location: location?.address || "Ubicación por definir",
+    latitude: location?.latitude ?? -12.0464,
+    longitude: location?.longitude ?? -77.0428,
+    description: description.trim(),
+    category,
+    typeMusic: musicTypes.join(", "),
+    author: initialEvent?.author || user?.fullName || "Tú",
+    authorAvatar: initialEvent?.authorAvatar || user?.imageUrl,
+    attendeeAvatars: initialEvent?.attendeeAvatars ?? [],
+    attendeeCount: initialEvent?.attendeeCount ?? 0,
+    interestedCount: initialEvent?.interestedCount ?? 0,
+    capacity,
+    price: isFree ? 0 : parseFloat(priceMen || "0"),
+    priceWomen: isFree ? 0 : parseFloat(priceWomen || "0"),
+    isMultiplePrices,
+    isFreeEvent: isFree,
+    paymentMethod,
+    contactPhone: contactPhone.trim(),
+    externalTicketUrl:
+      paymentMethod === "external" ? externalTicketUrl.trim() : undefined,
+    hideExactAddress,
+    isGoing: true,
+    isOwner: true,
+    rating: 0,
+  };
+
   const handleSubmit = async () => {
-    if (!isValid || !previewDraft) return;
+    if (!isValid) {
+      Alert.alert(
+        "Faltan datos",
+        "Por favor ingresa un título y una ubicación válida.",
+      );
+      return;
+    }
     setSubmitting(true);
     try {
       const uploadedMedia = await Promise.all(
         previewDraft.media.map(async (item) => {
-          if (item.type === 'video') {
-             const url = await uploadMediaToSupabase(item.uri, true);
-             return { type: 'video', uri: url } as EventMediaItem;
+          if (item.type === "video") {
+            const url = await uploadMediaToSupabase(item.uri, true);
+            return { type: "video", uri: url } as EventMediaItem;
           } else {
-             const uri = typeof item.source === 'object' && 'uri' in item.source ? item.source.uri : undefined;
-             const base64 = item.base64;
-             if (uri) {
-                const url = await uploadMediaToSupabase(uri, false, base64);
-                return { type: 'image', source: { uri: url } } as EventMediaItem;
-             }
-             return item;
+            const uri =
+              typeof item.source === "object" && "uri" in item.source
+                ? item.source.uri
+                : undefined;
+            const base64 = item.base64;
+            if (uri) {
+              const url = await uploadMediaToSupabase(uri, false, base64);
+              return {
+                type: "image",
+                source: { uri: url },
+              } as EventMediaItem;
+            }
+            return item;
           }
-        })
+        }),
       );
-      
+
       const finalDraft = { ...previewDraft, media: uploadedMedia };
       await onSubmit(finalDraft);
     } finally {
@@ -292,294 +350,259 @@ const EventForm = ({
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
-      className="flex-1 page-all bg-background"
+      className="flex-1 bg-background"
     >
+      {/* Barra de navegación superior con botón atrás */}
+      <View className="flex-row items-center justify-between px-4 py-3 border-b border-border/40">
+        <Pressable
+          onPress={() => router.back()}
+          hitSlop={10}
+          className="size-9 rounded-full bg-card items-center justify-center active:opacity-75"
+        >
+          <Ionicons name="chevron-back" size={20} color={colors.primary} />
+        </Pressable>
+        <Text className="text-base font-bold text-primary">{screenTitle}</Text>
+        <View className="size-9" />
+      </View>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-20"
+        contentContainerClassName="px-4 pt-4 pb-28"
       >
-        <Header isPressable={false} title={screenTitle} />
-
-        <View className="mb-4">
-          <View className="m-form-sec">
-            <Text className="form-section-title">Photos & videos</Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerClassName="gap-3"
-            >
-              {mediaItems.map((item, index) => (
-                <View key={index} className="form-media-thumb">
-                  <EventMediaCarousel
-                    media={[item]}
-                    className="form-media-thumb-media"
-                  />
-                  <Pressable
-                    className="form-media-thumb-remove"
-                    onPress={() => removeMediaItem(index)}
-                  >
-                    <Ionicons name="close" size={14} color="#f5f4f2" />
-                  </Pressable>
-                </View>
-              ))}
-
-              {mediaItems.length < MAX_MEDIA_ITEMS && (
-                <Pressable
-                  className="form-media-add-tile"
-                  onPress={pickCoverMedia}
-                >
-                  <Ionicons name="add" size={22} color="#b24bfb" />
-                </Pressable>
-              )}
-            </ScrollView>
-            {mediaItems.length === 0 && (
-              <Text className="form-photo-picker-text mt-2">
-                Add up to {MAX_MEDIA_ITEMS} photos or videos — the first one
-                becomes the cover.
-              </Text>
-            )}
+        {/* ================= 1. MULTIMEDIA Y PORTADA ================= */}
+        <View className="mb-2">
+          <View className="flex-row items-center justify-between mb-3">
+            <Text className="text-xs font-bold text-muted-foreground tracking-wider uppercase">
+              Multimedia y Portada
+            </Text>
+            <Text className="text-xs font-bold text-accent-pink">
+              {mediaItems.length}/{MAX_MEDIA_ITEMS}
+            </Text>
           </View>
 
-          <Separator type="component" />
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerClassName="gap-3"
+          >
+            {mediaItems.map((item, index) => (
+              <View
+                key={index}
+                className="w-32 h-24 rounded-2xl overflow-hidden bg-card border border-border relative"
+              >
+                <EventMediaCarousel
+                  media={[item]}
+                  className="w-full h-full"
+                />
 
-          <View className="auth-field mt-5">
-            <Text className="form-section-title">Title</Text>
+                {/* Badge Portada en la primera imagen */}
+                {index === 0 && (
+                  <View className="absolute top-2 left-2 bg-accent-pink px-2 py-0.5 rounded-full z-10 shadow-sm">
+                    <Text className="text-[10px] font-bold text-white">
+                      Portada
+                    </Text>
+                  </View>
+                )}
+
+                {/* Botón eliminar imagen */}
+                <Pressable
+                  className="absolute top-2 right-2 size-5 rounded-full bg-black/60 items-center justify-center z-10"
+                  onPress={() => removeMediaItem(index)}
+                  hitSlop={6}
+                >
+                  <Ionicons name="close" size={12} color="#ffffff" />
+                </Pressable>
+              </View>
+            ))}
+
+            {/* Tile para añadir foto o video */}
+            {mediaItems.length < MAX_MEDIA_ITEMS && (
+              <Pressable
+                onPress={pickCoverMedia}
+                className="w-32 h-24 rounded-2xl bg-card border border-dashed border-border items-center justify-center active:opacity-75"
+              >
+                <View className="size-9 rounded-full bg-accent-pink/15 items-center justify-center mb-1.5">
+                  <Ionicons
+                    name="image-outline"
+                    size={20}
+                    color={colors.accentPink}
+                  />
+                </View>
+                <Text className="text-[11px] font-semibold text-primary text-center px-2">
+                  Añadir foto o video
+                </Text>
+              </Pressable>
+            )}
+          </ScrollView>
+
+          <Text className="text-xs text-muted-foreground mt-2.5 leading-relaxed">
+            Sube hasta {MAX_MEDIA_ITEMS} fotos/videos con el plan Free. La
+            primera será la portada principal de tu evento.
+          </Text>
+        </View>
+
+        {/* ================= 2. INFORMACIÓN BÁSICA ================= */}
+        <View className="mt-5">
+          <Text className="text-xs font-bold text-muted-foreground tracking-wider uppercase mb-3">
+            Información Básica
+          </Text>
+
+          {/* Título del evento */}
+          <View>
+            <Text className="text-xs font-semibold text-muted-foreground mb-1.5">
+              Título del evento
+            </Text>
             <TextInput
-              className="auth-input"
-              placeholder="What's it called?"
-              placeholderTextColor="rgba(245, 244, 242, 0.4)"
+              className="bg-card text-primary text-sm font-semibold px-3.5 py-3 rounded-xl border border-border"
+              placeholder="Ej. Sunset Rooftop Sessions"
+              placeholderTextColor={colors.mutedForeground}
               value={title}
               onChangeText={setTitle}
             />
           </View>
 
-          <View className="auth-field mt-5">
-            <Text className="form-section-title">Description</Text>
+          {/* Tipo de evento (Categorías) */}
+          <View className="mt-4">
+            <Text className="text-xs font-semibold text-muted-foreground mb-2">
+              Tipo de evento
+            </Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerClassName="gap-2"
+            >
+              {EVENT_CATEGORIES.map((item) => {
+                const active = category === item;
+                return (
+                  <Pressable
+                    key={item}
+                    onPress={() => setCategory(item)}
+                    className={
+                      active
+                        ? "px-4 py-2 rounded-full bg-accent-pink border border-accent-pink active:opacity-85"
+                        : "px-4 py-2 rounded-full bg-card border border-border active:opacity-85"
+                    }
+                  >
+                    <Text
+                      className={
+                        active
+                          ? "text-xs font-bold text-white"
+                          : "text-xs font-medium text-primary"
+                      }
+                    >
+                      {item}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          {/* Selector de Género Musical Múltiple */}
+          <MusicTypeSelector
+            selected={musicTypes}
+            onChange={setMusicTypes}
+          />
+
+          {/* Detalles, Vibra y Reglas */}
+          <View className="mt-4">
+            <View className="flex-row items-center justify-between mb-1.5">
+              <Text className="text-xs font-semibold text-muted-foreground">
+                Detalles, Vibra y Reglas
+              </Text>
+              <Text className="text-[11px] text-muted-foreground font-medium">
+                Opcional
+              </Text>
+            </View>
             <TextInput
-              className="auth-input"
-              placeholder="What should people know before they come?"
-              placeholderTextColor="rgba(245, 244, 242, 0.4)"
+              className="bg-card text-primary text-sm font-normal p-3.5 rounded-xl border border-border min-h-[90px]"
+              placeholder="Vibe nocturno en terraza privada frente al mar con vista panorámica. Sunset cocktails de cortesía a los primeros 20 en llegar. Dress code: Smart Casual / Party chic..."
+              placeholderTextColor={colors.mutedForeground}
               value={description}
               onChangeText={setDescription}
               multiline
               numberOfLines={4}
-              style={{ height: 100, textAlignVertical: "top" }}
+              style={{ textAlignVertical: "top" }}
             />
-          </View>
-
-          <View className="form-row m-form-sec-title">
-            <Pressable
-              className="form-picker-btn"
-              onPress={() => setShowDatePicker(true)}
-            >
-              <View className="form-picker-icon-wrap">
-                <Ionicons name="calendar-outline" size={17} color="#b24bfb" />
-              </View>
-              <View className="form-picker-text-wrap">
-                <Text className="form-picker-label">Date</Text>
-                <Text
-                  className={
-                    date ? "form-picker-value" : "form-picker-placeholder"
-                  }
-                >
-                  {date ? formatDate(date) : "Select date"}
-                </Text>
-              </View>
-            </Pressable>
-
-            <Pressable
-              className="form-picker-btn"
-              onPress={() => setShowTimePicker(true)}
-            >
-              <View className="form-picker-icon-wrap">
-                <Ionicons name="time-outline" size={17} color="#b24bfb" />
-              </View>
-              <View className="form-picker-text-wrap">
-                <Text className="form-picker-label">Time</Text>
-                <Text
-                  className={
-                    time ? "form-picker-value" : "form-picker-placeholder"
-                  }
-                >
-                  {time ? formatTime(time) : "Select time"}
-                </Text>
-              </View>
-            </Pressable>
-          </View>
-
-          {showDatePicker && (
-            <DateTimePicker
-              value={date ?? new Date()}
-              mode="date"
-              minimumDate={new Date()}
-              onChange={handleDateChange}
-            />
-          )}
-          {showTimePicker && (
-            <DateTimePicker
-              value={time ?? new Date()}
-              mode="time"
-              onChange={handleTimeChange}
-            />
-          )}
-        </View>
-
-        <Separator type="component" />
-
-        <View className="m-form-sec">
-          <Text className="form-section-title">Location</Text>
-          <Pressable
-            className="form-picker-btn"
-            onPress={() => router.push("/create-location")}
-          >
-            <View className="form-picker-icon-wrap">
-              <Ionicons name="location-outline" size={17} color="#b24bfb" />
-            </View>
-            <View className="form-picker-text-wrap">
-              <Text className="form-picker-label">Address</Text>
-              <Text
-                className={
-                  location ? "form-picker-value" : "form-picker-placeholder"
-                }
-                numberOfLines={1}
-              >
-                {location ? location.address : "Set location on map"}
-              </Text>
-            </View>
-            <Ionicons
-              name="chevron-forward"
-              size={16}
-              color="rgba(245, 244, 242, 0.4)"
-            />
-          </Pressable>
-        </View>
-
-        <Separator type="component" />
-
-        <View className="m-form-sec">
-          <Text className="form-section-title">Category</Text>
-          <View className="form-chip-row">
-            {EVENT_CATEGORIES.map((item) => {
-              const active = category === item;
-              return (
-                <Pressable
-                  key={item}
-                  onPress={() => setCategory(active ? null : item)}
-                  className={
-                    active ? "form-chip form-chip-active" : "form-chip"
-                  }
-                >
-                  <Text
-                    className={
-                      active
-                        ? "form-chip-text form-chip-text-active"
-                        : "form-chip-text"
-                    }
-                  >
-                    {item}
-                  </Text>
-                </Pressable>
-              );
-            })}
           </View>
         </View>
 
-        <Separator type="component" />
+        {/* ================= 3. FECHA Y HORARIOS ================= */}
+        <DateTimeCard
+          date={date}
+          onDateChange={setDate}
+          startTime={startTime}
+          onStartTimeChange={setStartTime}
+          endTime={endTime}
+          onEndTimeChange={setEndTime}
+        />
 
-        <View className="m-form-sec">
-          <Text className="form-section-title">Extras</Text>
+        {/* ================= 4. UBICACIÓN Y PRIVACIDAD ================= */}
+        <LocationPrivacyCard
+          location={location}
+          hideExactAddress={hideExactAddress}
+          onHideExactAddressChange={setHideExactAddress}
+        />
 
-          <View className="form-toggle-row">
-            <View className="flex w-65">
-              <Text className="form-toggle-label">Unlimited capacity</Text>
-              <Text className="form-toggle-sublabel">
-                Make your party enable for everyone or not.
-              </Text>
-            </View>
-            <AnimatedToggle
-              value={unlimitedCapacity}
-              onValueChange={setUnlimitedCapacity}
-            />
-          </View>
-          {!unlimitedCapacity && (
-            <View className="form-field-extra">
-              <View className="form-field-extra-sub">
-                <Text className="form-section-subtitle">Capacity</Text>
-                <TextInput
-                  className="auth-input"
-                  placeholder="e.g. 50"
-                  placeholderTextColor="rgba(245, 244, 242, 0.4)"
-                  value={capacity}
-                  keyboardType="number-pad"
-                  onChangeText={setCapacity}
-                />
-              </View>
-            </View>
-          )}
+        {/* ================= 5. AFORO Y APORTACIÓN ================= */}
+        <PricingAforoSection
+          isFree={isFree}
+          onIsFreeChange={setIsFree}
+          isMultiplePrices={isMultiplePrices}
+          onIsMultiplePricesChange={setIsMultiplePrices}
+          priceMen={priceMen}
+          onPriceMenChange={setPriceMen}
+          priceWomen={priceWomen}
+          onPriceWomenChange={setPriceWomen}
+          capacity={capacity}
+          onCapacityChange={setCapacity}
+        />
 
-          <View className="form-toggle-row">
-            <View className="flex w-65">
-              <Text className="form-toggle-label">Free event</Text>
-              <Text className="form-toggle-sublabel">
-                Make your party free for everyone or not.
-              </Text>
-            </View>
-            <AnimatedToggle value={isFree} onValueChange={setIsFree} />
-          </View>
-          {!isFree && (
-            <>
-              <View className="form-field-extra"></View>
-              <View className="form-field-extra">
-                <View className="form-field-extra-sub">
-                  <Text className="form-section-subtitle">Price</Text>
-                  <TextInput
-                    className="auth-input"
-                    placeholder="e.g. 15"
-                    placeholderTextColor="rgba(245, 244, 242, 0.4)"
-                    value={price}
-                    keyboardType="decimal-pad"
-                    onChangeText={setPrice}
-                  />
-                </View>
-              </View>
-            </>
-          )}
-        </View>
+        {/* ================= 6. MEDIOS DE PAGO Y COORDINACIÓN ================= */}
+        <PaymentMethodCard
+          method={paymentMethod}
+          onMethodChange={setPaymentMethod}
+          externalUrl={externalTicketUrl}
+          onExternalUrlChange={setExternalTicketUrl}
+          contactPhone={contactPhone}
+          onContactPhoneChange={setContactPhone}
+        />
 
-        <Separator type="component" />
-
-        <Text className="form-preview-label">Preview</Text>
-        {previewDraft ? (
-          <EventCard {...previewDraft} onPress={() => {}} />
-        ) : (
-          <View className="form-preview-empty">
-            <Ionicons
-              name="eye-outline"
-              size={22}
-              color="rgba(245, 244, 242, 0.4)"
-            />
-            <Text className="form-preview-empty-text">
-              Fill in the required fields to see how your event will look.
+        {/* ================= 7. VISTA PREVIA PARA FIESTEROS ================= */}
+        <View className="mt-6">
+          <View className="flex-row items-center justify-between mb-3">
+            <Text className="text-xs font-bold text-muted-foreground tracking-wider uppercase">
+              Vista Previa para Fiesteros
+            </Text>
+            <Text className="text-xs font-bold text-accent-pink">
+              Tarjeta en Feed
             </Text>
           </View>
-        )}
 
+          <EventCard {...previewDraft} onPress={() => {}} />
+        </View>
+
+        {/* ================= 8. BOTÓN DE PUBLICACIÓN ================= */}
         <Pressable
           className={
-            isValid
-              ? "form-publish-btn"
-              : "form-publish-btn form-publish-btn-disabled"
+            isValid && !submitting
+              ? "w-full bg-accent-pink py-4 rounded-2xl items-center justify-center mt-6 shadow-lg shadow-accent-pink/20 active:opacity-85"
+              : "w-full bg-card py-4 rounded-2xl items-center justify-center mt-6 border border-border opacity-50"
           }
           onPress={handleSubmit}
           disabled={!isValid || submitting}
         >
-          <Text className="form-publish-text">
+          <Text
+            className={
+              isValid && !submitting
+                ? "text-white font-bold text-base tracking-wide"
+                : "text-muted-foreground font-bold text-base"
+            }
+          >
             {submitting ? submittingLabel : submitLabel}
           </Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-export default EventForm;
+}

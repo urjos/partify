@@ -2,10 +2,18 @@ import EventMediaCarousel from "@/components/event/EventMediaCarousel";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
+import { openWhatsApp } from "@/lib/whatsapp";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, Pressable, Text, View } from "react-native";
+import {
+  GestureResponderEvent,
+  Image,
+  Linking,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 
 dayjs.locale("es");
 
@@ -19,8 +27,22 @@ const EventCard = ({
   author,
   authorAvatar,
   rating,
+  paymentMethod,
+  contactPhone,
+  externalTicketUrl,
   onPress,
+  onContactPress,
 }: EventCardProps) => {
+  const handleContactPress = (e: GestureResponderEvent) => {
+    e.stopPropagation();
+    if (onContactPress) {
+      onContactPress();
+    } else if (paymentMethod === "external" && externalTicketUrl) {
+      Linking.openURL(externalTicketUrl).catch(() => {});
+    } else {
+      openWhatsApp(contactPhone, title);
+    }
+  };
   return (
     <Pressable onPress={onPress} className="event-card">
       <View className="event-image-wrap">
@@ -52,7 +74,7 @@ const EventCard = ({
           <Text numberOfLines={1} className="event-title">
             {title}
           </Text>
-          {rating && (
+          {rating && rating > 0 ? (
             <View className="event-rating-row">
               <Text className="event-rating-text">{rating}</Text>
               <Image
@@ -62,7 +84,7 @@ const EventCard = ({
                 resizeMode="contain"
               />
             </View>
-          )}
+          ) : null}
         </View>
 
         <View className="event-footer-row">
@@ -96,7 +118,11 @@ const EventCard = ({
           </View>
 
           <View className="event-actions-row">
-            <Pressable className="event-contact-btn">
+            <Pressable
+              className="event-contact-btn active:opacity-75"
+              onPress={handleContactPress}
+              hitSlop={8}
+            >
               <Image
                 source={icons.messageSquareText}
                 className="event-message-icon"

@@ -3,6 +3,7 @@ import Separator from "@/components/Separator";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
+import { openWhatsApp } from "@/lib/whatsapp";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { router, useLocalSearchParams } from "expo-router";
@@ -220,6 +221,33 @@ export default function EventDetail() {
             </Text>
           </View>
 
+          {/* Botón de Contacto Directo / Entrada */}
+          {!isOwner ? (
+            <View className="my-2">
+              {event.paymentMethod === "external" && event.externalTicketUrl ? (
+                <Pressable
+                  className="w-full bg-accent-pink py-3.5 px-4 rounded-2xl flex-row items-center justify-center gap-2 active:opacity-85 shadow-md shadow-accent-pink/30"
+                  onPress={() => Linking.openURL(event.externalTicketUrl!)}
+                >
+                  <Ionicons name="ticket-outline" size={20} color="#ffffff" />
+                  <Text className="text-white font-bold text-sm tracking-wide">
+                    Comprar Entrada Oficial
+                  </Text>
+                </Pressable>
+              ) : (
+                <Pressable
+                  className="w-full bg-[#25D366] py-3.5 px-4 rounded-2xl flex-row items-center justify-center gap-2 active:opacity-85 shadow-md shadow-[#25D366]/30"
+                  onPress={() => openWhatsApp(event.contactPhone, event.title)}
+                >
+                  <Ionicons name="logo-whatsapp" size={20} color="#ffffff" />
+                  <Text className="text-white font-bold text-sm tracking-wide">
+                    Contactar Anfitrión por WhatsApp
+                  </Text>
+                </Pressable>
+              )}
+            </View>
+          ) : null}
+
           <Text className="event-detail-section-title">Comments</Text>
           <View className="event-detail-comments-placeholder">
             <Ionicons
@@ -255,44 +283,71 @@ export default function EventDetail() {
               </Pressable>
             </View>
           ) : (
-            <View className="event-detail-segment">
-              <Pressable
-                onPress={() => toggleStatus("going")}
-                className={
-                  status === "going"
-                    ? "event-detail-segment-btn event-detail-segment-btn-active"
-                    : "event-detail-segment-btn"
-                }
-              >
-                <Text
+            <>
+              <View className="event-detail-segment">
+                <Pressable
+                  onPress={() => toggleStatus("going")}
                   className={
                     status === "going"
-                      ? "event-detail-segment-btn-text event-detail-segment-btn-text-active"
-                      : "event-detail-segment-btn-text"
+                      ? "event-detail-segment-btn event-detail-segment-btn-active"
+                      : "event-detail-segment-btn"
                   }
                 >
-                  I'm going
-                </Text>
-              </Pressable>
-              <Pressable
-                onPress={() => toggleStatus("interested")}
-                className={
-                  status === "interested"
-                    ? "event-detail-segment-btn event-detail-segment-btn-active"
-                    : "event-detail-segment-btn"
-                }
-              >
-                <Text
+                  <Text
+                    className={
+                      status === "going"
+                        ? "event-detail-segment-btn-text event-detail-segment-btn-text-active"
+                        : "event-detail-segment-btn-text"
+                    }
+                  >
+                    I'm going
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => toggleStatus("interested")}
                   className={
                     status === "interested"
-                      ? "event-detail-segment-btn-text event-detail-segment-btn-text-active"
-                      : "event-detail-segment-btn-text"
+                      ? "event-detail-segment-btn event-detail-segment-btn-active"
+                      : "event-detail-segment-btn"
                   }
                 >
-                  Interested
-                </Text>
+                  <Text
+                    className={
+                      status === "interested"
+                        ? "event-detail-segment-btn-text event-detail-segment-btn-text-active"
+                        : "event-detail-segment-btn-text"
+                    }
+                  >
+                    Interested
+                  </Text>
+                </Pressable>
+              </View>
+
+              <Pressable
+                onPress={() => {
+                  if (
+                    event.paymentMethod === "external" &&
+                    event.externalTicketUrl
+                  ) {
+                    Linking.openURL(event.externalTicketUrl);
+                  } else {
+                    openWhatsApp(event.contactPhone, event.title);
+                  }
+                }}
+                className="size-12 rounded-2xl bg-[#25D366] items-center justify-center active:opacity-80 shadow-md shadow-[#25D366]/30"
+                hitSlop={6}
+              >
+                <Ionicons
+                  name={
+                    event.paymentMethod === "external"
+                      ? "ticket-outline"
+                      : "logo-whatsapp"
+                  }
+                  size={24}
+                  color="#ffffff"
+                />
               </Pressable>
-            </View>
+            </>
           )}
         </View>
       </SafeAreaView>

@@ -32,6 +32,7 @@ declare global {
     distanceLabel?: string;
     location: string;
     latitude?: number;
+    typeMusic?: string;
     longitude?: number;
     description: string;
     category: string;
@@ -41,13 +42,21 @@ declare global {
     interestedCount: number;
     capacity?: number;
     price?: number;
+    priceWomen?: number;
+    isMultiplePrices?: boolean;
     isFreeEvent?: boolean;
+    paymentMethod?: "chat" | "external";
+    externalTicketUrl?: string;
+    contactPhone?: string;
+    hideExactAddress?: boolean;
+    closingAt?: string;
     isGoing?: boolean;
     isOwner?: boolean;
   }
 
   interface EventCardProps extends Omit<EventItem, "id"> {
     onPress: () => void;
+    onContactPress?: () => void;
   }
 
   type AttendanceStatus = "going" | "interested" | null;

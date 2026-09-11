@@ -23,9 +23,9 @@ const CreateEvent = () => {
 
   return (
     <EventForm
-      screenTitle="New event"
-      submitLabel="Publish event"
-      submittingLabel="Publishing..."
+      screenTitle="Crear Evento"
+      submitLabel="Publicar evento"
+      submittingLabel="Publicando..."
       onSubmit={handleSubmit}
     />
   );

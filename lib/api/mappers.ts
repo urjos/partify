@@ -13,6 +13,7 @@ type ApiEvent = {
   location: string;
   latitude: number;
   longitude: number;
+  typeMusic?: string;
   capacity?: number;
   isFreeEvent: boolean;
   price: number;
@@ -36,6 +37,7 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   title: apiEvent.title,
   description: apiEvent.description,
   category: apiEvent.category,
+  typeMusic: apiEvent.typeMusic,
   startAt: apiEvent.startAt,
   dateLabel: apiEvent.dateLabel,
   location: apiEvent.location,
@@ -66,6 +68,7 @@ export const mapEventDraftToApiPayload = (draft: Omit<EventItem, "id">) => ({
   title: draft.title,
   description: draft.description,
   category: draft.category,
+  typeMusic: draft.typeMusic,
   startAt: draft.startAt,
   media: draft.media.map((item) =>
     item.type === "video"
