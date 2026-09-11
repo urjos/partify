@@ -1,5 +1,6 @@
 import back from "@/assets/icons/back.png";
 import bookmark from "@/assets/icons/bookmark.png";
+import chevronDown from "@/assets/icons/chevron-down.png";
 import clock from "@/assets/icons/clock.png";
 import ellipsis from "@/assets/icons/ellipsis-vertical.png";
 import filter from "@/assets/icons/filter.png";
@@ -48,6 +49,7 @@ export const icons = {
   mapPin,
   loader,
   minus,
+  chevronDown,
 } as const;
 
 export type IconKey = keyof typeof icons;

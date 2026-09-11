@@ -1,5 +1,6 @@
 import MapEventModal from "@/components/search/MapEventModal";
 import SearchFilterModal, {
+  DEFAULT_FILTERS,
   SearchFilters,
 } from "@/components/search/SearchFilterModal";
 import SearchMap from "@/components/search/SearchMap";
@@ -7,6 +8,7 @@ import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import "@/global.css";
 import { useEventStore } from "@/lib/store/eventStore";
+import dayjs from "dayjs";
 import { router } from "expo-router";
 import { styled } from "nativewind";
 import { useState } from "react";
@@ -14,17 +16,6 @@ import { Image, Pressable, TextInput, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
-
-const DEFAULT_FILTERS: SearchFilters = {
-  distance: 25,
-  category: null,
-  schedule: "todos",
-  priceMin: "0",
-  priceMax: "0",
-  instantConfirm: false,
-  openBar: false,
-  corkageFree: false,
-};
 
 function getDistanceInKm(
   lat1: number,
@@ -57,10 +48,15 @@ export default function Search() {
     useState<SearchFilters>(DEFAULT_FILTERS);
   const { events } = useEventStore();
 
+  const isDateChanged =
+    !dayjs(activeFilters.date).isSame(dayjs(), "day") ||
+    activeFilters.startTime !== DEFAULT_FILTERS.startTime ||
+    activeFilters.endTime !== DEFAULT_FILTERS.endTime;
+
   const hasActiveFilters =
     activeFilters.distance !== DEFAULT_FILTERS.distance ||
     activeFilters.category !== null ||
-    activeFilters.schedule !== "todos" ||
+    isDateChanged ||
     (activeFilters.priceMin !== "" && activeFilters.priceMin !== "0") ||
     (activeFilters.priceMax !== "" && activeFilters.priceMax !== "0") ||
     activeFilters.instantConfirm ||
@@ -113,12 +109,21 @@ export default function Search() {
       matchesDistance = distanceInKm <= activeFilters.distance;
     }
 
+    // Filtro de fecha
+    let matchesSchedule = true;
+    if (isDateChanged && event.startAt) {
+      const eventDate = dayjs(event.startAt);
+      const filterDate = dayjs(activeFilters.date);
+      matchesSchedule = eventDate.isSame(filterDate, "day");
+    }
+
     return (
       matchesQuery &&
       matchesCategory &&
       matchesMinPrice &&
       matchesMaxPrice &&
-      matchesDistance
+      matchesDistance &&
+      matchesSchedule
     );
   });
 
