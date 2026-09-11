@@ -9,6 +9,7 @@ type ApiEvent = {
   description: string;
   category: string;
   startAt: string;
+  closingAt?: string;
   dateLabel: string;
   location: string;
   latitude: number;
@@ -17,6 +18,12 @@ type ApiEvent = {
   capacity?: number;
   isFreeEvent: boolean;
   price: number;
+  priceWomen?: number;
+  isMultiplePrices?: boolean;
+  paymentMethod?: "chat" | "external";
+  contactPhone?: string;
+  externalTicketUrl?: string;
+  hideExactAddress?: boolean;
   author: string;
   authorAvatar?: string;
   attendeeAvatars: string[];
@@ -39,6 +46,7 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   category: apiEvent.category,
   typeMusic: apiEvent.typeMusic,
   startAt: apiEvent.startAt,
+  closingAt: apiEvent.closingAt,
   dateLabel: apiEvent.dateLabel,
   location: apiEvent.location,
   latitude: apiEvent.latitude,
@@ -46,6 +54,12 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   capacity: apiEvent.capacity,
   isFreeEvent: apiEvent.isFreeEvent,
   price: apiEvent.price,
+  priceWomen: apiEvent.priceWomen,
+  isMultiplePrices: apiEvent.isMultiplePrices,
+  paymentMethod: apiEvent.paymentMethod ?? "chat",
+  contactPhone: apiEvent.contactPhone ?? "",
+  externalTicketUrl: apiEvent.externalTicketUrl ?? "",
+  hideExactAddress: apiEvent.hideExactAddress ?? false,
   author: apiEvent.author,
   authorAvatar: apiEvent.authorAvatar,
   attendeeAvatars: apiEvent.attendeeAvatars.map((uri) => ({ uri })),
@@ -61,15 +75,15 @@ const getImageUri = (source: ImageSourcePropType): string | undefined => {
   return undefined;
 };
 
-// Dirección inversa: lo que arma EventForm (media con source/uri sueltos,
-// location como string + lat/lng planos) hacia el body que espera el
-// controller (media con url, location como objeto).
+// Dirección inversa: lo que arma EventForm hacia el body que espera el
+// controller (media con url, location como objeto, contactPhone, etc.).
 export const mapEventDraftToApiPayload = (draft: Omit<EventItem, "id">) => ({
   title: draft.title,
   description: draft.description,
   category: draft.category,
   typeMusic: draft.typeMusic,
   startAt: draft.startAt,
+  closingAt: draft.closingAt,
   media: draft.media.map((item) =>
     item.type === "video"
       ? { type: "video", url: item.uri }
@@ -83,4 +97,10 @@ export const mapEventDraftToApiPayload = (draft: Omit<EventItem, "id">) => ({
   capacity: draft.capacity,
   isFreeEvent: draft.isFreeEvent,
   price: draft.price,
+  priceWomen: draft.priceWomen,
+  isMultiplePrices: draft.isMultiplePrices,
+  paymentMethod: draft.paymentMethod ?? "chat",
+  contactPhone: draft.contactPhone ?? "",
+  externalTicketUrl: draft.externalTicketUrl ?? "",
+  hideExactAddress: draft.hideExactAddress ?? false,
 });

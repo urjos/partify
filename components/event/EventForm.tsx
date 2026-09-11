@@ -5,6 +5,7 @@ import LocationPrivacyCard from "@/components/event/LocationPrivacyCard";
 import MusicTypeSelector from "@/components/event/MusicTypeSelector";
 import PaymentMethodCard from "@/components/event/PaymentMethodCard";
 import PricingAforoSection from "@/components/event/PricingAforoSection";
+import HorizontalChips from "@/components/shared/HorizontalChips";
 import { EVENT_CATEGORIES } from "@/constants/categories";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
@@ -28,6 +29,11 @@ import {
 } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
+const EVENT_CATEGORY_ITEMS = EVENT_CATEGORIES.map((item) => ({
+  id: item,
+  label: item,
+}));
+
 const SafeAreaView = styled(RNSafeAreaView);
 
 const MAX_MEDIA_ITEMS = 3;
@@ -41,8 +47,8 @@ type EventFormProps = {
 };
 
 export default function EventForm({
-  screenTitle = "Crear Evento",
-  submitLabel = "Publicar evento",
+  screenTitle = "Crear evento",
+  submitLabel = "Publicar",
   submittingLabel = "Publicando...",
   initialEvent,
   onSubmit,
@@ -68,7 +74,7 @@ export default function EventForm({
   const [musicTypes, setMusicTypes] = useState<string[]>(
     initialEvent?.typeMusic
       ? initialEvent.typeMusic.split(",").map((s) => s.trim())
-      : ["Reggaeton", "Techno"],
+      : ["Reggaeton", "Salsa"],
   );
   const [description, setDescription] = useState(
     initialEvent?.description ?? "",
@@ -191,7 +197,6 @@ export default function EventForm({
     setMediaItems((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Subida a Supabase Storage
   const uploadMediaToSupabase = async (
     uri: string,
     isVideo: boolean,
@@ -357,25 +362,27 @@ export default function EventForm({
         <Pressable
           onPress={() => router.back()}
           hitSlop={10}
-          className="size-9 rounded-full bg-card items-center justify-center active:opacity-75"
+          className="size-9 rounded-full items-center justify-center active:opacity-75"
         >
-          <Ionicons name="chevron-back" size={20} color={colors.primary} />
+          <Image
+            source={icons.back}
+            tintColor={colors.primary}
+            className="size-7"
+          />
         </Pressable>
-        <Text className="text-base font-bold text-primary">{screenTitle}</Text>
+        <Text className="text-xl font-bold text-primary">{screenTitle}</Text>
         <View className="size-9" />
       </View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="px-4 pt-4 pb-28"
+        contentContainerClassName="px-4 pt-4 pb-28 gap-6"
       >
         {/* ================= 1. MULTIMEDIA Y PORTADA ================= */}
-        <View className="mb-2">
-          <View className="flex-row items-center justify-between mb-3">
-            <Text className="text-xs font-bold text-muted-foreground tracking-wider uppercase">
-              Multimedia y Portada
-            </Text>
-            <Text className="text-xs font-bold text-accent-pink">
+        <View className="gap-2">
+          <View className="flex-row items-center justify-between">
+            <Text className="text-xl font-bold text-primary">Multimedia</Text>
+            <Text className="text-xs font-bold text-primary">
               {mediaItems.length}/{MAX_MEDIA_ITEMS}
             </Text>
           </View>
@@ -383,17 +390,14 @@ export default function EventForm({
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerClassName="gap-3"
+            contentContainerClassName="gap-2"
           >
             {mediaItems.map((item, index) => (
               <View
                 key={index}
                 className="w-32 h-24 rounded-2xl overflow-hidden bg-card border border-border relative"
               >
-                <EventMediaCarousel
-                  media={[item]}
-                  className="w-full h-full"
-                />
+                <EventMediaCarousel media={[item]} className="w-full h-full" />
 
                 {/* Badge Portada en la primera imagen */}
                 {index === 0 && (
@@ -419,112 +423,73 @@ export default function EventForm({
             {mediaItems.length < MAX_MEDIA_ITEMS && (
               <Pressable
                 onPress={pickCoverMedia}
-                className="w-32 h-24 rounded-2xl bg-card border border-dashed border-border items-center justify-center active:opacity-75"
+                className="w-32 h-28 rounded-2xl bg-card border-none items-center justify-center active:opacity-75"
               >
-                <View className="size-9 rounded-full bg-accent-pink/15 items-center justify-center mb-1.5">
-                  <Ionicons
-                    name="image-outline"
-                    size={20}
-                    color={colors.accentPink}
+                <View className="size-9  items-center justify-center">
+                  <Image
+                    source={icons.plus}
+                    className="size-10"
+                    tintColor={colors.primary}
                   />
                 </View>
-                <Text className="text-[11px] font-semibold text-primary text-center px-2">
-                  Añadir foto o video
-                </Text>
               </Pressable>
             )}
           </ScrollView>
 
-          <Text className="text-xs text-muted-foreground mt-2.5 leading-relaxed">
+          <Text className="text-xs text-muted-foreground leading-relaxed">
             Sube hasta {MAX_MEDIA_ITEMS} fotos/videos con el plan Free. La
             primera será la portada principal de tu evento.
           </Text>
         </View>
 
         {/* ================= 2. INFORMACIÓN BÁSICA ================= */}
-        <View className="mt-5">
-          <Text className="text-xs font-bold text-muted-foreground tracking-wider uppercase mb-3">
-            Información Básica
+        {/* Título del evento */}
+        <View className="gap-2">
+          <Text className="text-xl font-semibold text-primary ">
+            Título del evento
           </Text>
-
-          {/* Título del evento */}
-          <View>
-            <Text className="text-xs font-semibold text-muted-foreground mb-1.5">
-              Título del evento
-            </Text>
-            <TextInput
-              className="bg-card text-primary text-sm font-semibold px-3.5 py-3 rounded-xl border border-border"
-              placeholder="Ej. Sunset Rooftop Sessions"
-              placeholderTextColor={colors.mutedForeground}
-              value={title}
-              onChangeText={setTitle}
-            />
-          </View>
-
-          {/* Tipo de evento (Categorías) */}
-          <View className="mt-4">
-            <Text className="text-xs font-semibold text-muted-foreground mb-2">
-              Tipo de evento
-            </Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerClassName="gap-2"
-            >
-              {EVENT_CATEGORIES.map((item) => {
-                const active = category === item;
-                return (
-                  <Pressable
-                    key={item}
-                    onPress={() => setCategory(item)}
-                    className={
-                      active
-                        ? "px-4 py-2 rounded-full bg-accent-pink border border-accent-pink active:opacity-85"
-                        : "px-4 py-2 rounded-full bg-card border border-border active:opacity-85"
-                    }
-                  >
-                    <Text
-                      className={
-                        active
-                          ? "text-xs font-bold text-white"
-                          : "text-xs font-medium text-primary"
-                      }
-                    >
-                      {item}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
-          </View>
-
-          {/* Selector de Género Musical Múltiple */}
-          <MusicTypeSelector
-            selected={musicTypes}
-            onChange={setMusicTypes}
+          <TextInput
+            className="bg-card text-primary text-sm font-semibold px-3.5 py-3 rounded-xl border-none"
+            value={title}
+            onChangeText={setTitle}
           />
+        </View>
 
-          {/* Detalles, Vibra y Reglas */}
-          <View className="mt-4">
-            <View className="flex-row items-center justify-between mb-1.5">
-              <Text className="text-xs font-semibold text-muted-foreground">
-                Detalles, Vibra y Reglas
-              </Text>
-              <Text className="text-[11px] text-muted-foreground font-medium">
-                Opcional
-              </Text>
-            </View>
-            <TextInput
-              className="bg-card text-primary text-sm font-normal p-3.5 rounded-xl border border-border min-h-[90px]"
-              placeholder="Vibe nocturno en terraza privada frente al mar con vista panorámica. Sunset cocktails de cortesía a los primeros 20 en llegar. Dress code: Smart Casual / Party chic..."
-              placeholderTextColor={colors.mutedForeground}
-              value={description}
-              onChangeText={setDescription}
-              multiline
-              numberOfLines={4}
-              style={{ textAlignVertical: "top" }}
-            />
+        {/* Tipo de evento (Categorías) */}
+        <View className="gap-2">
+          <Text className="text-xl font-semibold text-primary ">
+            Tipo de evento
+          </Text>
+          <HorizontalChips
+            items={EVENT_CATEGORY_ITEMS}
+            selected={category}
+            onSelect={setCategory}
+          />
+        </View>
+
+        {/* Selector de Género Musical Múltiple */}
+        <MusicTypeSelector selected={musicTypes} onChange={setMusicTypes} />
+
+        {/* Detalles, Vibra y Reglas */}
+        <View className="gap-2">
+          <View className="flex-row items-center justify-between">
+            <Text className="text-xl font-semibold text-primary">
+              Detalles, Vibra y Reglas
+            </Text>
+            <Text className="text-[11px] text-muted-foreground font-medium">
+              Opcional
+            </Text>
           </View>
+          <TextInput
+            className="bg-card text-primary text-sm font-normal p-3.5 rounded-xl border-none min-h-[90px]"
+            placeholder="Escribe aqui alguna descripción"
+            placeholderTextColor={colors.mutedForeground}
+            value={description}
+            onChangeText={setDescription}
+            multiline
+            numberOfLines={4}
+            style={{ textAlignVertical: "top" }}
+          />
         </View>
 
         {/* ================= 3. FECHA Y HORARIOS ================= */}

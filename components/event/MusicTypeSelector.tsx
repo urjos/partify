@@ -1,8 +1,9 @@
 import { MUSIC_TYPES } from "@/constants/categories";
+import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Image, Modal, Pressable, ScrollView, Text, View } from "react-native";
 
 interface MusicTypeSelectorProps {
   selected: string[];
@@ -28,50 +29,48 @@ export default function MusicTypeSelector({
   };
 
   return (
-    <View className="mt-4">
+    <View className="gap-2">
       {/* Fila superior: Título y Selector "Elige ⌵" */}
       <View className="flex-row items-center justify-between">
-        <Text className="text-sm font-semibold text-primary">
-          Género Musical Principal
+        <Text className="text-xl font-semibold text-primary">
+          Género musical
         </Text>
         <Pressable
           onPress={() => setModalVisible(true)}
-          className="flex-row items-center px-3 py-1.5 bg-card rounded-full border border-border active:opacity-75"
+          className="flex-row items-center px-3 py-1.5 bg-card rounded-full border-none active:opacity-75 gap-1"
         >
-          <Text className="text-xs font-medium text-primary mr-1">
+          <Text className="text-xs font-bold text-muted-foreground">
             {selected.length > 0 ? `${selected.length} elegidos` : "Elige"}
           </Text>
-          <Ionicons
-            name="chevron-down"
-            size={14}
-            color={colors.mutedForeground}
+          <Image
+            source={icons.chevronDown}
+            className="size-5"
+            tintColor={colors.mutedForeground}
           />
         </Pressable>
       </View>
 
       {/* Chips seleccionados debajo */}
       {selected.length > 0 && (
-        <View className="flex-row flex-wrap gap-2 mt-3">
+        <View className="flex-row flex-wrap gap-2">
           {selected.map((genre) => (
             <View
               key={genre}
-              className="flex-row items-center px-3 py-1.5 bg-card rounded-full border border-border"
+              className="flex-row items-center px-5 py-2.5 bg-card rounded-full border-none"
             >
-              <Ionicons
-                name="musical-note"
-                size={12}
-                color={colors.accentPink}
-                style={{ marginRight: 4 }}
-              />
-              <Text className="text-xs font-medium text-primary mr-2">
+              <Text className="text-sm font-bold text-muted-foreground mr-2">
                 {genre}
               </Text>
               <Pressable
                 onPress={() => removeGenre(genre)}
                 hitSlop={6}
-                className="size-4 items-center justify-center rounded-full bg-muted"
+                className="size-4 items-center justify-center rounded-full"
               >
-                <Ionicons name="close" size={10} color={colors.primary} />
+                <Image
+                  source={icons.x}
+                  className="size-4"
+                  tintColor={colors.mutedForeground}
+                />
               </Pressable>
             </View>
           ))}
@@ -153,9 +152,7 @@ export default function MusicTypeSelector({
               onPress={() => setModalVisible(false)}
               className="w-full bg-accent-pink py-3 rounded-xl items-center justify-center mt-3 active:opacity-85"
             >
-              <Text className="text-white font-semibold text-sm">
-                Listo ({selected.length} seleccionados)
-              </Text>
+              <Text className="text-white font-semibold text-sm">Listo</Text>
             </Pressable>
           </Pressable>
         </Pressable>

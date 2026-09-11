@@ -68,12 +68,10 @@ export default function DateTimeCard({
   };
 
   return (
-    <View className="mt-5">
-      <Text className="text-xs font-bold text-muted-foreground tracking-wider uppercase mb-3">
-        Fecha y Horarios
-      </Text>
+    <View className="">
+      <Text className="text-xl font-bold text-primary ">Fecha y Horarios</Text>
 
-      <View className="bg-card rounded-2xl p-4 border border-border gap-4">
+      <View className="rounded-2xl p-2 border.none gap-2">
         {/* Fila 1: Fecha */}
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center flex-1 mr-3">
@@ -81,11 +79,11 @@ export default function DateTimeCard({
               <Ionicons name="calendar" size={20} color={colors.accentPink} />
             </View>
             <View className="flex-1">
-              <Text className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+              <Text className="text-[11px] font-semibold text-muted-foreground">
                 Fecha
               </Text>
               <Text
-                className="text-sm font-semibold text-primary mt-0.5"
+                className="text-sm font-semibold text-primary"
                 numberOfLines={1}
               >
                 {formatDisplayDateFull(date)}
@@ -95,21 +93,24 @@ export default function DateTimeCard({
 
           <Pressable
             onPress={() => setShowDatePicker(true)}
-            className="px-3.5 py-1.5 bg-muted rounded-full border border-border active:opacity-75"
+            className="px-3.5 py-1. rounded-full border-none active:opacity-75"
           >
-            <Text className="text-xs font-semibold text-primary">Cambiar</Text>
+            |
+            <Text className="text-xs font-bold text-muted-foreground">
+              Cambiar
+            </Text>
           </Pressable>
         </View>
 
         {/* Fila 2: Inicio y Cierre (Dos Columnas) */}
-        <View className="flex-row gap-3 pt-3 border-t border-border/50">
+        <View className="flex-row gap-3 ">
           {/* Columna Inicio */}
           <Pressable
             onPress={() => setActiveTimePicker("start")}
-            className="flex-1 flex-row items-center bg-modal-background p-3 rounded-xl border border-border active:opacity-80"
+            className="flex-1 flex-row items-center justify-center bg-card rounded-xl border-none active:opacity-80"
           >
-            <View className="size-9 rounded-full bg-accent-pink/15 items-center justify-center mr-2.5">
-              <Ionicons name="time" size={18} color={colors.accentPink} />
+            <View className="size-9 rounded-full items-center justify-center">
+              <Ionicons name="time" size={18} color={colors.primary} />
             </View>
             <View>
               <Text className="text-[10px] font-semibold text-muted-foreground uppercase">
@@ -124,14 +125,10 @@ export default function DateTimeCard({
           {/* Columna Cierre */}
           <Pressable
             onPress={() => setActiveTimePicker("end")}
-            className="flex-1 flex-row items-center bg-modal-background p-3 rounded-xl border border-border active:opacity-80"
+            className="flex-1 flex-row items-center justify-center bg-card p-3 rounded-xl border-none active:opacity-80"
           >
-            <View className="size-9 rounded-full bg-muted items-center justify-center mr-2.5">
-              <Ionicons
-                name="moon-outline"
-                size={18}
-                color={colors.mutedForeground}
-              />
+            <View className="size-9 rounded-full items-center justify-center">
+              <Ionicons name="moon-outline" size={18} color={colors.primary} />
             </View>
             <View>
               <Text className="text-[10px] font-semibold text-muted-foreground uppercase">
