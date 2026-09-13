@@ -7,6 +7,7 @@ import clock from "@/assets/icons/clock.png";
 import ellipsis from "@/assets/icons/ellipsis-vertical.png";
 import filter from "@/assets/icons/filter.png";
 import flame from "@/assets/icons/flame.png";
+import heart from "@/assets/icons/heart.png";
 import home from "@/assets/icons/home.png";
 import loader from "@/assets/icons/loader.png";
 import mapPin from "@/assets/icons/map-pin.png";
@@ -60,6 +61,7 @@ export const icons = {
   pencil,
   qrCode,
   checkCircle,
+  heart,
 } as const;
 
 export type IconKey = keyof typeof icons;

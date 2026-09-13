@@ -355,7 +355,7 @@
   }
 
   .event-category-text {
-    @apply text-xs font-sans-bold text-muted uppercase tracking-[0.5px];
+    @apply text-xs font-sans-bold text-muted uppercase tracking-normal;
   }
 
   .event-location-text {
@@ -363,19 +363,19 @@
   }
 
   .event-title {
-    @apply text-2xl font-sans-bold text-primary text-justify;
+    @apply text-2xl font-sans-extrabold text-primary text-justify;
   }
 
   .event-footer-row {
-    @apply flex-row items-end justify-between;
+    @apply flex-row items-center justify-between;
   }
 
   .event-meta-stack {
-    @apply gap-2;
+    @apply gap-1;
   }
 
   .event-meta-row {
-    @apply flex-row items-center gap-1;
+    @apply flex-row items-center gap-2 bg-card p-2 rounded-xl;
   }
 
   .event-meta-text {
@@ -383,7 +383,7 @@
   }
 
   .event-time-text {
-    @apply text-sm font-sans-medium text-muted-foreground;
+    @apply text-xs font-sans-medium text-muted-foreground;
   }
 
   .event-rating-row {
@@ -394,7 +394,7 @@
     @apply text-sm font-sans-bold text-accent-pink;
   }
   .event-meta-icon {
-    @apply size-4;
+    @apply size-3;
   }
 
   .event-actions-row {
@@ -406,7 +406,7 @@
   }
 
   .event-bookmark-btn {
-    @apply size-10 items-center justify-center overflow-hidden rounded-full;
+    @apply size-10 items-center justify-center overflow-hidden rounded-full bg-card;
   }
 
   .event-message-icon {
@@ -924,7 +924,7 @@
     @apply h-full w-full;
   }
   .map-modal-event-title {
-    @apply text-xl font-sans-bold text-primary;
+    @apply text-xl font-sans-extrabold text-primary;
   }
   .map-modal-subtitle-row {
     @apply flex-row items-center justify-between;

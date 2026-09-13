@@ -60,84 +60,81 @@ const EventCard = ({
           className="absolute inset-0"
           pointerEvents="none"
         />
-        <View className="event-header-row">
-          <View className="event-category-chip">
-            <Text className="event-category-text">{category}</Text>
+        <View className="flex-row justify-between">
+          <View className="event-header-row">
+            <View className="event-category-chip">
+              <Text className="event-category-text">{category}</Text>
+            </View>
+            <Text numberOfLines={1} className="event-location-text">
+              {location?.split(",").slice(-2, -1)[0]?.trim() || location}
+            </Text>
           </View>
-          <Text numberOfLines={1} className="event-location-text">
-            {location?.split(",").slice(-2, -1)[0]?.trim() || location}
-          </Text>
+          <View className="event-meta-row">
+            <Text className="event-time-text">
+              {`${dayjs(startAt).format("D/M")} - ${dayjs(startAt).format("h:mm a")}`}
+            </Text>
+          </View>
         </View>
-
-        <View className="flex-row items-center gap-2">
-          {/* Maximo de 30 caracteres para titulo*/}
-          <Text numberOfLines={1} className="event-title">
-            {title}
-          </Text>
-          {rating && rating > 0 ? (
-            <View className="event-rating-row">
-              <Text className="event-rating-text">{rating}</Text>
-              <Image
-                source={icons.star}
-                className="event-meta-icon"
-                tintColor={colors.accentPink}
-                resizeMode="contain"
-              />
-            </View>
-          ) : null}
-        </View>
-
-        <View className="event-footer-row">
-          <View className="event-meta-stack">
-            <View className="event-meta-row">
-              <Image
-                source={authorAvatar ? { uri: authorAvatar } : images.avatar}
-                className="w-5 h-5 rounded-full"
-              />
-              <Text className="event-meta-text">{author}</Text>
-              <Image
-                source={icons.verified}
-                className="event-meta-icon"
-                tintColor={colors.accentPink}
-                resizeMode="contain"
-              />
-            </View>
-            <View className="event-meta-row">
-              <Image
-                source={icons.clock}
-                className="event-meta-icon"
-                tintColor={colors.mutedForeground}
-                resizeMode="contain"
-              />
-              <Text className="event-time-text">
-                {dateLabel
-                  ? `${dayjs(startAt).format("D [de] MMMM")} • ${dayjs(startAt).format("h:mm a")}`
-                  : "Sin fecha"}
+        <View className="flex-row justify-between items-center">
+          <View className="gap-1">
+            <View className="flex-row items-center gap-2">
+              {/* Maximo de 30 caracteres para titulo*/}
+              <Text numberOfLines={1} className="event-title">
+                {title}
               </Text>
+              {rating && rating > 0 ? (
+                <View className="event-rating-row">
+                  <Text className="event-rating-text">{rating}</Text>
+                  <Image
+                    source={icons.star}
+                    className="event-meta-icon"
+                    tintColor={colors.accentPink}
+                    resizeMode="contain"
+                  />
+                </View>
+              ) : null}
+            </View>
+            <View className="event-meta-stack">
+              <View className="flex-row items-center gap-2">
+                <Image
+                  source={authorAvatar ? { uri: authorAvatar } : images.avatar}
+                  className="w-4 h-4 rounded-full"
+                />
+                <Text className="event-meta-text">{author}</Text>
+                <Image
+                  source={icons.verified}
+                  className="event-meta-icon"
+                  tintColor={colors.accentPink}
+                  resizeMode="contain"
+                />
+              </View>
             </View>
           </View>
 
-          <View className="event-actions-row">
-            <Pressable
-              className="event-contact-btn active:opacity-75"
-              onPress={handleContactPress}
-              hitSlop={8}
-            >
-              <Image
-                source={icons.messageSquareText}
-                className="event-message-icon"
-                tintColor={colors.primary}
-                resizeMode="contain"
-              />
-            </Pressable>
-            <Pressable className="event-bookmark-btn">
-              <Image
-                source={icons.bookmark}
-                className="event-bookmark-icon"
-                tintColor={colors.primary}
-                resizeMode="contain"
-              />
-            </Pressable>
+          <View>
+            <View className="event-actions-row">
+              <Pressable
+                className="event-contact-btn active:opacity-75"
+                onPress={handleContactPress}
+                hitSlop={8}
+              >
+                <Image
+                  source={icons.messageSquareText}
+                  className="event-message-icon"
+                  tintColor={colors.primary}
+                  resizeMode="contain"
+                />
+              </Pressable>
+
+              <Pressable className="event-bookmark-btn">
+                <Image
+                  source={icons.heart}
+                  className="event-bookmark-icon"
+                  tintColor={colors.primary}
+                  resizeMode="contain"
+                />
+              </Pressable>
+            </View>
           </View>
         </View>
       </View>
