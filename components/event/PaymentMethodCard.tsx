@@ -21,20 +21,22 @@ export default function PaymentMethodCard({
   onContactPhoneChange,
 }: PaymentMethodCardProps) {
   return (
-    <View className="mt-5">
-      <Text className="text-xs font-bold text-muted-foreground tracking-wider uppercase mb-3">
-        Medios de Pago y Coordinación
-      </Text>
+    <View className="gap-5">
+      <Text className="text-xl font-bold text-primary">Medios de pago</Text>
 
-      <View className="bg-card rounded-2xl p-4 border border-border gap-4">
+      <View className=" rounded-2xl gap-6">
         {/* Opción 1: Chat directo (WhatsApp) */}
-        <View>
+        <View className="flex gap-2">
           <Pressable
             onPress={() => onMethodChange("chat")}
-            className="flex-row items-start active:opacity-80"
+            className="flex-row items-center active:opacity-80"
           >
             {/* Radio circle */}
-            <View className="size-5 rounded-full border-2 border-accent-pink items-center justify-center mr-3 mt-0.5">
+            <View
+              className={`size-5 rounded-full border-2 items-center justify-center mr-3 ${
+                method === "chat" ? "border-accent-pink" : "border-border"
+              }`}
+            >
               {method === "chat" ? (
                 <View className="size-2.5 rounded-full bg-accent-pink" />
               ) : null}
@@ -43,44 +45,31 @@ export default function PaymentMethodCard({
             <View className="flex-1">
               <View className="flex-row items-center gap-2">
                 <Text className="text-sm font-semibold text-primary">
-                  Chat directo (WhatsApp)
+                  Chat directo
                 </Text>
-                <View className="bg-accent-pink/20 px-2 py-0.5 rounded-full">
-                  <Text className="text-[10px] font-bold text-accent-pink uppercase">
-                    Rápido
-                  </Text>
-                </View>
               </View>
               <Text className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                Coordina transferencias (Yape, Plin) o entrega de entradas
-                directamente con los fiesteros vía WhatsApp.
+                Coordina transferencias o entrega de entradas directamente vía
+                WhatsApp.
               </Text>
             </View>
           </Pressable>
 
           {/* Campo de Número de WhatsApp cuando se selecciona Chat directo */}
           {method === "chat" ? (
-            <View className="mt-3 pt-3 border-t border-border/50">
-              <Text className="text-xs font-semibold text-muted-foreground mb-1.5">
-                Número de celular (WhatsApp)
-              </Text>
-              <View className="flex-row items-center bg-modal-background px-3.5 py-2.5 rounded-xl border border-border">
-                <Ionicons
-                  name="logo-whatsapp"
-                  size={18}
-                  color="#25D366"
-                  style={{ marginRight: 8 }}
-                />
+            <View className="pl-7 gap-1">
+              <View className="flex-row items-center bg-card px-3.5 rounded-l-lg gap-1">
+                <Ionicons name="logo-whatsapp" size={18} color="#25D366" />
                 <TextInput
-                  className="flex-1 text-primary text-sm font-semibold p-0"
-                  placeholder="Ej. +51 987 654 321 o 987654321"
+                  className="flex-1 text-primary text-sm font-semibold"
+                  placeholder="Ej. +51 987 654 321"
                   placeholderTextColor={colors.mutedForeground}
                   value={contactPhone}
                   onChangeText={onContactPhoneChange}
                   keyboardType="phone-pad"
                 />
               </View>
-              <Text className="text-[11px] text-muted-foreground mt-1.5">
+              <Text className="text-xs text-muted-foreground">
                 Al pulsar "Contactar", el interesado abrirá un chat directo
                 contigo en WhatsApp.
               </Text>
@@ -89,13 +78,17 @@ export default function PaymentMethodCard({
         </View>
 
         {/* Opción 2: Enlace de Ticketing externo */}
-        <View className="pt-3 border-t border-border/50">
+        <View className="flex gap-2">
           <Pressable
             onPress={() => onMethodChange("external")}
-            className="flex-row items-start active:opacity-80"
+            className="flex-row items-center active:opacity-80"
           >
             {/* Radio circle */}
-            <View className="size-5 rounded-full border-2 border-border items-center justify-center mr-3 mt-0.5">
+            <View
+              className={`size-5 rounded-full border-2 items-center justify-center mr-3 ${
+                method === "external" ? "border-accent-pink" : "border-border"
+              }`}
+            >
               {method === "external" ? (
                 <View className="size-2.5 rounded-full bg-accent-pink" />
               ) : null}
@@ -113,18 +106,16 @@ export default function PaymentMethodCard({
 
           {/* Campo de URL cuando se selecciona Ticketing externo */}
           {method === "external" ? (
-            <View className="mt-3 pt-3 border-t border-border/50">
-              <Text className="text-xs font-semibold text-muted-foreground mb-1.5">
-                Enlace web del ticket
-              </Text>
+            <View className="pl-8 gap-1">
               <TextInput
-                className="bg-modal-background text-primary text-xs font-medium px-3.5 py-3 rounded-xl border border-border"
+                className="bg-card text-primary text-sm font-medium px-3.5 rounded-xl"
                 placeholder="https://passline.com/evento/tu-evento"
                 placeholderTextColor={colors.mutedForeground}
                 value={externalUrl}
                 onChangeText={onExternalUrlChange}
                 autoCapitalize="none"
                 keyboardType="url"
+                style={{ paddingLeft: 8 }}
               />
             </View>
           ) : null}

@@ -1,5 +1,4 @@
 import DateTimeCard from "@/components/event/DateTimeCard";
-import EventCard from "@/components/event/EventCard";
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
 import LocationPrivacyCard from "@/components/event/LocationPrivacyCard";
 import MusicTypeSelector from "@/components/event/MusicTypeSelector";
@@ -269,49 +268,6 @@ export default function EventForm({
 
   const isValid = Boolean(title.trim() && location);
 
-  // Borrador para Live Preview
-  const previewDraft: Omit<EventItem, "id"> = {
-    media:
-      mediaItems.length > 0
-        ? mediaItems
-        : [
-            {
-              type: "image",
-              source: {
-                uri: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80",
-              },
-            },
-          ],
-    title: title.trim() || "Título del evento",
-    dateLabel,
-    startAt: combinedStartAt,
-    closingAt: combinedClosingAt,
-    location: location?.address || "Ubicación por definir",
-    latitude: location?.latitude ?? -12.0464,
-    longitude: location?.longitude ?? -77.0428,
-    description: description.trim(),
-    category,
-    typeMusic: musicTypes.join(", "),
-    author: initialEvent?.author || user?.fullName || "Tú",
-    authorAvatar: initialEvent?.authorAvatar || user?.imageUrl,
-    attendeeAvatars: initialEvent?.attendeeAvatars ?? [],
-    attendeeCount: initialEvent?.attendeeCount ?? 0,
-    interestedCount: initialEvent?.interestedCount ?? 0,
-    capacity,
-    price: isFree ? 0 : parseFloat(priceMen || "0"),
-    priceWomen: isFree ? 0 : parseFloat(priceWomen || "0"),
-    isMultiplePrices,
-    isFreeEvent: isFree,
-    paymentMethod,
-    contactPhone: contactPhone.trim(),
-    externalTicketUrl:
-      paymentMethod === "external" ? externalTicketUrl.trim() : undefined,
-    hideExactAddress,
-    isGoing: true,
-    isOwner: true,
-    rating: 0,
-  };
-
   const handleSubmit = async () => {
     if (!isValid) {
       Alert.alert(
@@ -323,7 +279,7 @@ export default function EventForm({
     setSubmitting(true);
     try {
       const uploadedMedia = await Promise.all(
-        previewDraft.media.map(async (item) => {
+        mediaItems.map(async (item) => {
           if (item.type === "video") {
             const url = await uploadMediaToSupabase(item.uri, true);
             return { type: "video", uri: url } as EventMediaItem;
@@ -335,18 +291,46 @@ export default function EventForm({
             const base64 = item.base64;
             if (uri) {
               const url = await uploadMediaToSupabase(uri, false, base64);
-              return {
-                type: "image",
-                source: { uri: url },
-              } as EventMediaItem;
+              return { type: "image", source: { uri: url } } as EventMediaItem;
             }
             return item;
           }
         }),
       );
 
-      const finalDraft = { ...previewDraft, media: uploadedMedia };
-      await onSubmit(finalDraft);
+      const draft: Omit<EventItem, "id"> = {
+        media: uploadedMedia,
+        title: title.trim(),
+        dateLabel,
+        startAt: combinedStartAt,
+        closingAt: combinedClosingAt,
+        location: location?.address || "",
+        latitude: location?.latitude ?? -12.0464,
+        longitude: location?.longitude ?? -77.0428,
+        description: description.trim(),
+        category,
+        typeMusic: musicTypes.join(", "),
+        author: initialEvent?.author || user?.fullName || "Tú",
+        authorAvatar: initialEvent?.authorAvatar || user?.imageUrl,
+        attendeeAvatars: initialEvent?.attendeeAvatars ?? [],
+        attendeeCount: initialEvent?.attendeeCount ?? 0,
+        interestedCount: initialEvent?.interestedCount ?? 0,
+        capacity,
+        price: isFree ? 0 : parseFloat(priceMen || "0"),
+        priceWomen: isFree ? 0 : parseFloat(priceWomen || "0"),
+        isMultiplePrices,
+        isFreeEvent: isFree,
+        paymentMethod,
+        contactPhone: contactPhone.trim(),
+        externalTicketUrl:
+          paymentMethod === "external" ? externalTicketUrl.trim() : undefined,
+        hideExactAddress,
+        isGoing: true,
+        isOwner: true,
+        rating: 0,
+      };
+
+      await onSubmit(draft);
     } finally {
       setSubmitting(false);
     }
@@ -355,7 +339,7 @@ export default function EventForm({
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
-      className="flex-1 bg-background"
+      className="flex-1 bg-modal-background"
     >
       {/* Barra de navegación superior con botón atrás */}
       <View className="flex-row items-center justify-between px-4 py-3 border-b border-border/40">
@@ -376,13 +360,13 @@ export default function EventForm({
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="px-4 pt-4 pb-28 gap-6"
+        contentContainerClassName="px-4 pt-4 pb-10 gap-7"
       >
         {/* ================= 1. MULTIMEDIA Y PORTADA ================= */}
         <View className="gap-2">
           <View className="flex-row items-center justify-between">
             <Text className="text-xl font-bold text-primary">Multimedia</Text>
-            <Text className="text-xs font-bold text-primary">
+            <Text className="text-xs font-bold text-muted-foreground">
               {mediaItems.length}/{MAX_MEDIA_ITEMS}
             </Text>
           </View>
@@ -444,7 +428,7 @@ export default function EventForm({
 
         {/* ================= 2. INFORMACIÓN BÁSICA ================= */}
         {/* Título del evento */}
-        <View className="gap-2">
+        <View className="gap-4">
           <Text className="text-xl font-semibold text-primary ">
             Título del evento
           </Text>
@@ -456,7 +440,7 @@ export default function EventForm({
         </View>
 
         {/* Tipo de evento (Categorías) */}
-        <View className="gap-2">
+        <View className="gap-4">
           <Text className="text-xl font-semibold text-primary ">
             Tipo de evento
           </Text>
@@ -471,11 +455,9 @@ export default function EventForm({
         <MusicTypeSelector selected={musicTypes} onChange={setMusicTypes} />
 
         {/* Detalles, Vibra y Reglas */}
-        <View className="gap-2">
+        <View className="gap-4">
           <View className="flex-row items-center justify-between">
-            <Text className="text-xl font-semibold text-primary">
-              Detalles, Vibra y Reglas
-            </Text>
+            <Text className="text-xl font-semibold text-primary">Detalles</Text>
             <Text className="text-[11px] text-muted-foreground font-medium">
               Opcional
             </Text>
@@ -509,6 +491,16 @@ export default function EventForm({
           onHideExactAddressChange={setHideExactAddress}
         />
 
+        {/* ================= 6. MEDIOS DE PAGO Y COORDINACIÓN ================= */}
+        <PaymentMethodCard
+          method={paymentMethod}
+          onMethodChange={setPaymentMethod}
+          externalUrl={externalTicketUrl}
+          onExternalUrlChange={setExternalTicketUrl}
+          contactPhone={contactPhone}
+          onContactPhoneChange={setContactPhone}
+        />
+
         {/* ================= 5. AFORO Y APORTACIÓN ================= */}
         <PricingAforoSection
           isFree={isFree}
@@ -523,36 +515,12 @@ export default function EventForm({
           onCapacityChange={setCapacity}
         />
 
-        {/* ================= 6. MEDIOS DE PAGO Y COORDINACIÓN ================= */}
-        <PaymentMethodCard
-          method={paymentMethod}
-          onMethodChange={setPaymentMethod}
-          externalUrl={externalTicketUrl}
-          onExternalUrlChange={setExternalTicketUrl}
-          contactPhone={contactPhone}
-          onContactPhoneChange={setContactPhone}
-        />
-
-        {/* ================= 7. VISTA PREVIA PARA FIESTEROS ================= */}
-        <View className="mt-6">
-          <View className="flex-row items-center justify-between mb-3">
-            <Text className="text-xs font-bold text-muted-foreground tracking-wider uppercase">
-              Vista Previa para Fiesteros
-            </Text>
-            <Text className="text-xs font-bold text-accent-pink">
-              Tarjeta en Feed
-            </Text>
-          </View>
-
-          <EventCard {...previewDraft} onPress={() => {}} />
-        </View>
-
         {/* ================= 8. BOTÓN DE PUBLICACIÓN ================= */}
         <Pressable
           className={
             isValid && !submitting
-              ? "w-full bg-accent-pink py-4 rounded-2xl items-center justify-center mt-6 shadow-lg shadow-accent-pink/20 active:opacity-85"
-              : "w-full bg-card py-4 rounded-2xl items-center justify-center mt-6 border border-border opacity-50"
+              ? "w-full bg-accent-pink py-4 rounded-2xl items-center justify-center shadow-lg shadow-accent-pink/20 active:opacity-85"
+              : "w-full bg-card py-4 rounded-2xl items-center justify-center border-none opacity-50"
           }
           onPress={handleSubmit}
           disabled={!isValid || submitting}

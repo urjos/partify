@@ -29,7 +29,7 @@ export default function MusicTypeSelector({
   };
 
   return (
-    <View className="gap-2">
+    <View className="gap-4">
       {/* Fila superior: Título y Selector "Elige ⌵" */}
       <View className="flex-row items-center justify-between">
         <Text className="text-xl font-semibold text-primary">
