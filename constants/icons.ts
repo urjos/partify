@@ -1,6 +1,8 @@
 import back from "@/assets/icons/back.png";
 import bookmark from "@/assets/icons/bookmark.png";
+import calendar from "@/assets/icons/calendar.png";
 import chevronDown from "@/assets/icons/chevron-down.png";
+import checkCircle from "@/assets/icons/circle-check.png";
 import clock from "@/assets/icons/clock.png";
 import ellipsis from "@/assets/icons/ellipsis-vertical.png";
 import filter from "@/assets/icons/filter.png";
@@ -11,11 +13,14 @@ import mapPin from "@/assets/icons/map-pin.png";
 import martini from "@/assets/icons/martini.png";
 import messageSquareText from "@/assets/icons/message-square-text.png";
 import minus from "@/assets/icons/minus.png";
+import moon from "@/assets/icons/moon.png";
 import navigation from "@/assets/icons/navigation.png";
 import logowb from "@/assets/icons/partify-logo-2.png";
 import logowb2 from "@/assets/icons/partify-logo-3.png";
 import logo from "@/assets/icons/partify-logo.png";
+import pencil from "@/assets/icons/pencil.png";
 import plus from "@/assets/icons/plus.png";
+import qrCode from "@/assets/icons/qr-code.png";
 import right from "@/assets/icons/right.png";
 import search from "@/assets/icons/search.png";
 import setting from "@/assets/icons/setting.png";
@@ -50,6 +55,11 @@ export const icons = {
   loader,
   minus,
   chevronDown,
+  calendar,
+  moon,
+  pencil,
+  qrCode,
+  checkCircle,
 } as const;
 
 export type IconKey = keyof typeof icons;

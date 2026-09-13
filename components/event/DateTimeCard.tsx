@@ -1,12 +1,12 @@
+import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
-import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import React, { useState } from "react";
-import { Platform, Pressable, Text, View } from "react-native";
+import { Image, Platform, Pressable, Text, View } from "react-native";
 
 dayjs.locale("es");
 
@@ -74,10 +74,10 @@ export default function DateTimeCard({
         <View className="flex-row items-center justify-between rounded-xl bg-card border-none">
           <View className="flex-row items-center flex-1 gap-1 p-2">
             <View className="size-10 rounded-xl items-center justify-center">
-              <Ionicons
-                name="calendar"
-                size={20}
-                color={colors.mutedForeground}
+              <Image
+                source={icons.calendar}
+                className="size-5"
+                tintColor={colors.mutedForeground}
               />
             </View>
             <View className="flex-1">
@@ -95,9 +95,8 @@ export default function DateTimeCard({
 
           <Pressable
             onPress={() => setShowDatePicker(true)}
-            className="px-3.5 py-1. rounded-full border-none active:opacity-75"
+            className="px-3.5 py-1.5 rounded-full border-none active:opacity-75"
           >
-            |
             <Text className="text-xs font-bold text-muted-foreground">
               Cambiar
             </Text>
@@ -109,10 +108,14 @@ export default function DateTimeCard({
           {/* Columna Inicio */}
           <Pressable
             onPress={() => setActiveTimePicker("start")}
-            className="flex-1 flex-row items-center justify-start bg-card p-2 rounded-xl border-none active:opacity-80"
+            className="flex-1 flex-row items-center justify-start bg-card p-2 rounded-xl border-none active:opacity-80 gap-2"
           >
             <View className="size-9 rounded-full items-center justify-center">
-              <Ionicons name="time" size={18} color={colors.mutedForeground} />
+              <Image
+                source={icons.clock}
+                className="size-5"
+                tintColor={colors.mutedForeground}
+              />
             </View>
             <View className="gap-1">
               <Text className="text-[10px] font-semibold text-muted-foreground">
@@ -127,13 +130,13 @@ export default function DateTimeCard({
           {/* Columna Cierre */}
           <Pressable
             onPress={() => setActiveTimePicker("end")}
-            className="flex-1 flex-row items-center justify-start bg-card p-2 rounded-xl border-none active:opacity-80"
+            className="flex-1 flex-row items-center justify-start bg-card p-2 rounded-xl border-none active:opacity-80 gap-2"
           >
             <View className="size-9 rounded-full items-center justify-center">
-              <Ionicons
-                name="moon-outline"
-                size={18}
-                color={colors.mutedForeground}
+              <Image
+                source={icons.moon}
+                className="size-5"
+                tintColor={colors.mutedForeground}
               />
             </View>
             <View className="gap-1">

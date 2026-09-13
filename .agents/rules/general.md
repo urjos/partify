@@ -12,7 +12,7 @@ No omitas código con comentarios como // ... resto del código .... Escribe el 
 Anticipa problemas de rendimiento en listas móviles y cuellos de botella en la base de datos.
 
 Frontend (React Native + Expo + Nativewind)
-Enrutamiento: Utiliza Expo Router obligatoriamente. Sigue el modelo de enrutamiento basado en archivos (app/(tabs), app/(auth), \_layout.tsx).
+Enrutamiento: Utiliza Expo Router obligatoriamente. Sigue el modelo de enrutamiento basado en archivos (app/(tabs), app/(auth), \_layout.tsx). Crea componentes reutilizables si se puede.
 
 Estilos: Utiliza EXCLUSIVAMENTE Nativewind (clases de Tailwind CSS). Está prohibido usar StyleSheet.create de React Native a menos que sea estrictamente necesario para animaciones complejas.
 

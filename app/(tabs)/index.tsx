@@ -7,7 +7,6 @@ import "@/global.css";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
 import { useAuth } from "@clerk/expo";
-import clsx from "clsx";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -91,12 +90,10 @@ export default function App() {
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
-      className={clsx("flex-1", "bg-background", "page-all")}
+      className="flex-1 bg-background page-all"
     >
-      <View className="bg-background z-10 pb-2">
-        <Header isPressable={true} logo={true} title="Partify" />
-        <CategoryFilters />
-      </View>
+      <Header isPressable={true} logo={true} title="Partify" />
+      <CategoryFilters />
       <FlatList
         data={filteredEvents}
         keyExtractor={(item) => item.id}

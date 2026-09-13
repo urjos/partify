@@ -1,5 +1,4 @@
 import { icons } from "@/constants/icons";
-import clsx from "clsx";
 import { router } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
@@ -18,12 +17,12 @@ const Header = ({ title, isPressable, logo, onPress }: HeaderProps) => {
   */
   return (
     <>
-      <View className={clsx("home-header", "w-full", "justify-between")}>
-        <View className={clsx("flex-row", "items-center", "gap-3")}>
+      <View className="home-header w-full justify-between py-2">
+        <View className="flex-row items-center gap-2">
           {logo && (
             <Image
               source={icons.logowb2}
-              className="size-8"
+              className="size-6"
               resizeMode="contain"
             />
           )}
@@ -32,7 +31,7 @@ const Header = ({ title, isPressable, logo, onPress }: HeaderProps) => {
         {isPressable && (
           <Pressable
             onPress={onPress ?? (() => router.push("/(tabs)/create"))}
-            className="p-2"
+            className=""
           >
             <Image
               source={icons.plus}
