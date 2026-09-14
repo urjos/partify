@@ -20,7 +20,7 @@ export default function ProfileHeroCard({
   const resolvedAvatar = avatarSource || images.avatar;
 
   return (
-    <View className="bg-card rounded-3xl p-6 items-center border-none relative overflow-hidden">
+    <View className="bg-modal-background rounded-3xl p-6 items-center border-none relative overflow-hidden">
       {/* Resplandor decorativo superior estilo neón */}
       <View
         pointerEvents="none"
@@ -40,7 +40,7 @@ export default function ProfileHeroCard({
       <View className="flex-row items-center justify-center gap-1.5 mt-4">
         <Text
           numberOfLines={1}
-          className="text-xl font-sans-bold text-primary text-center"
+          className="text-xl font-bold text-primary text-center"
         >
           {name}
         </Text>
@@ -55,11 +55,11 @@ export default function ProfileHeroCard({
 
       {/* Biografía */}
       {bio?.trim() ? (
-        <Text className="text-xs font-sans-medium text-muted-foreground text-center mt-2 px-3 leading-relaxed">
+        <Text className="text-xs font-medium text-muted-foreground text-center mt-2 px-3 leading-relaxed">
           {bio}
         </Text>
       ) : (
-        <Text className="text-xs font-sans-medium text-muted-foreground text-center mt-2 px-3 leading-relaxed">
+        <Text className="text-xs font-medium text-muted-foreground text-center mt-2 px-3 leading-relaxed">
           No hay biografía, aún.
         </Text>
       )}

@@ -8,16 +8,23 @@ interface HeaderProps {
   isPressable: boolean;
   logo?: boolean;
   onPress?: () => void;
+  className?: string;
 }
 
-const Header = ({ title, isPressable, logo, onPress }: HeaderProps) => {
+const Header = ({
+  title,
+  isPressable,
+  logo,
+  onPress,
+  className,
+}: HeaderProps) => {
   /*
   const { user } = useUser();
   const displayName = user?.firstName || user?.fullName || "User";
   */
   return (
     <>
-      <View className="home-header w-full justify-between py-2">
+      <View className={`${className} home-header w-full justify-between py-2`}>
         <View className="flex-row items-center gap-2">
           {logo && (
             <Image

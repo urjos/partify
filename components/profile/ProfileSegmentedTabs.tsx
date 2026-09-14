@@ -14,20 +14,22 @@ export default function ProfileSegmentedTabs({
   onTabChange,
 }: ProfileSegmentedTabsProps) {
   return (
-    <View className="bg-card/60 p-1 rounded-full flex-row items-center border-none">
+    <View className="bg-modal-background/60 p-1 rounded-full flex-row items-center border-none">
       <Pressable
         onPress={() => onTabChange("favorites")}
         className={clsx(
           "flex-1 py-2.5 rounded-full items-center justify-center transition-all",
-          activeTab === "favorites" ? "bg-card border-none" : "bg-transparent",
+          activeTab === "favorites"
+            ? "bg-modal-background border-none"
+            : "bg-transparent",
         )}
       >
         <Text
           className={clsx(
             "text-sm",
             activeTab === "favorites"
-              ? "font-sans-semibold text-primary"
-              : "font-sans-medium text-muted-foreground",
+              ? "font-semibold text-primary"
+              : "font-medium text-muted-foreground",
           )}
         >
           Favoritas
@@ -38,15 +40,17 @@ export default function ProfileSegmentedTabs({
         onPress={() => onTabChange("history")}
         className={clsx(
           "flex-1 py-2.5 rounded-full items-center justify-center transition-all",
-          activeTab === "history" ? "bg-card border-none" : "bg-transparent",
+          activeTab === "history"
+            ? "bg-modal-background border-none"
+            : "bg-transparent",
         )}
       >
         <Text
           className={clsx(
             "text-sm",
             activeTab === "history"
-              ? "font-sans-semibold text-primary"
-              : "font-sans-medium text-muted-foreground",
+              ? "font-semibold text-primary"
+              : "font-medium text-muted-foreground",
           )}
         >
           Historial

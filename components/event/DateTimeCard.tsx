@@ -71,7 +71,7 @@ export default function DateTimeCard({
     <View className="">
       <View className="rounded-2xl border-none gap-4">
         {/* Fila 1: Fecha */}
-        <View className="flex-row items-center justify-between rounded-xl bg-card border-none">
+        <View className="flex-row items-center justify-between rounded-xl bg-modal-background border-none">
           <View className="flex-row items-center flex-1 gap-1 p-2">
             <View className="size-10 rounded-xl items-center justify-center">
               <Image
@@ -108,7 +108,7 @@ export default function DateTimeCard({
           {/* Columna Inicio */}
           <Pressable
             onPress={() => setActiveTimePicker("start")}
-            className="flex-1 flex-row items-center justify-start bg-card p-2 rounded-xl border-none active:opacity-80 gap-2"
+            className="flex-1 flex-row items-center justify-start bg-modal-background p-2 rounded-xl border-none active:opacity-80 gap-2"
           >
             <View className="size-9 rounded-full items-center justify-center">
               <Image
@@ -130,7 +130,7 @@ export default function DateTimeCard({
           {/* Columna Cierre */}
           <Pressable
             onPress={() => setActiveTimePicker("end")}
-            className="flex-1 flex-row items-center justify-start bg-card p-2 rounded-xl border-none active:opacity-80 gap-2"
+            className="flex-1 flex-row items-center justify-start bg-modal-background p-2 rounded-xl border-none active:opacity-80 gap-2"
           >
             <View className="size-9 rounded-full items-center justify-center">
               <Image

@@ -17,6 +17,9 @@ export interface ProfileEventItem {
   image: ImageSourcePropType | { uri: string };
   status: "approved" | "confirmed";
   statusLabel: string;
+  contactPhone?: string;
+  externalTicketUrl?: string;
+  contactMethod?: "chat" | "external";
 }
 
 interface ProfileEventCardProps {
@@ -33,7 +36,7 @@ export default function ProfileEventCard({
   return (
     <Pressable
       onPress={onPress}
-      className="bg-card/60 rounded-2xl p-4 border.none gap-5 active:opacity-90"
+      className="bg-modal-background/60 rounded-2xl p-4 border.none gap-5 active:opacity-90"
     >
       {/* Información principal del evento */}
       <View className="flex-row items-center gap-3">
@@ -54,7 +57,7 @@ export default function ProfileEventCard({
           {/* Título */}
           <Text
             numberOfLines={1}
-            className="text-sm font-sans-bold text-primary mt-1"
+            className="text-sm font-bold text-primary mt-1"
           >
             {item.title}
           </Text>
@@ -62,7 +65,7 @@ export default function ProfileEventCard({
           {/* Dirección */}
           <Text
             numberOfLines={1}
-            className="text-xs font-sans-medium text-muted-foreground mt-0.5"
+            className="text-xs font-medium text-muted-foreground mt-0.5"
           >
             {item.location}
           </Text>
@@ -86,7 +89,7 @@ export default function ProfileEventCard({
               tintColor={colors.accentPink}
             />
           )}
-          <Text className="text-xs font-sans-semibold text-primary">
+          <Text className="text-xs font-semibold text-primary">
             {item.statusLabel}
           </Text>
         </View>
@@ -102,7 +105,7 @@ export default function ProfileEventCard({
             className="size-4"
             tintColor={colors.primary}
           />
-          <Text className="text-xs font-sans-bold text-primary">Contactar</Text>
+          <Text className="text-xs font-bold text-primary">Contactar</Text>
         </Pressable>
       </View>
     </Pressable>

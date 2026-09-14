@@ -9,54 +9,38 @@ import ProfileSegmentedTabs, {
 } from "@/components/profile/ProfileSegmentedTabs";
 import ProfileStats from "@/components/profile/ProfileStats";
 import images from "@/constants/images";
+import { useApi } from "@/hooks/use-api";
+import { useEventStore } from "@/lib/store/eventStore";
+import { openWhatsApp } from "@/lib/whatsapp";
 import { useClerk, useUser } from "@clerk/expo";
+import { router } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
-import React, { useState } from "react";
-import { Alert, FlatList, Text, View } from "react-native";
+import React, { useMemo, useState } from "react";
+import { Alert, FlatList, Linking, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
-const MOCK_HISTORY_EVENTS: ProfileEventItem[] = [
-  {
-    id: "hist-1",
-    title: "Sunset Rooftop Barranco",
-    location: "Malecón Paul Harris, Barranco",
-    dateBadge: "Hoy · 20:00",
-    image: images.noriel,
-    status: "approved",
-    statusLabel: "Pase Aprobado",
-  },
-  {
-    id: "hist-2",
-    title: "Underground Penthouse #04",
-    location: "Av. Pardo, Miraflores, Lima",
-    dateBadge: "Sábado 21 · 23:00",
-    image: images.darkiel,
-    status: "confirmed",
-    statusLabel: "Reserva confirmada",
-  },
-];
-
-const MOCK_FAVORITE_EVENTS: ProfileEventItem[] = [
-  {
-    id: "fav-1",
-    title: "Sunset Rooftop Barranco",
-    location: "Malecón Paul Harris, Barranco",
-    dateBadge: "Hoy · 20:00",
-    image: images.noriel,
-    status: "approved",
-    statusLabel: "Pase Aprobado",
-  },
-];
+const getEventImage = (event: EventItem) => {
+  const firstMedia = event.media?.[0];
+  if (!firstMedia) return images.noriel;
+  if ("source" in firstMedia && firstMedia.source) return firstMedia.source;
+  if ("uri" in firstMedia && firstMedia.uri) return { uri: firstMedia.uri };
+  return images.noriel;
+};
 
 const Profile = () => {
   const { signOut } = useClerk();
   const { user } = useUser();
   const posthog = usePostHog();
+  const api = useApi();
 
-  const [activeTab, setActiveTab] = useState<ProfileTab>("history");
+  const events = useEventStore((state) => state.events);
+  const fetchEvents = useEventStore((state) => state.fetchEvents);
+  const loading = useEventStore((state) => state.loading);
+
+  const [activeTab, setActiveTab] = useState<ProfileTab>("favorites");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   const displayName =
@@ -67,8 +51,45 @@ const Profile = () => {
 
   const userAvatar = user?.imageUrl ? { uri: user.imageUrl } : images.noriel;
 
+  const favoriteEvents: ProfileEventItem[] = useMemo(() => {
+    return events
+      .filter((e) => Boolean(e.isFavorite))
+      .map((e) => ({
+        id: e.id,
+        title: e.title,
+        location: e.location,
+        dateBadge: e.dateLabel || "Próximamente",
+        image: getEventImage(e),
+        status: "approved",
+        statusLabel: "Guardada en Favoritas",
+        contactPhone: e.contactPhone,
+        externalTicketUrl: e.externalTicketUrl,
+        contactMethod: e.contactMethod,
+      }));
+  }, [events]);
+
+  const historyEvents: ProfileEventItem[] = useMemo(() => {
+    return events
+      .filter((e) => Boolean(e.isGoing || e.isOwner))
+      .map((e) => ({
+        id: e.id,
+        title: e.title,
+        location: e.location,
+        dateBadge: e.dateLabel || "Próximamente",
+        image: getEventImage(e),
+        status: e.isOwner ? "confirmed" : "approved",
+        statusLabel: e.isOwner ? "Tu evento publicado" : "Pase Aprobado",
+        contactPhone: e.contactPhone,
+        externalTicketUrl: e.externalTicketUrl,
+        contactMethod: e.contactMethod,
+      }));
+  }, [events]);
+
   const currentEvents =
-    activeTab === "history" ? MOCK_HISTORY_EVENTS : MOCK_FAVORITE_EVENTS;
+    activeTab === "favorites" ? favoriteEvents : historyEvents;
+
+  const organizedCount = events.filter((e) => Boolean(e.isOwner)).length;
+  const attendedCount = events.filter((e) => Boolean(e.isGoing)).length;
 
   const handleSignOut = async () => {
     posthog.capture("user_signed_out");
@@ -87,11 +108,17 @@ const Profile = () => {
     );
   };
 
-  const handleContactOrganizer = (eventTitle: string) => {
-    Alert.alert(
-      "Contactar Anfitrión",
-      `Iniciando canal de comunicación para "${eventTitle}".`,
-    );
+  const handleContactOrganizer = (item: ProfileEventItem) => {
+    if (item.contactMethod === "external" && item.externalTicketUrl) {
+      Linking.openURL(item.externalTicketUrl).catch(() => {});
+    } else if (item.contactPhone) {
+      openWhatsApp(item.contactPhone, item.title);
+    } else {
+      Alert.alert(
+        "Contactar Anfitrión",
+        `Iniciando canal de comunicación para "${item.title}".`,
+      );
+    }
   };
 
   const renderListHeader = () => (
@@ -109,8 +136,8 @@ const Profile = () => {
       {/* Tarjetas de Estadísticas y Acción */}
       <ProfileStats
         rating={4.9}
-        attendedCount={14}
-        organizedCount={3}
+        attendedCount={attendedCount}
+        organizedCount={organizedCount}
         onEditPress={handleEditProfile}
       />
 
@@ -119,8 +146,9 @@ const Profile = () => {
 
       {/* Título de la Sección de Eventos */}
       <View className="flex-row items-center justify-between mb-5">
-        <Text className="text-base font-sans-bold text-primary">
-          Eventos ({currentEvents.length})
+        <Text className="text-base font-bold text-primary">
+          {activeTab === "favorites" ? "Favoritas" : "Historial"} (
+          {currentEvents.length})
         </Text>
       </View>
     </View>
@@ -145,18 +173,22 @@ const Profile = () => {
         renderItem={({ item }) => (
           <ProfileEventCard
             item={item}
-            onPress={() => {}}
-            onContact={() => handleContactOrganizer(item.title)}
+            onPress={() => router.push(`/(events)/${item.id}`)}
+            onContact={() => handleContactOrganizer(item)}
           />
         )}
         ListHeaderComponent={renderListHeader}
         ListFooterComponent={renderListFooter}
         ItemSeparatorComponent={() => <View className="h-5" />}
         showsVerticalScrollIndicator={false}
+        onRefresh={() => fetchEvents(api)}
+        refreshing={loading}
         ListEmptyComponent={
           <View className="bg-card rounded-2xl p-6 items-center justify-center border border-border/20">
-            <Text className="text-sm font-sans-medium text-muted-foreground text-center">
-              No tienes eventos en esta sección aún.
+            <Text className="text-sm font-medium text-muted-foreground text-center">
+              {activeTab === "favorites"
+                ? "No tienes eventos guardados en tus favoritos aún. ¡Toca el corazón en cualquier evento para guardarlo!"
+                : "No tienes eventos en tu historial aún."}
             </Text>
           </View>
         }

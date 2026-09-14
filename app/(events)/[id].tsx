@@ -1,5 +1,10 @@
+import EventActionBar from "@/components/event/detail/EventActionBar";
+import EventAttendeesCard from "@/components/event/detail/EventAttendeesCard";
+import EventMainCard from "@/components/event/detail/EventMainCard";
+import EventMeetingPointCard from "@/components/event/detail/EventMeetingPointCard";
+import EventNightDetailsCard from "@/components/event/detail/EventNightDetailsCard";
+import EventOrganizerCard from "@/components/event/detail/EventOrganizerCard";
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
-import Separator from "@/components/Separator";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import "@/global.css";
@@ -9,12 +14,10 @@ import { openWhatsApp } from "@/lib/whatsapp";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Alert,
   Image,
-  Linking,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -23,81 +26,117 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const ICON_COLOR = "#f5f4f2";
-
 export default function EventDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const api = useApi();
   const events = useEventStore((state) => state.events);
   const removeEvent = useEventStore((state) => state.removeEvent);
   const setAttendanceAction = useEventStore((state) => state.setAttendance);
+  const rateEventAction = useEventStore((state) => state.rateEvent);
+  const toggleFavoriteAction = useEventStore((state) => state.toggleFavorite);
+
   const event = events.find((item) => item.id === id);
 
+  // Estados locales para interactividad fluida
   const [status, setStatus] = useState<AttendanceStatus>(
     event?.isGoing ? "going" : null,
   );
+  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
+  const [isFavorite, setIsFavorite] = useState<boolean>(
+    Boolean(event?.isFavorite),
+  );
+  const [userRating, setUserRating] = useState<number | null>(
+    event?.userRating ?? null,
+  );
+
+  React.useEffect(() => {
+    if (event) {
+      setIsFavorite(Boolean(event.isFavorite));
+      setUserRating(event.userRating ?? null);
+      setStatus(event.isGoing ? "going" : null);
+    }
+  }, [event?.isFavorite, event?.userRating, event?.isGoing]);
 
   if (!event) {
     return (
-      <SafeAreaView className="event-detail-empty">
-        <Ionicons name="calendar-outline" size={32} color={ICON_COLOR} />
-        <Text className="event-detail-empty-text">
-          We couldn't find this event. It may have been removed or cancelled.
+      <SafeAreaView className="flex-1 bg-background items-center justify-center p-6 gap-4">
+        <Ionicons
+          name="calendar-outline"
+          size={48}
+          color={colors.mutedForeground}
+        />
+        <Text className="text-base text-center text-muted-foreground font-medium">
+          No pudimos encontrar este evento. Es posible que haya sido cancelado.
         </Text>
         <Pressable
-          className="auth-secondary-button"
+          className="bg-card border border-border px-6 py-3 rounded-2xl active:opacity-75"
           onPress={() => router.back()}
         >
-          <Text className="auth-secondary-button-text">Go back</Text>
+          <Text className="text-sm font-bold text-primary">Volver</Text>
         </Pressable>
       </SafeAreaView>
     );
   }
 
   const isOwner = event.isOwner ?? false;
-  const goingCount = event.attendeeCount + (status === "going" ? 1 : 0);
+  const goingCount =
+    event.attendeeCount + (status === "going" && !event.isGoing ? 1 : 0);
   const interestedCount =
     event.interestedCount + (status === "interested" ? 1 : 0);
 
-  const toggleStatus = async (next: Exclude<AttendanceStatus, null>) => {
+  const handleToggleFavorite = async () => {
+    const previous = isFavorite;
+    setIsFavorite(!previous);
+    try {
+      const nextFavState = await toggleFavoriteAction(api, event.id);
+      setIsFavorite(nextFavState);
+    } catch {
+      setIsFavorite(previous);
+      Alert.alert(
+        "Error",
+        "No se pudo actualizar tu lista de favoritos. Inténtalo de nuevo.",
+      );
+    }
+  };
+
+  const handleRateEvent = async (score: number) => {
+    const previous = userRating;
+    setUserRating(score);
+    try {
+      await rateEventAction(api, event.id, score);
+    } catch (error) {
+      setUserRating(previous);
+      Alert.alert(
+        "Error al calificar",
+        error instanceof Error ? error.message : "Inténtalo de nuevo.",
+      );
+    }
+  };
+
+  const handleToggleStatus = async (next: Exclude<AttendanceStatus, null>) => {
     const previous = status;
     const nextStatus = previous === next ? null : next;
-    setStatus(nextStatus); // optimista, se revierte si falla la llamada
+    setStatus(nextStatus);
 
     try {
       await setAttendanceAction(api, event.id, nextStatus);
     } catch (error) {
       setStatus(previous);
       Alert.alert(
-        "Couldn't update your RSVP",
-        error instanceof Error ? error.message : "Try again in a moment.",
+        "Error",
+        error instanceof Error ? error.message : "Inténtalo de nuevo.",
       );
     }
   };
 
-  const openInMaps = () => {
-    const query = encodeURIComponent(event.location);
-    const url = Platform.select({
-      ios: `maps:0,0?q=${query}`,
-      android: `geo:0,0?q=${query}`,
-      default: `https://maps.google.com/?q=${query}`,
-    });
-    if (url) Linking.openURL(url).catch(() => {});
-  };
-
-  const staticMapUrl =
-    `https://staticmap.openstreetmap.de/staticmap.php` +
-    `?center=${event.latitude},${event.longitude}` +
-    `&zoom=15&size=600x300`;
-
   const confirmCancel = () => {
     Alert.alert(
-      "Cancel this event?",
-      "Attendees will be notified that it's no longer happening. This can't be undone.",
+      "¿Cancelar este evento?",
+      "Los asistentes serán notificados. Esta acción no se puede deshacer.",
       [
-        { text: "Keep event", style: "cancel" },
+        { text: "Mantener evento", style: "cancel" },
         {
-          text: "Cancel event",
+          text: "Cancelar evento",
           style: "destructive",
           onPress: async () => {
             try {
@@ -105,10 +144,8 @@ export default function EventDetail() {
               router.replace("/(tabs)");
             } catch (error) {
               Alert.alert(
-                "Couldn't cancel event",
-                error instanceof Error
-                  ? error.message
-                  : "Try again in a moment.",
+                "Error",
+                error instanceof Error ? error.message : "Inténtalo de nuevo.",
               );
             }
           },
@@ -118,248 +155,161 @@ export default function EventDetail() {
   };
 
   return (
-    <View className="event-detail-container">
+    <View className="flex-1 bg-background">
+      {/* Barra Superior Flotante (Siempre visible y sobre el status bar) */}
+      <SafeAreaView
+        edges={["top"]}
+        className="absolute top-0 left-0 right-0 z-50 pointer-events-box-none"
+        pointerEvents="box-none"
+      >
+        <View
+          className="flex-row items-center justify-between px-4 pt-1"
+          pointerEvents="box-none"
+        >
+          {/* Botón Atrás */}
+          <Pressable
+            onPress={() => router.back()}
+            className="size-10 rounded-full items-center justify-center overflow-hidden active:opacity-75 bg-black/50"
+            hitSlop={10}
+          >
+            <BlurView
+              intensity={50}
+              tint="dark"
+              style={StyleSheet.absoluteFill}
+            />
+            <Ionicons name="chevron-back" size={22} color="#ffffff" />
+          </Pressable>
+        </View>
+      </SafeAreaView>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-20"
+        contentContainerClassName="pb-5"
       >
-        <View className="event-detail-header">
+        {/* ================= 1. HEADER MULTIMEDIA ================= */}
+        <View className="relative w-full aspect-4/5 min-h-[400px] max-h-[560px] overflow-hidden bg-modal-background">
+          <View
+            className="absolute top-4 left-4 right-4 flex-row items-center justify-between  z-50"
+            pointerEvents="box-none"
+          >
+            {/* Tag de Categoría */}
+            <View className="bg-chip-background px-3 py-1 rounded-full">
+              <Text className="text-xs font-bold text-primary uppercase tra king-normal">
+                {event.category}
+              </Text>
+            </View>
+
+            {/* Contador de fotos (ej. 1/3) */}
+            {event.media.length > 1 ? (
+              <View className="px-2.5 py-1 rounded-full">
+                <Text className="text-xs font-bold text-white">
+                  {activeMediaIndex + 1}/{event.media.length}
+                </Text>
+              </View>
+            ) : null}
+          </View>
           <EventMediaCarousel
             media={event.media}
-            className="event-detail-image"
+            className="w-full h-full"
+            resizeMode="cover"
+            onIndexChange={setActiveMediaIndex}
+            hideDots={true}
           />
-          <SafeAreaView>
-            <View className="event-detail-nav-row mt-2">
-              <Pressable
-                onPress={() => router.back()}
-                className="event-detail-icon-btn"
-              >
-                <BlurView
-                  intensity={40}
-                  tint="dark"
-                  style={StyleSheet.absoluteFill}
-                />
-                <Ionicons name="chevron-back" size={22} color={ICON_COLOR} />
-              </Pressable>
 
-              <Pressable
-                onPress={() =>
-                  Alert.alert("Share", "Sharing isn't wired up yet.")
-                }
-                className="event-detail-icon-btn"
-              >
-                <BlurView
-                  intensity={40}
-                  tint="dark"
-                  style={StyleSheet.absoluteFill}
-                />
-                <Ionicons name="share-outline" size={20} color={ICON_COLOR} />
-              </Pressable>
-            </View>
-          </SafeAreaView>
+          {/* Botón Flotante de Favoritos (Corazón) */}
+          <Pressable
+            onPress={handleToggleFavorite}
+            className={`absolute bottom-4 right-4 size-11 rounded-full items-center justify-center overflow-hidden active:opacity-75 z-20 border-none ${
+              isFavorite ? "bg-chip-background" : "bg-modal-background"
+            }`}
+            hitSlop={8}
+          >
+            <Image
+              source={icons.heart}
+              className="size-5"
+              tintColor={isFavorite ? colors.accentPink : colors.primary}
+            />
+          </Pressable>
         </View>
 
-        <View className="event-detail-card">
-          <View className="event-detail-category-chip">
-            <Text className="event-detail-category-text">{event.category}</Text>
-          </View>
+        {/* ================= 2. CONTENIDO PRINCIPAL ================= */}
+        <View className="page-all gap-4 mt-5">
+          {/* Card 1: Tarjeta Principal del Evento */}
+          <EventMainCard
+            title={event.title}
+            price={event.price}
+            priceWomen={event.priceWomen}
+            isFreeEvent={event.isFreeEvent}
+            isMultiplePrices={event.isMultiplePrices}
+            typeMusic={event.typeMusic}
+            startAt={event.startAt}
+            closingAt={event.closingAt}
+            location={event.location}
+            distanceLabel={event.distanceLabel}
+            capacity={event.capacity}
+            attendeeCount={goingCount}
+            interestedCount={interestedCount}
+            rating={event.rating}
+            ratingsCount={event.ratingsCount}
+            userRating={userRating}
+            onRate={handleRateEvent}
+            onLocationPress={() => {}}
+          />
 
-          <Text className="event-detail-title">{event.title}</Text>
+          {/* Card 2: Asistentes y Amigos */}
+          <EventAttendeesCard
+            attendeeCount={goingCount}
+            attendeeAvatars={event.attendeeAvatars}
+          />
 
-          <Separator type={"header"} />
+          {/* Card 3: Anfitrión */}
+          <EventOrganizerCard
+            author={event.author}
+            authorAvatar={event.authorAvatar}
+            rating={event.rating}
+            onViewProfile={() => {
+              Alert.alert(
+                event.author,
+                "Perfil de organizador en construcción.",
+              );
+            }}
+          />
 
-          <Text className="event-detail-section-title">About this event</Text>
-          <Text className="event-detail-description">{event.description}</Text>
+          {/* Card 4: Detalles de la Noche (Beneficios y Reglas) */}
+          <EventNightDetailsCard
+            description={event.description}
+            corkageFree={event.corkageFree}
+            openBar={event.openBar}
+            dressCode={event.dressCode}
+            dressCodeDetails={event.dressCodeDetails}
+            isAdultsOnly={event.isAdultsOnly}
+            requirePhysicalId={event.requirePhysicalId}
+            contactMethod={event.contactMethod}
+            externalTicketUrl={event.externalTicketUrl}
+          />
 
-          <View className="event-detail-info-row">
-            <View className="event-detail-info-icon-wrap">
-              <Ionicons name="calendar-outline" size={17} color="#b24bfb" />
-            </View>
-            <View className="event-detail-info-text-wrap">
-              <Text className="event-detail-info-label">{event.dateLabel}</Text>
-              {event.distanceLabel ? (
-                <Text className="event-detail-info-sub">
-                  {event.distanceLabel}
-                </Text>
-              ) : null}
-            </View>
-          </View>
-
-          <Pressable className="event-detail-info-row" onPress={openInMaps}>
-            <View className="event-detail-info-icon-wrap">
-              <Ionicons name="location-outline" size={17} color="#b24bfb" />
-            </View>
-            <View className="event-detail-info-text-wrap">
-              <Text className="event-detail-info-label" numberOfLines={1}>
-                {event.location}
-              </Text>
-              <Text className="event-detail-info-sub">Tap to open in Maps</Text>
-            </View>
-            <Ionicons
-              name="chevron-forward"
-              size={16}
-              color="rgba(245, 244, 242, 0.4)"
-            />
-          </Pressable>
-
-          {/*}
-          <Pressable className="event-detail-map-wrap" onPress={openInMaps}>
-            <Image
-              source={{ uri: staticMapUrl }}
-              className="event-detail-map-image"
-              resizeMode="cover"
-            />
-            <View className="event-detail-map-pin">
-              <Ionicons name="location" size={18} color="#f5f4f2" />
-            </View>
-            <View className="event-detail-map-label">
-              <Text className="event-detail-map-label-text">Open in Maps</Text>
-            </View>
-          </Pressable>
-          {*/}
-
-          <View className="event-detail-attendance-row">
-            <Text className="event-detail-attendance-text">
-              {goingCount} going · {interestedCount} interested
-            </Text>
-          </View>
-
-          {/* Botón de Contacto Directo / Entrada */}
-          {!isOwner ? (
-            <View className="my-2">
-              {event.contactMethod === "external" && event.externalTicketUrl ? (
-                <Pressable
-                  className="w-full bg-accent-pink py-3.5 px-4 rounded-2xl flex-row items-center justify-center gap-2 active:opacity-85 shadow-md shadow-accent-pink/30"
-                  onPress={() => Linking.openURL(event.externalTicketUrl!)}
-                >
-                  <Ionicons name="ticket-outline" size={20} color="#ffffff" />
-                  <Text className="text-white font-bold text-sm tracking-wide">
-                    Comprar Entrada Oficial
-                  </Text>
-                </Pressable>
-              ) : (
-                <Pressable
-                  className="w-full bg-[#25D366] py-3.5 px-4 rounded-2xl flex-row items-center justify-center gap-2 active:opacity-85 shadow-md shadow-[#25D366]/30"
-                  onPress={() => openWhatsApp(event.contactPhone, event.title)}
-                >
-                  <Ionicons name="logo-whatsapp" size={20} color="#ffffff" />
-                  <Text className="text-white font-bold text-sm tracking-wide">
-                    Contactar Anfitrión por WhatsApp
-                  </Text>
-                </Pressable>
-              )}
-            </View>
-          ) : null}
-
-          <Text className="event-detail-section-title">Comments</Text>
-          <View className="event-detail-comments-placeholder">
-            <Ionicons
-              name="chatbubble-ellipses-outline"
-              size={22}
-              color="rgba(245, 244, 242, 0.4)"
-            />
-            <Text className="event-detail-comments-placeholder-text">
-              Comments are coming in a future update.
-            </Text>
-          </View>
+          {/* Card 5: Punto de Encuentro (Mapa, Uber y Waze) */}
+          <EventMeetingPointCard
+            location={event.location}
+            latitude={event.latitude}
+            longitude={event.longitude}
+          />
         </View>
       </ScrollView>
 
-      <SafeAreaView edges={["bottom"]}>
-        <View className="event-detail-action-bar">
-          {isOwner ? (
-            <View className="event-detail-owner-row">
-              <Pressable
-                className="event-detail-edit-btn"
-                onPress={() => router.push(`/edit/${event.id}`)}
-              >
-                <Text className="event-detail-edit-btn-text">Edit</Text>
-              </Pressable>
-
-              <Pressable
-                className="event-detail-cancel-btn"
-                onPress={confirmCancel}
-              >
-                <Text className="event-detail-cancel-btn-text">
-                  Cancel event
-                </Text>
-              </Pressable>
-            </View>
-          ) : (
-            <>
-              <View className="event-detail-segment">
-                <Pressable
-                  onPress={() => toggleStatus("going")}
-                  className={
-                    status === "going"
-                      ? "event-detail-segment-btn event-detail-segment-btn-active"
-                      : "event-detail-segment-btn"
-                  }
-                >
-                  <Text
-                    className={
-                      status === "going"
-                        ? "event-detail-segment-btn-text event-detail-segment-btn-text-active"
-                        : "event-detail-segment-btn-text"
-                    }
-                  >
-                    I'm going
-                  </Text>
-                </Pressable>
-
-                <Pressable
-                  onPress={() => toggleStatus("interested")}
-                  className={
-                    status === "interested"
-                      ? "event-detail-segment-btn event-detail-segment-btn-active"
-                      : "event-detail-segment-btn"
-                  }
-                >
-                  <Text
-                    className={
-                      status === "interested"
-                        ? "event-detail-segment-btn-text event-detail-segment-btn-text-active"
-                        : "event-detail-segment-btn-text"
-                    }
-                  >
-                    Interested
-                  </Text>
-                </Pressable>
-              </View>
-
-              <Pressable
-                onPress={() => {
-                  if (
-                    event.contactMethod === "external" &&
-                    event.externalTicketUrl
-                  ) {
-                    Linking.openURL(event.externalTicketUrl);
-                  } else {
-                    openWhatsApp(event.contactPhone, event.title);
-                  }
-                }}
-                className="size-12 rounded-2xl bg-background items-center justify-center active:opacity-80 shadow-md"
-                hitSlop={6}
-              >
-                <Image
-                  source={
-                    event.contactMethod === "external"
-                      ? icons.ticket
-                      : icons.whatsapp
-                  }
-                  className="size-6"
-                  resizeMode="contain"
-                  tintColor={
-                    event.contactMethod === "external"
-                      ? colors.primary
-                      : "#2BCC59"
-                  }
-                />
-              </Pressable>
-            </>
-          )}
-        </View>
-      </SafeAreaView>
+      {/* ================= 3. BARRA INFERIOR DE ACCIÓN ================= */}
+      <EventActionBar
+        isOwner={isOwner}
+        status={status}
+        contactMethod={event.contactMethod}
+        externalTicketUrl={event.externalTicketUrl}
+        contactPhone={event.contactPhone}
+        eventTitle={event.title}
+        onToggleStatus={handleToggleStatus}
+        onContactWhatsApp={() => openWhatsApp(event.contactPhone, event.title)}
+        onEditPress={() => router.push(`/edit/${event.id}`)}
+        onCancelPress={confirmCancel}
+      />
     </View>
   );
 }

@@ -50,7 +50,7 @@ export default function ContactMethodCard({
                   Chat directo
                 </Text>
               </View>
-              <Text className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              <Text className="text-xs font-medium text-muted-foreground mt-1 leading-relaxed">
                 Coordina transferencias o entrega de entradas directamente vía
                 WhatsApp.
               </Text>
@@ -60,7 +60,7 @@ export default function ContactMethodCard({
           {/* Campo de Número de WhatsApp cuando se selecciona Chat directo */}
           {contactMethod === "chat" ? (
             <View className="pl-7 gap-1">
-              <View className="flex-row items-center bg-card px-3.5 rounded-l-lg gap-1">
+              <View className="flex-row items-center bg-modal-background px-3.5 rounded-l-lg gap-1">
                 <Ionicons name="logo-whatsapp" size={18} color="#25D366" />
                 <TextInput
                   className="flex-1 text-primary text-sm font-semibold"
@@ -71,10 +71,6 @@ export default function ContactMethodCard({
                   keyboardType="phone-pad"
                 />
               </View>
-              <Text className="text-xs text-muted-foreground">
-                Al pulsar "Contactar", el interesado abrirá un chat directo
-                contigo en WhatsApp.
-              </Text>
             </View>
           ) : null}
         </View>
@@ -102,7 +98,7 @@ export default function ContactMethodCard({
               <Text className="text-sm font-semibold text-primary">
                 Enlace de Ticketing externo
               </Text>
-              <Text className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              <Text className="text-xs font-medium text-muted-foreground mt-1 leading-relaxed">
                 Redirige a plataformas como Passline, Eventbrite o Joinnus.
               </Text>
             </View>
@@ -112,7 +108,7 @@ export default function ContactMethodCard({
           {contactMethod === "external" ? (
             <View className="pl-8 gap-1">
               <TextInput
-                className="bg-card text-primary text-sm font-medium px-3.5 rounded-xl"
+                className="bg-modal-background text-primary text-sm font-medium px-3.5 rounded-xl"
                 placeholder="https://passline.com/evento/tu-evento"
                 placeholderTextColor={colors.mutedForeground}
                 value={externalUrl}

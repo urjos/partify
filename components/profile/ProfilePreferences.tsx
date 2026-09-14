@@ -20,10 +20,10 @@ export default function ProfilePreferences({
       {/* Card de Notificaciones */}
       <View className="rounded-2xl border border-border/30 flex-row items-center justify-between gap-4">
         <View className="flex-1 pr-2">
-          <Text className="text-sm font-sans-semibold text-primary">
+          <Text className="text-sm font-semibold text-primary">
             Recibir notificaciones
           </Text>
-          <Text className="text-xs font-sans-medium text-muted-foreground mt-0.5 leading-snug">
+          <Text className="text-xs font-medium text-muted-foreground mt-0.5 leading-snug">
             Alertas inmediatas de fiestas cercanas a ti.
           </Text>
         </View>
@@ -36,7 +36,7 @@ export default function ProfilePreferences({
 
       {/* Footer con versión y acción de cerrar sesión */}
       <View className="flex-row items-center justify-between mt-4 px-1 pb-8">
-        <Text className="text-xs font-sans-medium text-muted-foreground">
+        <Text className="text-xs font-regular text-muted-foreground">
           {appVersion}
         </Text>
 
@@ -45,7 +45,7 @@ export default function ProfilePreferences({
           hitSlop={8}
           className="active:opacity-75"
         >
-          <Text className="text-xs font-sans-semibold text-muted-foreground">
+          <Text className="text-xs font-semibold text-muted-foreground">
             Cerrar Sesión
           </Text>
         </Pressable>

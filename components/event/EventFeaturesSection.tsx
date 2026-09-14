@@ -29,7 +29,7 @@ export default function EventFeaturesSection({
         Beneficios y Requisitos
       </Text>
 
-      <View className="gap-6 ">
+      <View className="gap-6">
         {/* ================= SECCIÓN BEBIDAS ================= */}
 
         {/* Corcho libre */}
@@ -39,7 +39,7 @@ export default function EventFeaturesSection({
               <Text className="text-sm font-semibold text-primary">
                 Corcho libre
               </Text>
-              <Text className="text-xs text-muted-foreground">
+              <Text className="text-xs font-medium text-muted-foreground">
                 Los asistentes pueden ingresar sus propias bebidas.
               </Text>
             </View>
@@ -57,7 +57,7 @@ export default function EventFeaturesSection({
               <Text className="text-sm font-semibold text-primary">
                 Barra libre
               </Text>
-              <Text className="text-xs text-muted-foreground">
+              <Text className="text-xs font-medium text-muted-foreground">
                 Tragos o bebidas incluidas con la entrada/acceso.
               </Text>
             </View>
@@ -72,7 +72,7 @@ export default function EventFeaturesSection({
               <Text className="text-sm font-semibold text-primary">
                 Solo mayores de edad
               </Text>
-              <Text className="text-xs text-muted-foreground">
+              <Text className="text-xs font-medium text-muted-foreground">
                 Ingreso estrictamente limitado a mayores de 18 años.
               </Text>
             </View>
@@ -90,7 +90,7 @@ export default function EventFeaturesSection({
               <Text className="text-sm font-semibold text-primary">
                 DNI físico obligatorio
               </Text>
-              <Text className="text-xs text-muted-foreground">
+              <Text className="text-xs font-medium text-muted-foreground">
                 No se aceptarán fotos ni documentos digitales en puerta.
               </Text>
             </View>

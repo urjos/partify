@@ -90,11 +90,16 @@ export default function App() {
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
-      className="flex-1 bg-background page-all"
+      className="flex-1 bg-background"
     >
-      <Header isPressable={true} logo={true} title="Partify" />
-      <CategoryFilters />
+      <Header
+        isPressable={true}
+        logo={true}
+        title="Partify"
+        className="page-all"
+      />
       <FlatList
+        ListHeaderComponent={<CategoryFilters />}
         data={filteredEvents}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -121,7 +126,7 @@ export default function App() {
         contentContainerClassName="pb-6"
         ListFooterComponent={
           <>
-            <View className="mt-6">
+            <View className="mt-6 page-all">
               <HostBanner />
             </View>
           </>

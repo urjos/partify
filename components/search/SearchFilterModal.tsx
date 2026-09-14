@@ -167,9 +167,7 @@ export default function SearchFilterModal({
                 tintColor={colors.primary}
                 resizeMode="contain"
               />
-              <Text className="text-xl font-sans-bold text-primary">
-                Filtros
-              </Text>
+              <Text className="text-xl font-bold text-primary">Filtros</Text>
             </View>
             <Pressable onPress={handleClose} hitSlop={12}>
               <Image
@@ -193,7 +191,7 @@ export default function SearchFilterModal({
                   Radio de Distancia
                 </Text>
                 <View className="px-3 py-1.5 rounded-full border-none bg-card">
-                  <Text className="text-sm font-sans-bold text-primary">
+                  <Text className="text-sm font-bold text-primary">
                     {filters.distance} km
                   </Text>
                 </View>
@@ -213,13 +211,13 @@ export default function SearchFilterModal({
                 />
 
                 <View className="flex-row items-center justify-between px-2 mt-1">
-                  <Text className="text-xs font-sans-medium text-muted-foreground">
+                  <Text className="text-xs font-medium text-muted-foreground">
                     1 km
                   </Text>
-                  <Text className="text-xs font-sans-medium text-muted-foreground">
+                  <Text className="text-xs font-medium text-muted-foreground">
                     25 km
                   </Text>
-                  <Text className="text-xs font-sans-medium text-muted-foreground">
+                  <Text className="text-xs font-medium text-muted-foreground">
                     50 km
                   </Text>
                 </View>
@@ -241,7 +239,7 @@ export default function SearchFilterModal({
               <Text className="sf-modal-section-title">Rango de precio</Text>
               <View className="flex-row gap-3">
                 <View className="flex-1">
-                  <Text className="text-xs font-sans-medium text-muted-foreground mb-1.5">
+                  <Text className="text-xs font-medium text-muted-foreground mb-1.5">
                     Mínimo
                   </Text>
                   <PriceInput
@@ -250,7 +248,7 @@ export default function SearchFilterModal({
                   />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-xs font-sans-medium text-muted-foreground mb-1.5">
+                  <Text className="text-xs font-medium text-muted-foreground mb-1.5">
                     Máximo
                   </Text>
                   <PriceInput
@@ -260,7 +258,7 @@ export default function SearchFilterModal({
                 </View>
               </View>
               {isPriceError && (
-                <Text className="text-xs font-sans-medium text-destructive mt-3 text-center">
+                <Text className="text-xs font-medium text-destructive mt-3 text-center">
                   El máximo debe ser mayor o igual al mínimo
                 </Text>
               )}
@@ -291,10 +289,10 @@ export default function SearchFilterModal({
 
               <View className="flex-row items-center justify-between py-3.5">
                 <View className="flex-1 pr-4">
-                  <Text className="text-sm font-sans-semibold text-primary">
+                  <Text className="text-sm font-semibold text-primary">
                     Confirmacion instantanea
                   </Text>
-                  <Text className="text-xs font-sans-medium text-muted-foreground mt-0.5">
+                  <Text className="text-xs font-medium text-muted-foreground mt-0.5">
                     Sin esperar aprobacion del anfitron
                   </Text>
                 </View>
@@ -306,10 +304,10 @@ export default function SearchFilterModal({
 
               <View className="flex-row items-center justify-between py-3.5 ">
                 <View className="flex-1 pr-4">
-                  <Text className="text-sm font-sans-semibold text-primary">
+                  <Text className="text-sm font-semibold text-primary">
                     Barra Libre
                   </Text>
-                  <Text className="text-xs font-sans-medium text-muted-foreground mt-0.5">
+                  <Text className="text-xs font-medium text-muted-foreground mt-0.5">
                     Tiene trago dentro de la fiesta
                   </Text>
                 </View>
@@ -321,10 +319,10 @@ export default function SearchFilterModal({
 
               <View className="flex-row items-center justify-between py-3.5">
                 <View className="flex-1 pr-4">
-                  <Text className="text-sm font-sans-semibold text-primary">
+                  <Text className="text-sm font-semibold text-primary">
                     Corcho libre
                   </Text>
-                  <Text className="text-xs font-sans-medium text-muted-foreground mt-0.5">
+                  <Text className="text-xs font-medium text-muted-foreground mt-0.5">
                     Puedes llevar tu propio trago
                   </Text>
                 </View>
@@ -342,7 +340,7 @@ export default function SearchFilterModal({
               onPress={handleReset}
               className="flex-1 items-center justify-center py-4 rounded-2xl bg-muted"
             >
-              <Text className="text-sm font-sans-bold text-primary">
+              <Text className="text-sm font-bold text-primary">
                 Restablecer
               </Text>
             </Pressable>
@@ -353,7 +351,7 @@ export default function SearchFilterModal({
               style={{ opacity: isPriceError ? 0.5 : 1 }}
               className="flex-1 items-center justify-center py-4 rounded-2xl bg-accent-pink"
             >
-              <Text className="text-sm font-sans-bold text-primary">
+              <Text className="text-sm font-bold text-primary">
                 {hasActiveFilters ? "Aplicar filtros" : "Aplicar"}
               </Text>
             </Pressable>

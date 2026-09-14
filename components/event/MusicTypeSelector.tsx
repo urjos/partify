@@ -32,12 +32,10 @@ export default function MusicTypeSelector({
     <View className="gap-4">
       {/* Fila superior: Título y Selector "Elige ⌵" */}
       <View className="flex-row items-center justify-between">
-        <Text className="text-xl font-semibold text-primary">
-          Género musical
-        </Text>
+        <Text className="text-xl font-bold text-primary">Género musical</Text>
         <Pressable
           onPress={() => setModalVisible(true)}
-          className="flex-row items-center px-3 py-1.5 bg-card rounded-full border-none active:opacity-75 gap-1"
+          className="flex-row items-center px-3 py-1.5 bg-modal-background rounded-full border-none active:opacity-75 gap-1"
         >
           <Text className="text-xs font-bold text-muted-foreground">
             {selected.length > 0 ? `${selected.length} elegidos` : "Elige"}
@@ -56,9 +54,9 @@ export default function MusicTypeSelector({
           {selected.map((genre) => (
             <View
               key={genre}
-              className="flex-row items-center px-5 py-2.5 bg-card rounded-full border-none"
+              className="flex-row items-center px-5 py-2.5 bg-modal-background rounded-full border-none"
             >
-              <Text className="text-sm font-bold text-muted-foreground mr-2">
+              <Text className="text-sm font-semibold text-muted-foreground mr-2">
                 {genre}
               </Text>
               <Pressable

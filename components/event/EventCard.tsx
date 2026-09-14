@@ -2,10 +2,13 @@ import EventMediaCarousel from "@/components/event/EventMediaCarousel";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
+import { useApi } from "@/hooks/use-api";
+import { useEventStore } from "@/lib/store/eventStore";
 import { openWhatsApp } from "@/lib/whatsapp";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useState } from "react";
 import {
   GestureResponderEvent,
   Image,
@@ -18,6 +21,7 @@ import {
 dayjs.locale("es");
 
 const EventCard = ({
+  id,
   media,
   title,
   dateLabel,
@@ -27,12 +31,41 @@ const EventCard = ({
   author,
   authorAvatar,
   rating,
+  isFavorite: initialIsFavorite,
   contactMethod,
   contactPhone,
   externalTicketUrl,
   onPress,
   onContactPress,
+  onToggleFavorite,
 }: EventCardProps) => {
+  const api = useApi();
+  const toggleFavoriteAction = useEventStore((state) => state.toggleFavorite);
+  const [isFavorite, setIsFavorite] = useState<boolean>(
+    Boolean(initialIsFavorite),
+  );
+
+  useEffect(() => {
+    setIsFavorite(Boolean(initialIsFavorite));
+  }, [initialIsFavorite]);
+
+  const handleFavoritePress = async (e: GestureResponderEvent) => {
+    e.stopPropagation();
+    if (onToggleFavorite) {
+      onToggleFavorite();
+      return;
+    }
+    if (!id) return;
+    const previous = isFavorite;
+    setIsFavorite(!previous);
+    try {
+      const nextState = await toggleFavoriteAction(api, id);
+      setIsFavorite(nextState);
+    } catch {
+      setIsFavorite(previous);
+    }
+  };
+
   const isExternal = contactMethod === "external" && Boolean(externalTicketUrl);
 
   const handleContactPress = (e: GestureResponderEvent) => {
@@ -55,7 +88,7 @@ const EventCard = ({
         />
       </View>
 
-      <View className="event-content">
+      <View className="event-content page-all">
         <LinearGradient
           colors={["rgba(0,0,0,0.6)", "transparent"]}
           locations={[0, 0.2]}
@@ -78,7 +111,7 @@ const EventCard = ({
           </View>
         </View>
         <View className="flex-row justify-between items-center">
-          <View className="gap-1">
+          <View className="gap-1 max-w-75">
             <View className="flex-row items-center gap-2">
               {/* Maximo de 30 caracteres para titulo*/}
               <Text numberOfLines={1} className="event-title">
@@ -96,20 +129,18 @@ const EventCard = ({
                 </View>
               ) : null}
             </View>
-            <View className="event-meta-stack">
-              <View className="flex-row items-center gap-2">
-                <Image
-                  source={authorAvatar ? { uri: authorAvatar } : images.avatar}
-                  className="w-4 h-4 rounded-full"
-                />
-                <Text className="event-meta-text">{author}</Text>
-                <Image
-                  source={icons.verified}
-                  className="event-meta-icon"
-                  tintColor={colors.accentPink}
-                  resizeMode="contain"
-                />
-              </View>
+            <View className="flex-row items-center gap-2">
+              <Image
+                source={authorAvatar ? { uri: authorAvatar } : images.avatar}
+                className="w-4 h-4 rounded-full"
+              />
+              <Text className="event-meta-text">{author}</Text>
+              <Image
+                source={icons.verified}
+                className="event-meta-icon"
+                tintColor={colors.accentPink}
+                resizeMode="contain"
+              />
             </View>
           </View>
 
@@ -128,11 +159,15 @@ const EventCard = ({
                 />
               </Pressable>
 
-              <Pressable className="event-bookmark-btn">
+              <Pressable
+                className="event-bookmark-btn active:opacity-75"
+                onPress={handleFavoritePress}
+                hitSlop={8}
+              >
                 <Image
                   source={icons.heart}
                   className="event-bookmark-icon"
-                  tintColor={colors.primary}
+                  tintColor={isFavorite ? colors.accentPink : colors.primary}
                   resizeMode="contain"
                 />
               </Pressable>

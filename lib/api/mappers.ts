@@ -36,7 +36,11 @@ type ApiEvent = {
   interestedCount: number;
   isGoing?: boolean;
   isOwner?: boolean;
+  authorId?: string;
   rating: number;
+  ratingsCount?: number;
+  userRating?: number | null;
+  isFavorite?: boolean;
   dressCode?: string;
   dressCodeDetails?: string;
   corkageFree?: boolean;
@@ -94,6 +98,7 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   externalTicketUrl: apiEvent.externalTicketUrl ?? "",
   hideExactAddress: apiEvent.hideExactAddress ?? false,
   author: apiEvent.author,
+  authorId: apiEvent.authorId,
   authorAvatar: apiEvent.authorAvatar,
   attendeeAvatars: apiEvent.attendeeAvatars.map((uri) => ({ uri })),
   attendeeCount: apiEvent.attendeeCount,
@@ -101,6 +106,9 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   isGoing: apiEvent.isGoing,
   isOwner: apiEvent.isOwner,
   rating: apiEvent.rating,
+  ratingsCount: apiEvent.ratingsCount,
+  userRating: apiEvent.userRating,
+  isFavorite: apiEvent.isFavorite ?? false,
   dressCode: apiEvent.dressCode ?? "Casual",
   dressCodeDetails: apiEvent.dressCodeDetails ?? "",
   corkageFree: apiEvent.corkageFree ?? false,

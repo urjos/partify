@@ -31,7 +31,7 @@ const AnimatedToggle = ({ value, onValueChange }: AnimatedToggleProps) => {
 
   const trackColor = progress.interpolate({
     inputRange: [0, 1],
-    outputRange: [colors.card, colors.accentPink],
+    outputRange: [colors.modalBackground, colors.accentPink],
   });
 
   return (
@@ -55,7 +55,7 @@ const AnimatedToggle = ({ value, onValueChange }: AnimatedToggleProps) => {
             width: KNOB_SIZE,
             height: KNOB_SIZE,
             borderRadius: KNOB_SIZE / 2,
-            backgroundColor: "#f5f4f2",
+            backgroundColor: colors.primary,
             transform: [{ translateX: knobTranslateX }],
           }}
         />

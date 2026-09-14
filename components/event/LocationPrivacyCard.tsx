@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView from "react-native-maps";
 
 interface LocationPrivacyCardProps {
   location: {
@@ -27,43 +27,49 @@ export default function LocationPrivacyCard({
 
   return (
     <View className="gap-4">
-      <View className="bg-card rounded-2xl border-none gap-2">
+      <View className="gap-2">
         {/* Campo Dirección o Referencia */}
-        <View>
+        <View className="gap-1">
           <Pressable
             onPress={() => router.push("/create-location")}
-            className="flex-row items-center bg-card border-none active:opacity-80"
+            className="h-44 w-full relative overflow-hidden rounded-2xl active:opacity-80"
           >
-            <View className="h-45 w-full relative">
-              <MapView
-                style={{ width: "100%", height: "100%" }}
-                region={{
-                  latitude,
-                  longitude,
-                  latitudeDelta: 0.015,
-                  longitudeDelta: 0.015,
-                }}
-                scrollEnabled={false}
-                zoomEnabled={false}
-                rotateEnabled={false}
-                pitchEnabled={false}
-                customMapStyle={darkMapStyle}
-                userInterfaceStyle="dark"
+            <MapView
+              style={{ width: "100%", height: "100%" }}
+              region={{
+                latitude,
+                longitude,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.015,
+              }}
+              scrollEnabled={false}
+              zoomEnabled={false}
+              rotateEnabled={false}
+              pitchEnabled={false}
+              customMapStyle={darkMapStyle}
+              userInterfaceStyle="dark"
+              pointerEvents="none"
+            />
+
+            {/* Pin central fijo (evita parpadeo) */}
+            {location ? (
+              <View
+                className="absolute inset-0 items-center justify-center"
+                pointerEvents="none"
               >
-                {location ? (
-                  <Marker coordinate={{ latitude, longitude }}>
-                    <View className="size-7 rounded-full bg-card items-center justify-center shadow-lg">
-                      <Ionicons
-                        name="location"
-                        size={14}
-                        color={colors.destructive}
-                      />
-                    </View>
-                  </Marker>
-                ) : null}
-              </MapView>
-            </View>
+                <View className="size-8 rounded-full bg-card items-center justify-center shadow-lg border border-border/40">
+                  <Ionicons
+                    name="location"
+                    size={16}
+                    color={colors.destructive}
+                  />
+                </View>
+              </View>
+            ) : null}
           </Pressable>
+          <Text className="font-regular text-muted-foreground text-xs">
+            Selecciona en el mapa.
+          </Text>
         </View>
 
         {/* Mini Mapa Preview con botón "Fijar punto GPS exacto" */}

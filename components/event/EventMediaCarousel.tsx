@@ -17,12 +17,18 @@ type VideoSlideProps = {
   uri: string;
   width: number;
   className?: string;
+  contentFit?: "cover" | "contain";
 };
 
 // Componente aparte porque useVideoPlayer es un hook — cada video de la
 // lista necesita su propia instancia, solo se crea cuando de verdad hay
 // un slide de video que renderizar.
-const VideoSlide = ({ uri, width, className }: VideoSlideProps) => {
+const VideoSlide = ({
+  uri,
+  width,
+  className,
+  contentFit = "cover",
+}: VideoSlideProps) => {
   const player = useVideoPlayer(uri, (p) => {
     p.loop = true;
     p.muted = true;
@@ -42,7 +48,7 @@ const VideoSlide = ({ uri, width, className }: VideoSlideProps) => {
       player={player}
       style={{ width }}
       className={className}
-      contentFit="cover"
+      contentFit={contentFit}
       nativeControls={false}
       allowsFullscreen={false}
       allowsPictureInPicture={false}
@@ -54,12 +60,18 @@ type EventMediaCarouselProps = {
   media: EventMediaItem[];
   className?: string;
   onPress?: () => void;
+  onIndexChange?: (index: number) => void;
+  hideDots?: boolean;
+  resizeMode?: "cover" | "contain";
 };
 
 const EventMediaCarousel = ({
   media,
   className,
   onPress,
+  onIndexChange,
+  hideDots = false,
+  resizeMode = "cover",
 }: EventMediaCarouselProps) => {
   const [width, setWidth] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -72,7 +84,10 @@ const EventMediaCarousel = ({
   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (!width) return;
     const index = Math.round(event.nativeEvent.contentOffset.x / width);
-    if (index !== activeIndex) setActiveIndex(index);
+    if (index !== activeIndex) {
+      setActiveIndex(index);
+      if (onIndexChange) onIndexChange(index);
+    }
   };
 
   return (
@@ -83,6 +98,7 @@ const EventMediaCarousel = ({
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
+          className="h-full w-full"
           keyExtractor={(_, index) => String(index)}
           onScroll={onScroll}
           scrollEventThrottle={16}
@@ -92,19 +108,24 @@ const EventMediaCarousel = ({
             index,
           })}
           renderItem={({ item }) => (
-            <Pressable onPress={onPress} style={{ width }}>
+            <Pressable
+              onPress={onPress}
+              style={{ width, height: "100%" }}
+              className="h-full items-center justify-center overflow-hidden"
+            >
               {item.type === "video" ? (
                 <VideoSlide
                   uri={item.uri}
                   width={width}
                   className={className}
+                  contentFit={resizeMode}
                 />
               ) : (
                 <Image
                   source={item.source}
                   style={{ width }}
                   className={className}
-                  resizeMode="cover"
+                  resizeMode={resizeMode}
                 />
               )}
             </Pressable>
@@ -112,7 +133,7 @@ const EventMediaCarousel = ({
         />
       )}
 
-      {media.length > 1 && (
+      {!hideDots && media.length > 1 && (
         <View className="event-media-dots" pointerEvents="none">
           {media.map((_, index) => (
             <View

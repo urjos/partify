@@ -27,6 +27,8 @@ interface EventStore {
     id: string,
     status: "going" | "interested" | null,
   ) => Promise<void>;
+  rateEvent: (api: ApiClient, id: string, score: number) => Promise<void>;
+  toggleFavorite: (api: ApiClient, id: string) => Promise<boolean>;
 }
 
 export const useEventStore = create<EventStore>((set, get) => ({
@@ -98,5 +100,28 @@ export const useEventStore = create<EventStore>((set, get) => ({
     set((state) => ({
       events: state.events.map((event) => (event.id === id ? updated : event)),
     }));
+  },
+
+  rateEvent: async (api, id, score) => {
+    const { data } = await api.patch<{ data: any }>(
+      `/events/${id}/rate`,
+      { score },
+    );
+    const updated = mapApiEventToEventItem(data);
+    set((state) => ({
+      events: state.events.map((event) => (event.id === id ? updated : event)),
+    }));
+  },
+
+  toggleFavorite: async (api, id) => {
+    const { data } = await api.patch<{ data: any }>(
+      `/events/${id}/favorite`,
+      {},
+    );
+    const updated = mapApiEventToEventItem(data);
+    set((state) => ({
+      events: state.events.map((event) => (event.id === id ? updated : event)),
+    }));
+    return updated.isFavorite ?? false;
   },
 }));

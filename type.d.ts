@@ -52,6 +52,10 @@ declare global {
     closingAt?: string;
     isGoing?: boolean;
     isOwner?: boolean;
+    authorId?: string;
+    ratingsCount?: number;
+    userRating?: number | null;
+    isFavorite?: boolean;
     dressCode?: string;
     dressCodeDetails?: string;
     corkageFree?: boolean;
@@ -61,8 +65,10 @@ declare global {
   }
 
   interface EventCardProps extends Omit<EventItem, "id"> {
+    id?: string;
     onPress: () => void;
     onContactPress?: () => void;
+    onToggleFavorite?: () => void;
   }
 
   type AttendanceStatus = "going" | "interested" | null;

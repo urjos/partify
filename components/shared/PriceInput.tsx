@@ -53,7 +53,7 @@ export default function PriceInput({
   };
 
   return (
-    <View className="flex-row items-center bg-card rounded-xl overflow-hidden">
+    <View className="flex-row items-center border border-border rounded-xl overflow-hidden">
       {/* Botón − */}
       <Pressable
         onPress={handleMinus}
@@ -80,7 +80,7 @@ export default function PriceInput({
         <Text
           style={{
             fontSize: 14,
-            fontFamily: "sans-semibold",
+            fontFamily: "bold",
             color: hasValue ? colors.primary : colors.mutedForeground,
             marginRight: 2,
           }}
@@ -91,7 +91,7 @@ export default function PriceInput({
         <TextInput
           style={{
             fontSize: 14,
-            fontFamily: "sans-semibold",
+            fontFamily: "bold",
             color: colors.primary,
             paddingVertical: 12,
             minWidth: 20,

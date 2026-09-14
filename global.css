@@ -9,6 +9,8 @@
   --color-foreground: #f5f4f2;
 
   --color-modal-background: #0c0c0c;
+  --color-chip-background: #241320;
+  --color-subchip-background: #1d1225;
   --color-card: #1b1b1f;
   --color-muted: #27272a;
   --color-muted-foreground: rgba(245, 244, 242, 0.62);
@@ -23,6 +25,7 @@
 
   --color-border: rgba(245, 244, 242, 0.12);
   --color-success: #22c55e;
+  --color-delete: #f87171;
   --color-destructive: #ef4444;
 
   --spacing-0: 0px;
@@ -45,12 +48,12 @@
   --spacing-24: 96px;
   --spacing-30: 120px;
 
-  --font-sans-light: sans-light;
-  --font-sans: sans-regular;
-  --font-sans-medium: sans-medium;
-  --font-sans-semibold: sans-semibold;
-  --font-sans-bold: sans-bold;
-  --font-sans-extrabold: sans-extrabold;
+  --font-light: light;
+  --font-regular: regular;
+  --font-medium: medium;
+  --font-semibold: semibold;
+  --font-bold: bold;
+  --font-extrabold: extrabold;
 }
 
 @layer components {
@@ -115,19 +118,19 @@
   }
 
   .auth-wordmark {
-    @apply text-3xl font-sans-extrabold text-primary;
+    @apply text-3xl font-extrabold text-primary;
   }
 
   .auth-wordmark-sub {
-    @apply -mt-1 text-xs font-sans-semibold uppercase tracking-[1px] text-muted-foreground;
+    @apply -mt-1 text-xs font-semibold uppercase tracking-[1px] text-muted-foreground;
   }
 
   .auth-title {
-    @apply text-4xl font-sans-bold text-primary text-center;
+    @apply text-4xl font-bold text-primary text-center;
   }
 
   .auth-subtitle {
-    @apply text-base font-sans-medium text-muted-foreground text-center;
+    @apply text-base font-medium text-muted-foreground text-center;
   }
 
   .auth-card {
@@ -143,11 +146,11 @@
   }
 
   .auth-label {
-    @apply text-base font-sans-bold text-primary mb-2;
+    @apply text-base font-bold text-primary mb-2;
   }
 
   .auth-input {
-    @apply rounded-2xl border-none bg-card p-3 text-base font-sans-medium text-primary;
+    @apply rounded-2xl border-none bg-card p-3 text-base font-medium text-primary;
   }
 
   .auth-input-error {
@@ -155,11 +158,11 @@
   }
 
   .auth-error {
-    @apply text-xs font-sans-medium text-destructive;
+    @apply text-xs font-medium text-destructive;
   }
 
   .auth-helper {
-    @apply text-sm font-sans-medium text-muted-foreground;
+    @apply text-sm font-medium text-muted-foreground;
   }
 
   .auth-button {
@@ -171,7 +174,7 @@
   }
 
   .auth-button-text {
-    @apply text-base font-sans-bold text-primary;
+    @apply text-base font-bold text-primary;
   }
 
   .auth-secondary-button {
@@ -179,7 +182,7 @@
   }
 
   .auth-secondary-button-text {
-    @apply text-base font-sans-semibold text-accent;
+    @apply text-base font-semibold text-accent;
   }
 
   .auth-divider-row {
@@ -191,7 +194,7 @@
   }
 
   .auth-divider-text {
-    @apply text-[11px] font-sans-semibold uppercase tracking-[1px] text-muted-foreground;
+    @apply text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground;
   }
 
   .auth-link-row {
@@ -199,11 +202,11 @@
   }
 
   .auth-link-copy {
-    @apply text-xs font-sans-medium text-muted-foreground;
+    @apply text-xs font-medium text-muted-foreground;
   }
 
   .auth-link {
-    @apply text-xs font-sans-bold text-accent;
+    @apply text-xs font-bold text-accent;
   }
 
   .auth-google-button {
@@ -211,13 +214,13 @@
   }
 
   .auth-google-button-text {
-    @apply text-base font-sans-semibold text-foreground;
+    @apply text-base font-semibold text-foreground;
   }
 
   /* Home */
 
   .home-empty-state {
-    @apply py-4 text-sm font-sans-medium text-muted-foreground;
+    @apply py-4 text-sm font-medium text-muted-foreground;
   }
 
   .home-header {
@@ -225,7 +228,7 @@
   }
 
   .home-brand-title {
-    @apply text-3xl font-sans-bold text-primary;
+    @apply text-3xl font-bold text-primary;
   }
 
   .home-icon-settings {
@@ -247,7 +250,7 @@
   }
 
   .home-location-text {
-    @apply text-base font-sans-bold text-primary;
+    @apply text-base font-bold text-primary;
   }
 
   /* Home - Category Filters */
@@ -261,7 +264,7 @@
   }
 
   .home-filter-chip {
-    @apply flex-row items-center rounded-full bg-card px-5 py-2.5;
+    @apply flex-row items-center rounded-full bg-modal-background px-5 py-2.5;
   }
 
   .home-filter-chip-active {
@@ -269,11 +272,11 @@
   }
 
   .home-filter-text {
-    @apply text-sm font-sans-bold text-muted-foreground;
+    @apply text-sm font-semibold text-muted-foreground;
   }
 
   .home-filter-text-active {
-    @apply text-muted;
+    @apply text-modal-background font-bold;
   }
 
   /* Home - List Head */
@@ -283,7 +286,7 @@
   }
 
   .list-title {
-    @apply text-xl font-sans-bold text-primary;
+    @apply text-xl font-bold text-primary;
   }
 
   .list-action {
@@ -291,7 +294,7 @@
   }
 
   .list-action-text {
-    @apply text-lg font-sans-semibold text-primary;
+    @apply text-lg font-semibold text-primary;
   }
 
   /* Host Banner */
@@ -305,11 +308,11 @@
   }
 
   .host-banner-title {
-    @apply mb-1 text-lg font-sans-bold text-primary;
+    @apply mb-1 text-lg font-bold text-primary;
   }
 
   .host-banner-subtitle {
-    @apply text-sm font-sans-medium text-muted-foreground leading-5;
+    @apply text-sm font-medium text-muted-foreground leading-5;
   }
 
   .host-banner-btn {
@@ -317,21 +320,21 @@
   }
 
   .host-banner-btn-text {
-    @apply text-sm font-sans-bold text-primary;
+    @apply text-sm font-bold text-primary;
   }
 
   /* Event Card */
 
   .event-card {
-    @apply relative overflow-hidden bg-card;
+    @apply relative overflow-hidden bg-background w-full;
   }
 
   .event-image-wrap {
-    @apply relative aspect-4/5 w-full;
+    @apply relative w-full aspect-4/5 min-h-[380px] max-h-[520px] overflow-hidden bg-black;
   }
 
   .event-image {
-    @apply absolute inset-0 h-full;
+    @apply absolute inset-0 h-full w-full;
   }
 
   .event-overlay-light {
@@ -351,19 +354,19 @@
   }
 
   .event-category-chip {
-    @apply bg-accent-pink px-3 py-1 rounded-xl;
+    @apply bg-accent-pink/50 px-3 py-1 rounded-xl;
   }
 
   .event-category-text {
-    @apply text-xs font-sans-bold text-muted uppercase tracking-normal;
+    @apply text-xs font-bold text-primary uppercase tracking-normal;
   }
 
   .event-location-text {
-    @apply text-base font-sans-medium text-muted-foreground;
+    @apply text-base font-medium text-muted-foreground;
   }
 
   .event-title {
-    @apply text-2xl font-sans-extrabold text-primary text-justify;
+    @apply text-2xl font-extrabold text-primary;
   }
 
   .event-footer-row {
@@ -379,11 +382,11 @@
   }
 
   .event-meta-text {
-    @apply text-sm font-sans-medium text-muted-foreground;
+    @apply text-sm font-medium text-muted-foreground;
   }
 
   .event-time-text {
-    @apply text-xs font-sans-medium text-muted-foreground;
+    @apply text-xs font-medium text-muted-foreground;
   }
 
   .event-rating-row {
@@ -391,7 +394,7 @@
   }
 
   .event-rating-text {
-    @apply text-sm font-sans-bold text-accent-pink;
+    @apply text-sm font-bold text-accent-pink;
   }
   .event-meta-icon {
     @apply size-3;
@@ -432,7 +435,7 @@
   }
 
   .avatar-stack-count {
-    @apply ml-2 text-xs font-sans-semibold text-muted-foreground;
+    @apply ml-2 text-xs font-semibold text-muted-foreground;
   }
 
   /* Event - Text Inside Going/Interested */
@@ -442,7 +445,7 @@
   }
 
   .event-going-badge-text {
-    @apply text-xs font-sans-bold text-background;
+    @apply text-xs font-bold text-background;
   }
 
   .event-interested-badge {
@@ -450,7 +453,7 @@
   }
 
   .event-interested-badge-text {
-    @apply text-xs font-sans-bold text-primary;
+    @apply text-xs font-bold text-primary;
   }
 
   /* Event detail screen */
@@ -484,11 +487,11 @@
   }
 
   .event-detail-category-text {
-    @apply text-xs font-sans-bold uppercase tracking-[0.5px] text-accent;
+    @apply text-xs font-bold uppercase tracking-[0.5px] text-accent;
   }
 
   .event-detail-title {
-    @apply text-2xl font-sans-extrabold text-primary;
+    @apply text-2xl font-extrabold text-primary;
   }
 
   .event-detail-info-row {
@@ -504,11 +507,11 @@
   }
 
   .event-detail-info-label {
-    @apply text-sm font-sans-semibold text-primary;
+    @apply text-sm font-semibold text-primary;
   }
 
   .event-detail-info-sub {
-    @apply mt-0.5 text-xs font-sans-medium text-muted-foreground;
+    @apply mt-0.5 text-xs font-medium text-muted-foreground;
   }
 
   .event-detail-attendance-row {
@@ -516,15 +519,15 @@
   }
 
   .event-detail-attendance-text {
-    @apply ml-3 text-sm font-sans-medium text-muted-foreground;
+    @apply ml-3 text-sm font-medium text-muted-foreground;
   }
 
   .event-detail-section-title {
-    @apply mb-2 mt-1 text-base font-sans-bold text-primary;
+    @apply mb-2 mt-1 text-base font-bold text-primary;
   }
 
   .event-detail-description {
-    @apply mb-6 text-sm font-sans-medium leading-5 text-muted-foreground;
+    @apply mb-6 text-sm font-medium leading-5 text-muted-foreground;
   }
 
   .event-detail-comments-placeholder {
@@ -532,7 +535,7 @@
   }
 
   .event-detail-comments-placeholder-text {
-    @apply text-sm font-sans-medium text-muted-foreground;
+    @apply text-sm font-medium text-muted-foreground;
   }
 
   .event-detail-action-bar {
@@ -552,7 +555,7 @@
   }
 
   .event-detail-segment-btn-text {
-    @apply text-sm font-sans-bold text-muted-foreground;
+    @apply text-sm font-bold text-muted-foreground;
   }
 
   .event-detail-segment-btn-text-active {
@@ -568,7 +571,7 @@
   }
 
   .event-detail-edit-btn-text {
-    @apply text-sm font-sans-bold text-accent;
+    @apply text-sm font-bold text-accent;
   }
 
   .event-detail-cancel-btn {
@@ -576,7 +579,7 @@
   }
 
   .event-detail-cancel-btn-text {
-    @apply text-sm font-sans-bold text-destructive;
+    @apply text-sm font-bold text-destructive;
   }
 
   .event-detail-empty {
@@ -584,7 +587,7 @@
   }
 
   .event-detail-empty-text {
-    @apply text-center text-sm font-sans-medium text-muted-foreground;
+    @apply text-center text-sm font-medium text-muted-foreground;
   }
   .event-detail-map-wrap {
     @apply relative mb-3 h-36 w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-muted;
@@ -603,7 +606,7 @@
   }
 
   .event-detail-map-label-text {
-    @apply text-xs font-sans-semibold text-primary;
+    @apply text-xs font-semibold text-primary;
   }
 
   /* Search Page*/
@@ -613,7 +616,7 @@
   }
 
   .search-input {
-    @apply pl-5 pr-5 font-sans-medium rounded-xl text-white;
+    @apply pl-5 pr-5 font-medium rounded-xl text-white;
   }
 
   /* Select Location - Create Page*/
@@ -643,7 +646,7 @@
   }
 
   .location-picker-address-text {
-    @apply flex-1 text-sm font-sans-medium text-primary;
+    @apply flex-1 text-sm font-medium text-primary;
   }
 
   .location-picker-confirm-btn {
@@ -651,17 +654,17 @@
   }
 
   .location-picker-confirm-text {
-    @apply text-sm font-sans-bold text-primary;
+    @apply text-sm font-bold text-primary;
   }
 
   /* Create event form */
 
   .form-section-title {
-    @apply mb-2 text-2xl font-sans-bold text-primary first:mt-0;
+    @apply mb-2 text-2xl font-bold text-primary first:mt-0;
   }
 
   .form-section-subtitle {
-    @apply mb-2 text-lg font-sans-bold text-primary first:mt-0;
+    @apply mb-2 text-lg font-bold text-primary first:mt-0;
   }
 
   .m-form-sec-title {
@@ -681,7 +684,7 @@
   }
 
   .form-photo-picker-text {
-    @apply text-sm font-sans-semibold text-muted-foreground;
+    @apply text-sm font-semibold text-muted-foreground;
   }
 
   .form-photo-remove-btn {
@@ -721,15 +724,15 @@
   }
 
   .form-picker-label {
-    @apply text-xs font-sans-medium text-muted-foreground;
+    @apply text-xs font-medium text-muted-foreground;
   }
 
   .form-picker-value {
-    @apply mt-0.5 text-sm font-sans-semibold text-primary;
+    @apply mt-0.5 text-sm font-semibold text-primary;
   }
 
   .form-picker-placeholder {
-    @apply mt-0.5 text-sm font-sans-semibold text-muted-foreground;
+    @apply mt-0.5 text-sm font-semibold text-muted-foreground;
   }
 
   .form-field-extra {
@@ -753,7 +756,7 @@
   }
 
   .form-chip-text {
-    @apply text-sm font-sans-semibold text-muted-foreground;
+    @apply text-sm font-semibold text-muted-foreground;
   }
 
   .form-chip-text-active {
@@ -765,15 +768,15 @@
   }
 
   .form-toggle-label {
-    @apply text-sm font-sans-semibold text-primary;
+    @apply text-sm font-semibold text-primary;
   }
 
   .form-toggle-sublabel {
-    @apply text-sm font-sans-semibold text-muted-foreground;
+    @apply text-sm font-semibold text-muted-foreground;
   }
 
   .form-preview-label {
-    @apply mb-2 mt-6 text-base font-sans-bold text-primary;
+    @apply mb-2 mt-6 text-base font-bold text-primary;
   }
 
   .form-preview-empty {
@@ -781,7 +784,7 @@
   }
 
   .form-preview-empty-text {
-    @apply text-sm font-sans-medium text-muted-foreground;
+    @apply text-sm font-medium text-muted-foreground;
   }
 
   .form-publish-btn {
@@ -793,7 +796,7 @@
   }
 
   .form-publish-text {
-    @apply text-sm font-sans-bold text-primary;
+    @apply text-sm font-bold text-primary;
   }
 
   .event-media-carousel {
@@ -838,7 +841,7 @@
   }
 
   .search-input {
-    @apply flex-1 text-primary text-base h-full font-sans-medium;
+    @apply flex-1 text-primary text-base h-full font-medium;
   }
 
   .search-clear-btn {
@@ -874,11 +877,11 @@
   }
 
   .search-map-marker-title {
-    @apply text-xs font-sans-bold text-primary;
+    @apply text-xs font-bold text-primary;
   }
 
   .search-map-marker-meta {
-    @apply text-[10px] font-sans-medium text-money;
+    @apply text-[10px] font-medium text-money;
   }
 
   .search-filter-btn {
@@ -909,7 +912,7 @@
     @apply px-3 py-1 rounded-xl;
   }
   .map-modal-badge-text {
-    @apply text-xs font-sans-bold text-center text-primary tracking-[0.5px];
+    @apply text-xs font-bold text-center text-primary tracking-[0.5px];
   }
   .map-modal-content {
     @apply px-4 relative w-full gap-1 mt-4 justify-center;
@@ -924,7 +927,7 @@
     @apply h-full w-full;
   }
   .map-modal-event-title {
-    @apply text-xl font-sans-extrabold text-primary;
+    @apply text-xl font-extrabold text-primary;
   }
   .map-modal-subtitle-row {
     @apply flex-row items-center justify-between;
@@ -939,7 +942,7 @@
     @apply flex-row items-center;
   }
   .map-modal-host-name {
-    @apply text-sm font-sans-bold text-muted-foreground;
+    @apply text-sm font-bold text-muted-foreground;
   }
   .map-modal-verified-icon {
     @apply size-3.5 ml-1;
@@ -948,7 +951,7 @@
     @apply size-4;
   }
   .map-modal-subtitle-text {
-    @apply text-sm font-sans-medium text-muted-foreground;
+    @apply text-sm font-medium text-muted-foreground;
   }
   .map-modal-actions {
     @apply flex-row gap-3 mt-2;
@@ -957,13 +960,13 @@
     @apply flex-row flex-1 items-center justify-center gap-2 rounded-xl py-3.5;
   }
   .map-modal-btn-contact-text {
-    @apply text-sm font-sans-bold text-primary;
+    @apply text-sm font-bold text-primary;
   }
   .map-modal-btn-details {
     @apply flex-row flex-1 bg-accent-pink items-center justify-center gap-1 rounded-xl py-3.5;
   }
   .map-modal-btn-details-text {
-    @apply text-sm font-sans-bold text-modal-background;
+    @apply text-sm font-bold text-modal-background;
   }
 
   /* Search Filter Modal */
@@ -980,6 +983,6 @@
     @apply mb-6;
   }
   .sf-modal-section-title {
-    @apply mb-3 text-base font-sans-bold text-primary;
+    @apply mb-3 text-base font-bold text-primary;
   }
 }

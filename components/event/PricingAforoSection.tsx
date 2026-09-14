@@ -41,7 +41,7 @@ export default function PricingAforoSection({
             <Text className="text-sm font-semibold text-primary">
               ¿Evento gratuito?
             </Text>
-            <Text className="text-xs text-muted-foreground mt-0.5">
+            <Text className="text-xs font-medium text-muted-foreground mt-0.5">
               Entrada libre sin costo de acceso
             </Text>
           </View>
@@ -57,7 +57,7 @@ export default function PricingAforoSection({
                 <Text className="text-sm font-semibold text-primary">
                   ¿Evento con múltiples precios?
                 </Text>
-                <Text className="text-xs text-muted-foreground mt-0.5">
+                <Text className="text-xs font-medium text-muted-foreground mt-0.5">
                   El precio de entrada puede variar según el usuario
                 </Text>
               </View>
@@ -67,7 +67,7 @@ export default function PricingAforoSection({
               />
             </View>
 
-            <View className="p-3 gap-4 rounded-2xl border border-card">
+            <View className="p-3 gap-4 rounded-2xl bg-modal-background">
               {/* Si NO es de múltiples precios, se muestran los dos inputs: Hombre y Mujer */}
               {!isMultiplePrices && (
                 <View className="flex-row gap-3">
@@ -103,12 +103,12 @@ export default function PricingAforoSection({
                   <Text className="text-sm font-semibold text-primary">
                     Capacidad Máxima
                   </Text>
-                  <Text className="text-xs text-muted-foreground mt-0.5">
+                  <Text className="text-xs font-medium text-muted-foreground mt-0.5">
                     Evita sobrecupos inesperados
                   </Text>
                 </View>
 
-                <View className="flex-row items-center bg-modal-background rounded-xl border border-card overflow-hidden">
+                <View className="flex-row items-center  rounded-xl border border-border overflow-hidden">
                   <Pressable
                     onPress={() =>
                       onCapacityChange(Math.max(1, (capacity || 0) - 5))

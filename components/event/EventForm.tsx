@@ -378,7 +378,7 @@ export default function EventForm({
   return (
     <SafeAreaView
       edges={["top", "left", "right"]}
-      className="flex-1 bg-modal-background"
+      className="flex-1 bg-background"
     >
       {/* Barra de navegación superior con botón atrás */}
       <View className="flex-row items-center justify-between px-4 py-3 border-b border-border/40">
@@ -418,14 +418,14 @@ export default function EventForm({
             {mediaItems.map((item, index) => (
               <View
                 key={index}
-                className="w-32 h-24 rounded-2xl overflow-hidden bg-card border border-border relative"
+                className="w-32 h-24 rounded-2xl overflow-hidden bg-modal-background relative"
               >
                 <EventMediaCarousel media={[item]} className="w-full h-full" />
 
                 {/* Badge Portada en la primera imagen */}
                 {index === 0 && (
-                  <View className="absolute top-2 left-2 bg-accent-pink px-2 py-0.5 rounded-full z-10 shadow-sm">
-                    <Text className="text-[10px] font-bold text-white">
+                  <View className="absolute top-2 left-2 bg-chip-background px-2 py-0.5 rounded-full z-10 shadow-sm">
+                    <Text className="text-xs font-bold text-accent-pink">
                       Portada
                     </Text>
                   </View>
@@ -446,7 +446,7 @@ export default function EventForm({
             {mediaItems.length < MAX_MEDIA_ITEMS && (
               <Pressable
                 onPress={pickCoverMedia}
-                className="w-32 h-28 rounded-2xl bg-card border-none items-center justify-center active:opacity-75"
+                className="w-32 h-28 rounded-2xl bg-modal-background border-none items-center justify-center active:opacity-75"
               >
                 <View className="size-9 items-center justify-center">
                   <Image
@@ -459,7 +459,7 @@ export default function EventForm({
             )}
           </ScrollView>
 
-          <Text className="text-xs text-muted-foreground leading-relaxed">
+          <Text className="text-xs font-regular text-muted-foreground leading-relaxed">
             Sube hasta {MAX_MEDIA_ITEMS} fotos/videos con el plan Free. La
             primera será la portada principal de tu evento.
           </Text>
@@ -468,11 +468,11 @@ export default function EventForm({
         {/* ================= 2. INFORMACIÓN BÁSICA ================= */}
         {/* Título del evento */}
         <View className="gap-4">
-          <Text className="text-xl font-semibold text-primary">
+          <Text className="text-xl font-bold text-primary">
             Título del evento
           </Text>
           <TextInput
-            className="bg-card text-primary text-sm font-semibold px-3.5 py-3 rounded-xl border-none"
+            className="bg-modal-background text-primary text-sm font-semibold px-3.5 py-3 rounded-xl border-none"
             value={title}
             onChangeText={setTitle}
           />
@@ -480,9 +480,7 @@ export default function EventForm({
 
         {/* Tipo de evento (Categorías) */}
         <View className="gap-4">
-          <Text className="text-xl font-semibold text-primary">
-            Tipo de evento
-          </Text>
+          <Text className="text-xl font-bold text-primary">Tipo de evento</Text>
           <HorizontalChips
             items={EVENT_CATEGORY_ITEMS}
             selected={category}
@@ -496,13 +494,13 @@ export default function EventForm({
         {/* Detalles, Vibra y Reglas */}
         <View className="gap-4">
           <View className="flex-row items-center justify-between">
-            <Text className="text-xl font-semibold text-primary">Detalles</Text>
+            <Text className="text-xl font-bold text-primary">Detalles</Text>
             <Text className="text-[11px] text-muted-foreground font-medium">
               Opcional
             </Text>
           </View>
           <TextInput
-            className="bg-card text-primary text-sm font-normal p-3.5 rounded-xl border-none min-h-[90px]"
+            className="bg-modal-background text-primary text-sm font-regular p-3.5 rounded-xl border-none min-h-[90px]"
             placeholder="Escribe aqui alguna descripción"
             placeholderTextColor={colors.mutedForeground}
             value={description}
@@ -591,7 +589,7 @@ export default function EventForm({
           className={
             isValid && !submitting
               ? "w-full bg-accent-pink py-4 rounded-2xl items-center justify-center shadow-lg shadow-accent-pink/20 active:opacity-85"
-              : "w-full bg-card py-4 rounded-2xl items-center justify-center border-none opacity-50"
+              : "w-full bg-modal-background py-4 rounded-2xl items-center justify-center border-none opacity-50"
           }
           onPress={handleSubmit}
           disabled={!isValid || submitting}

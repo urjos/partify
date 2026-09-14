@@ -71,7 +71,7 @@ const TabLayout = () => {
                 style={{ color }}
                 className={clsx(
                   "text-[11px] text-center",
-                  focused ? "font-sans-semibold" : "font-sans-medium",
+                  focused ? "font-semibold" : "font-medium",
                 )}
               >
                 {tab.title}

@@ -30,7 +30,7 @@ export default function DressCodeSection({
     <View className="gap-4">
       {/* Encabezado de la sección */}
       <View className="flex-row items-center justify-between">
-        <Text className="text-xl font-semibold text-primary">
+        <Text className="text-xl font-bold text-primary">
           Código de vestimenta
         </Text>
       </View>
@@ -45,7 +45,7 @@ export default function DressCodeSection({
       {/* Input opcional con límite estricto de 50 caracteres */}
       <View className="gap-2">
         <TextInput
-          className="bg-card text-primary text-sm font-normal p-3 rounded-xl border-none"
+          className="bg-modal-background text-primary text-sm font-regular p-3 rounded-xl border-none"
           placeholder="Ej. No zapatillas deportivas..."
           placeholderTextColor={colors.mutedForeground}
           value={dressCodeDetails}
@@ -54,11 +54,11 @@ export default function DressCodeSection({
         />
 
         <View className="flex-row items-center justify-between">
-          <Text className="text-xs text-muted-foreground font-medium">
-            Especificación adicional (opcional)
+          <Text className="text-xs text-muted-foreground font-regular">
+            Opcional
           </Text>
           <Text
-            className={`text-xs font-medium ${
+            className={`text-xs font-bold ${
               currentLength >= MAX_DETAILS_LENGTH
                 ? "text-accent-pink font-bold"
                 : "text-muted-foreground"

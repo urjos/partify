@@ -10,11 +10,11 @@ export const SCHEDULE_FILTERS = [
   { id: "cerca", label: "Cerca de ti" },
 ];
 
-export default function CategoryFilters() {
+export default function CategoryFilters({ className }: { className?: string }) {
   const { activeFilter, setActiveFilter } = useEventStore();
 
   return (
-    <View className="home-filters-wrap">
+    <View className={`${className} home-filters-wrap`}>
       <HorizontalChips
         items={SCHEDULE_FILTERS}
         selected={activeFilter}
