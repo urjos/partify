@@ -1,4 +1,8 @@
+import dayjs from "dayjs";
+import "dayjs/locale/es";
 import { ImageSourcePropType } from "react-native";
+
+dayjs.locale("es");
 
 type ApiMediaItem = { type: "image" | "video"; url: string };
 
@@ -17,9 +21,10 @@ type ApiEvent = {
   typeMusic?: string;
   capacity?: number;
   isFreeEvent: boolean;
-  price: number;
+  price?: number;
   priceWomen?: number;
   isMultiplePrices?: boolean;
+  contactMethod?: "chat" | "external";
   paymentMethod?: "chat" | "external";
   contactPhone?: string;
   externalTicketUrl?: string;
@@ -32,6 +37,33 @@ type ApiEvent = {
   isGoing?: boolean;
   isOwner?: boolean;
   rating: number;
+  dressCode?: string;
+  dressCodeDetails?: string;
+  corkageFree?: boolean;
+  openBar?: boolean;
+  isAdultsOnly?: boolean;
+  requirePhysicalId?: boolean;
+};
+
+const formatClientDateLabel = (
+  startAt?: string,
+  closingAt?: string,
+  fallback?: string,
+): string => {
+  if (!startAt) return fallback ?? "";
+  try {
+    const start = dayjs(startAt).locale("es");
+    const formattedDate = start.format("ddd, D [de] MMM");
+    const startTimeStr = start.format("h:mm A");
+    if (closingAt) {
+      const end = dayjs(closingAt).locale("es");
+      const endTimeStr = end.format("h:mm A");
+      return `${formattedDate} · ${startTimeStr} - ${endTimeStr}`;
+    }
+    return `${formattedDate} · ${startTimeStr}`;
+  } catch {
+    return fallback ?? "";
+  }
 };
 
 export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
@@ -47,7 +79,8 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   typeMusic: apiEvent.typeMusic,
   startAt: apiEvent.startAt,
   closingAt: apiEvent.closingAt,
-  dateLabel: apiEvent.dateLabel,
+  dateLabel:
+    formatClientDateLabel(apiEvent.startAt, apiEvent.closingAt, apiEvent.dateLabel),
   location: apiEvent.location,
   latitude: apiEvent.latitude,
   longitude: apiEvent.longitude,
@@ -56,7 +89,7 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   price: apiEvent.price,
   priceWomen: apiEvent.priceWomen,
   isMultiplePrices: apiEvent.isMultiplePrices,
-  paymentMethod: apiEvent.paymentMethod ?? "chat",
+  contactMethod: apiEvent.contactMethod ?? apiEvent.paymentMethod ?? "chat",
   contactPhone: apiEvent.contactPhone ?? "",
   externalTicketUrl: apiEvent.externalTicketUrl ?? "",
   hideExactAddress: apiEvent.hideExactAddress ?? false,
@@ -68,6 +101,12 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   isGoing: apiEvent.isGoing,
   isOwner: apiEvent.isOwner,
   rating: apiEvent.rating,
+  dressCode: apiEvent.dressCode ?? "Casual",
+  dressCodeDetails: apiEvent.dressCodeDetails ?? "",
+  corkageFree: apiEvent.corkageFree ?? false,
+  openBar: apiEvent.openBar ?? false,
+  isAdultsOnly: apiEvent.isAdultsOnly ?? false,
+  requirePhysicalId: apiEvent.requirePhysicalId ?? false,
 });
 
 const getImageUri = (source: ImageSourcePropType): string | undefined => {
@@ -96,11 +135,18 @@ export const mapEventDraftToApiPayload = (draft: Omit<EventItem, "id">) => ({
   },
   capacity: draft.capacity,
   isFreeEvent: draft.isFreeEvent,
-  price: draft.price,
-  priceWomen: draft.priceWomen,
+  price: draft.isFreeEvent || draft.isMultiplePrices ? undefined : draft.price,
+  priceWomen:
+    draft.isFreeEvent || draft.isMultiplePrices ? undefined : draft.priceWomen,
   isMultiplePrices: draft.isMultiplePrices,
-  paymentMethod: draft.paymentMethod ?? "chat",
+  contactMethod: draft.contactMethod ?? "chat",
   contactPhone: draft.contactPhone ?? "",
   externalTicketUrl: draft.externalTicketUrl ?? "",
   hideExactAddress: draft.hideExactAddress ?? false,
+  dressCode: draft.dressCode ?? "Casual",
+  dressCodeDetails: draft.dressCodeDetails ?? "",
+  corkageFree: Boolean(draft.corkageFree),
+  openBar: Boolean(draft.openBar),
+  isAdultsOnly: Boolean(draft.isAdultsOnly),
+  requirePhysicalId: Boolean(draft.requirePhysicalId),
 });

@@ -1,4 +1,4 @@
-import AnimatedToggle from "@/components/AnimatedToggle";
+import AnimatedToggle from "@/components/shared/AnimatedToggle";
 import CategoryChips from "@/components/shared/CategoryChips";
 import PriceInput from "@/components/shared/PriceInput";
 import SchedulePicker, {

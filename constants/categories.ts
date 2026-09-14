@@ -26,3 +26,17 @@ export const MUSIC_TYPES = [
   "Hip hop",
   "Electrónica",
 ] as const;
+
+export const DRESS_CATEGORIES = [
+  "Casual",
+  "Elegante Sport",
+  "Formal",
+  "Total Black",
+  "Total White",
+  "Temático",
+  "Disfraces",
+  "Urbano",
+  "Libre",
+] as const;
+
+export type DressCategory = (typeof DRESS_CATEGORIES)[number];

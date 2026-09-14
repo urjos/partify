@@ -45,13 +45,19 @@ declare global {
     priceWomen?: number;
     isMultiplePrices?: boolean;
     isFreeEvent?: boolean;
-    paymentMethod?: "chat" | "external";
+    contactMethod?: "chat" | "external";
     externalTicketUrl?: string;
     contactPhone?: string;
     hideExactAddress?: boolean;
     closingAt?: string;
     isGoing?: boolean;
     isOwner?: boolean;
+    dressCode?: string;
+    dressCodeDetails?: string;
+    corkageFree?: boolean;
+    openBar?: boolean;
+    isAdultsOnly?: boolean;
+    requirePhysicalId?: boolean;
   }
 
   interface EventCardProps extends Omit<EventItem, "id"> {

@@ -375,7 +375,7 @@
   }
 
   .event-meta-row {
-    @apply flex-row items-center gap-2 bg-card p-2 rounded-xl;
+    @apply flex-row items-center gap-2 bg-card p-1.5 rounded-lg;
   }
 
   .event-meta-text {

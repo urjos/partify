@@ -1,4 +1,4 @@
-import AnimatedToggle from "@/components/AnimatedToggle";
+import AnimatedToggle from "@/components/shared/AnimatedToggle";
 import { darkMapStyle } from "@/constants/mapStyle";
 import { colors } from "@/constants/theme";
 import { Ionicons } from "@expo/vector-icons";

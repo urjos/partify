@@ -26,8 +26,10 @@ import right from "@/assets/icons/right.png";
 import search from "@/assets/icons/search.png";
 import setting from "@/assets/icons/setting.png";
 import star from "@/assets/icons/star.png";
+import ticket from "@/assets/icons/ticket.png";
 import user from "@/assets/icons/user.png";
 import verified from "@/assets/icons/verified.png";
+import whatsapp from "@/assets/icons/whatsapp.png";
 import x from "@/assets/icons/x.png";
 
 export const icons = {
@@ -62,6 +64,8 @@ export const icons = {
   qrCode,
   checkCircle,
   heart,
+  whatsapp,
+  ticket,
 } as const;
 
 export type IconKey = keyof typeof icons;

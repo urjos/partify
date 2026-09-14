@@ -1,4 +1,4 @@
-import AnimatedToggle from "@/components/AnimatedToggle";
+import AnimatedToggle from "@/components/shared/AnimatedToggle";
 import PriceInput from "@/components/shared/PriceInput";
 import { colors } from "@/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
@@ -34,9 +34,9 @@ export default function PricingAforoSection({
     <View className="gap-5">
       <Text className="text-xl font-bold text-primary">Aforo y aportación</Text>
 
-      <View className="rounded-2xl border-none gap-6">
+      <View className="gap-6">
         {/* Toggle 1: ¿Evento gratuito? */}
-        <View className="flex-row items-center justify-between mb-2">
+        <View className="flex-row items-center justify-between">
           <View className="flex-1 pr-4">
             <Text className="text-sm font-semibold text-primary">
               ¿Evento gratuito?
@@ -52,7 +52,7 @@ export default function PricingAforoSection({
         {!isFree && (
           <>
             {/* Toggle 2: ¿Evento con múltiples precios? */}
-            <View className="flex-row items-center justify-between mb-2">
+            <View className="flex-row items-center justify-between">
               <View className="flex-1">
                 <Text className="text-sm font-semibold text-primary">
                   ¿Evento con múltiples precios?
@@ -66,35 +66,38 @@ export default function PricingAforoSection({
                 onValueChange={onIsMultiplePricesChange}
               />
             </View>
-            <View className="p-3 gap-4 rounded-2xl border border-card">
-              {!isMultiplePrices && (
-                <>
-                  {/* Dos campos: Hombre y Mujer */}
-                  <View className="flex-row gap-3">
-                    {/* Precio Hombre */}
-                    <View className="flex-1 gap-2">
-                      <Text className="text-xs font-medium text-muted-foreground">
-                        Hombre
-                      </Text>
-                      <PriceInput
-                        value={priceMen}
-                        onChange={onPriceMenChange}
-                      />
-                    </View>
 
-                    {/* Precio Mujer */}
-                    <View className="flex-1 gap-2">
-                      <Text className="text-xs font-medium text-muted-foreground">
-                        Mujer
-                      </Text>
-                      <PriceInput
-                        value={priceWomen}
-                        onChange={onPriceWomenChange}
-                      />
-                    </View>
+            <View className="p-3 gap-4 rounded-2xl border border-card">
+              {/* Si NO es de múltiples precios, se muestran los dos inputs: Hombre y Mujer */}
+              {!isMultiplePrices && (
+                <View className="flex-row gap-3">
+                  {/* Precio Hombre */}
+                  <View className="flex-1 gap-2">
+                    <Text className="text-xs font-medium text-muted-foreground">
+                      Hombre
+                    </Text>
+                    <PriceInput
+                      value={priceMen}
+                      onChange={onPriceMenChange}
+                      placeholder="0"
+                    />
                   </View>
-                </>
+
+                  {/* Precio Mujer */}
+                  <View className="flex-1 gap-2">
+                    <Text className="text-xs font-medium text-muted-foreground">
+                      Mujer
+                    </Text>
+                    <PriceInput
+                      value={priceWomen}
+                      onChange={onPriceWomenChange}
+                      placeholder="0"
+                    />
+                  </View>
+                </View>
               )}
+
+              {/* Capacidad Máxima: se muestra siempre */}
               <View className="flex-row items-center justify-between">
                 <View className="flex-1 pr-3">
                   <Text className="text-sm font-semibold text-primary">
@@ -145,8 +148,6 @@ export default function PricingAforoSection({
             </View>
           </>
         )}
-
-        {/* Capacidad Máxima con Stepper */}
       </View>
     </View>
   );

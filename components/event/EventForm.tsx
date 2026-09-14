@@ -1,11 +1,12 @@
 import DateTimeCard from "@/components/event/DateTimeCard";
+import DressCodeSection from "@/components/event/DressCodeSection";
+import EventFeaturesSection from "@/components/event/EventFeaturesSection";
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
 import LocationPrivacyCard from "@/components/event/LocationPrivacyCard";
 import MusicTypeSelector from "@/components/event/MusicTypeSelector";
-import PaymentMethodCard from "@/components/event/PaymentMethodCard";
 import PricingAforoSection from "@/components/event/PricingAforoSection";
 import HorizontalChips from "@/components/shared/HorizontalChips";
-import { EVENT_CATEGORIES } from "@/constants/categories";
+import { DRESS_CATEGORIES, EVENT_CATEGORIES } from "@/constants/categories";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import { useLocationPickerStore } from "@/lib/store/locationPickerStore";
@@ -27,6 +28,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
+import ContactMethodCard from "./ContactMethodCard";
 
 const EVENT_CATEGORY_ITEMS = EVENT_CATEGORIES.map((item) => ({
   id: item,
@@ -79,6 +81,26 @@ export default function EventForm({
     initialEvent?.description ?? "",
   );
 
+  const [dressCode, setDressCode] = useState<string>(
+    initialEvent?.dressCode ?? DRESS_CATEGORIES[0],
+  );
+  const [dressCodeDetails, setDressCodeDetails] = useState<string>(
+    initialEvent?.dressCodeDetails ?? "",
+  );
+
+  const [corkageFree, setCorkageFree] = useState<boolean>(
+    initialEvent?.corkageFree ?? false,
+  );
+  const [openBar, setOpenBar] = useState<boolean>(
+    initialEvent?.openBar ?? false,
+  );
+  const [isAdultsOnly, setIsAdultsOnly] = useState<boolean>(
+    initialEvent?.isAdultsOnly ?? false,
+  );
+  const [requirePhysicalId, setRequirePhysicalId] = useState<boolean>(
+    initialEvent?.requirePhysicalId ?? false,
+  );
+
   // Estados de Fecha y Horarios
   const [date, setDate] = useState<Date>(
     initialEvent?.startAt ? new Date(initialEvent.startAt) : new Date(),
@@ -121,16 +143,16 @@ export default function EventForm({
     initialEvent?.isMultiplePrices ?? false,
   );
   const [priceMen, setPriceMen] = useState(
-    initialEvent?.price ? String(initialEvent.price) : "45.00",
+    initialEvent?.price != null ? String(initialEvent.price) : "",
   );
   const [priceWomen, setPriceWomen] = useState(
-    initialEvent?.priceWomen ? String(initialEvent.priceWomen) : "35.00",
+    initialEvent?.priceWomen != null ? String(initialEvent.priceWomen) : "",
   );
   const [capacity, setCapacity] = useState(initialEvent?.capacity ?? 40);
 
-  // Estados de Medios de Pago
-  const [paymentMethod, setPaymentMethod] = useState<"chat" | "external">(
-    initialEvent?.paymentMethod ?? "chat",
+  // Estados de Medios de Contacto
+  const [contactMethod, setContactMethod] = useState<"chat" | "external">(
+    initialEvent?.contactMethod ?? "chat",
   );
   const [contactPhone, setContactPhone] = useState(
     initialEvent?.contactPhone ?? "",
@@ -316,18 +338,35 @@ export default function EventForm({
         attendeeCount: initialEvent?.attendeeCount ?? 0,
         interestedCount: initialEvent?.interestedCount ?? 0,
         capacity,
-        price: isFree ? 0 : parseFloat(priceMen || "0"),
-        priceWomen: isFree ? 0 : parseFloat(priceWomen || "0"),
+        price:
+          isFree || isMultiplePrices
+            ? undefined
+            : priceMen.trim() !== ""
+              ? parseFloat(priceMen)
+              : undefined,
+        priceWomen:
+          isFree || isMultiplePrices
+            ? undefined
+            : priceWomen.trim() !== ""
+              ? parseFloat(priceWomen)
+              : undefined,
         isMultiplePrices,
         isFreeEvent: isFree,
-        paymentMethod,
+        contactMethod,
         contactPhone: contactPhone.trim(),
         externalTicketUrl:
-          paymentMethod === "external" ? externalTicketUrl.trim() : undefined,
+          contactMethod === "external" ? externalTicketUrl.trim() : undefined,
         hideExactAddress,
         isGoing: true,
         isOwner: true,
         rating: 0,
+        // Nuevos campos
+        dressCode,
+        dressCodeDetails: dressCodeDetails.trim(),
+        corkageFree,
+        openBar,
+        isAdultsOnly,
+        requirePhysicalId,
       };
 
       await onSubmit(draft);
@@ -409,7 +448,7 @@ export default function EventForm({
                 onPress={pickCoverMedia}
                 className="w-32 h-28 rounded-2xl bg-card border-none items-center justify-center active:opacity-75"
               >
-                <View className="size-9  items-center justify-center">
+                <View className="size-9 items-center justify-center">
                   <Image
                     source={icons.plus}
                     className="size-10"
@@ -429,7 +468,7 @@ export default function EventForm({
         {/* ================= 2. INFORMACIÓN BÁSICA ================= */}
         {/* Título del evento */}
         <View className="gap-4">
-          <Text className="text-xl font-semibold text-primary ">
+          <Text className="text-xl font-semibold text-primary">
             Título del evento
           </Text>
           <TextInput
@@ -441,7 +480,7 @@ export default function EventForm({
 
         {/* Tipo de evento (Categorías) */}
         <View className="gap-4">
-          <Text className="text-xl font-semibold text-primary ">
+          <Text className="text-xl font-semibold text-primary">
             Tipo de evento
           </Text>
           <HorizontalChips
@@ -474,7 +513,27 @@ export default function EventForm({
           />
         </View>
 
-        {/* ================= 3. FECHA Y HORARIOS ================= */}
+        {/* ================= 3. CÓDIGO DE VESTIMENTA ================= */}
+        <DressCodeSection
+          dressCode={dressCode}
+          onDressCodeChange={setDressCode}
+          dressCodeDetails={dressCodeDetails}
+          onDressCodeDetailsChange={setDressCodeDetails}
+        />
+
+        {/* ================= 4. BENEFICIOS Y REQUISITOS (ANIMATED TOGGLE) ================= */}
+        <EventFeaturesSection
+          corkageFree={corkageFree}
+          onCorkageFreeChange={setCorkageFree}
+          openBar={openBar}
+          onOpenBarChange={setOpenBar}
+          isAdultsOnly={isAdultsOnly}
+          onIsAdultsOnlyChange={setIsAdultsOnly}
+          requirePhysicalId={requirePhysicalId}
+          onRequirePhysicalIdChange={setRequirePhysicalId}
+        />
+
+        {/* ================= 5. FECHA Y HORARIOS ================= */}
         <DateTimeCard
           date={date}
           onDateChange={setDate}
@@ -484,29 +543,41 @@ export default function EventForm({
           onEndTimeChange={setEndTime}
         />
 
-        {/* ================= 4. UBICACIÓN Y PRIVACIDAD ================= */}
+        {/* ================= 6. UBICACIÓN Y PRIVACIDAD ================= */}
         <LocationPrivacyCard
           location={location}
           hideExactAddress={hideExactAddress}
           onHideExactAddressChange={setHideExactAddress}
         />
 
-        {/* ================= 6. MEDIOS DE PAGO Y COORDINACIÓN ================= */}
-        <PaymentMethodCard
-          method={paymentMethod}
-          onMethodChange={setPaymentMethod}
+        {/* ================= 7. MEDIOS DE CONTACTO ================= */}
+        <ContactMethodCard
+          contactMethod={contactMethod}
+          onContactMethodChange={setContactMethod}
           externalUrl={externalTicketUrl}
           onExternalUrlChange={setExternalTicketUrl}
           contactPhone={contactPhone}
           onContactPhoneChange={setContactPhone}
         />
 
-        {/* ================= 5. AFORO Y APORTACIÓN ================= */}
+        {/* ================= 8. AFORO Y APORTACIÓN ================= */}
         <PricingAforoSection
           isFree={isFree}
-          onIsFreeChange={setIsFree}
+          onIsFreeChange={(free) => {
+            setIsFree(free);
+            if (free) {
+              setPriceMen("");
+              setPriceWomen("");
+            }
+          }}
           isMultiplePrices={isMultiplePrices}
-          onIsMultiplePricesChange={setIsMultiplePrices}
+          onIsMultiplePricesChange={(multiple) => {
+            setIsMultiplePrices(multiple);
+            if (multiple) {
+              setPriceMen("");
+              setPriceWomen("");
+            }
+          }}
           priceMen={priceMen}
           onPriceMenChange={setPriceMen}
           priceWomen={priceWomen}
@@ -515,7 +586,7 @@ export default function EventForm({
           onCapacityChange={setCapacity}
         />
 
-        {/* ================= 8. BOTÓN DE PUBLICACIÓN ================= */}
+        {/* ================= 9. BOTÓN DE PUBLICACIÓN ================= */}
         <Pressable
           className={
             isValid && !submitting

@@ -27,18 +27,20 @@ const EventCard = ({
   author,
   authorAvatar,
   rating,
-  paymentMethod,
+  contactMethod,
   contactPhone,
   externalTicketUrl,
   onPress,
   onContactPress,
 }: EventCardProps) => {
+  const isExternal = contactMethod === "external" && Boolean(externalTicketUrl);
+
   const handleContactPress = (e: GestureResponderEvent) => {
     e.stopPropagation();
     if (onContactPress) {
       onContactPress();
-    } else if (paymentMethod === "external" && externalTicketUrl) {
-      Linking.openURL(externalTicketUrl).catch(() => {});
+    } else if (isExternal) {
+      Linking.openURL(externalTicketUrl!).catch(() => {});
     } else {
       openWhatsApp(contactPhone, title);
     }
@@ -119,7 +121,7 @@ const EventCard = ({
                 hitSlop={8}
               >
                 <Image
-                  source={icons.messageSquareText}
+                  source={isExternal ? icons.ticket : icons.messageSquareText}
                   className="event-message-icon"
                   tintColor={colors.primary}
                   resizeMode="contain"

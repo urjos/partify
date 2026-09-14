@@ -1,5 +1,7 @@
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
 import Separator from "@/components/Separator";
+import { icons } from "@/constants/icons";
+import { colors } from "@/constants/theme";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
@@ -10,6 +12,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
+  Image,
   Linking,
   Platform,
   Pressable,
@@ -224,7 +227,7 @@ export default function EventDetail() {
           {/* Botón de Contacto Directo / Entrada */}
           {!isOwner ? (
             <View className="my-2">
-              {event.paymentMethod === "external" && event.externalTicketUrl ? (
+              {event.contactMethod === "external" && event.externalTicketUrl ? (
                 <Pressable
                   className="w-full bg-accent-pink py-3.5 px-4 rounded-2xl flex-row items-center justify-center gap-2 active:opacity-85 shadow-md shadow-accent-pink/30"
                   onPress={() => Linking.openURL(event.externalTicketUrl!)}
@@ -303,6 +306,7 @@ export default function EventDetail() {
                     I'm going
                   </Text>
                 </Pressable>
+
                 <Pressable
                   onPress={() => toggleStatus("interested")}
                   className={
@@ -326,7 +330,7 @@ export default function EventDetail() {
               <Pressable
                 onPress={() => {
                   if (
-                    event.paymentMethod === "external" &&
+                    event.contactMethod === "external" &&
                     event.externalTicketUrl
                   ) {
                     Linking.openURL(event.externalTicketUrl);
@@ -334,17 +338,22 @@ export default function EventDetail() {
                     openWhatsApp(event.contactPhone, event.title);
                   }
                 }}
-                className="size-12 rounded-2xl bg-[#25D366] items-center justify-center active:opacity-80 shadow-md shadow-[#25D366]/30"
+                className="size-12 rounded-2xl bg-background items-center justify-center active:opacity-80 shadow-md"
                 hitSlop={6}
               >
-                <Ionicons
-                  name={
-                    event.paymentMethod === "external"
-                      ? "ticket-outline"
-                      : "logo-whatsapp"
+                <Image
+                  source={
+                    event.contactMethod === "external"
+                      ? icons.ticket
+                      : icons.whatsapp
                   }
-                  size={24}
-                  color="#ffffff"
+                  className="size-6"
+                  resizeMode="contain"
+                  tintColor={
+                    event.contactMethod === "external"
+                      ? colors.primary
+                      : "#2BCC59"
+                  }
                 />
               </Pressable>
             </>
