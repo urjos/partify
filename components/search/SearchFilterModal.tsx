@@ -60,7 +60,7 @@ export const getDefaultFilters = (): SearchFilters => {
   }
 
   return {
-    distance: 10,
+    distance: 1,
     category: null,
     date: now,
     startTime: formatTime12h(start),
@@ -190,7 +190,7 @@ export default function SearchFilterModal({
                 <Text className="sf-modal-section-title">
                   Radio de Distancia
                 </Text>
-                <View className="px-3 py-1.5 rounded-full border-none bg-card">
+                <View className="px-3 py-1.5 rounded-full border-none bg-modal-background">
                   <Text className="text-sm font-bold text-primary">
                     {filters.distance} km
                   </Text>
@@ -206,7 +206,7 @@ export default function SearchFilterModal({
                   value={filters.distance}
                   onValueChange={(v) => set("distance", v)}
                   minimumTrackTintColor={colors.accentPink}
-                  maximumTrackTintColor={colors.muted}
+                  maximumTrackTintColor={colors.card}
                   thumbTintColor={colors.accentPink}
                 />
 
@@ -335,10 +335,10 @@ export default function SearchFilterModal({
           </ScrollView>
 
           {/* Footer */}
-          <View className="flex-row gap-3 pt-3 border-t border-border">
+          <View className="flex-row gap-3 pt-3">
             <Pressable
               onPress={handleReset}
-              className="flex-1 items-center justify-center py-4 rounded-2xl bg-muted"
+              className="flex-1 items-center justify-center py-4 rounded-2xl bg-modal-background"
             >
               <Text className="text-sm font-bold text-primary">
                 Restablecer
@@ -349,9 +349,9 @@ export default function SearchFilterModal({
               onPress={handleApply}
               disabled={isPriceError}
               style={{ opacity: isPriceError ? 0.5 : 1 }}
-              className="flex-1 items-center justify-center py-4 rounded-2xl bg-accent-pink"
+              className="flex-1 items-center justify-center py-4 rounded-2xl bg-chip-background"
             >
-              <Text className="text-sm font-bold text-primary">
+              <Text className="text-sm font-bold text-accent-pink">
                 {hasActiveFilters ? "Aplicar filtros" : "Aplicar"}
               </Text>
             </Pressable>

@@ -25,6 +25,7 @@ interface EventMainCardProps {
   rating: number;
   ratingsCount?: number;
   userRating?: number | null;
+  hideExactAddress?: boolean;
   onRate: (score: number) => void;
   onLocationPress?: () => void;
 }
@@ -46,6 +47,7 @@ export default function EventMainCard({
   rating,
   ratingsCount = 0,
   userRating,
+  hideExactAddress = false,
   onRate,
   onLocationPress,
 }: EventMainCardProps) {
@@ -162,27 +164,29 @@ export default function EventMainCard({
         </View>
 
         {/* 4. Fila de Ubicación & Distancia */}
-        <Pressable
-          onPress={onLocationPress}
-          className="flex-row items-center gap-2 active:opacity-75"
-        >
-          <View className="size-10 rounded-2xl items-center justify-center">
-            <Image
-              source={icons.navigation}
-              className="size-5"
-              tintColor={colors.mutedForeground}
-              resizeMode="contain"
-            />
-          </View>
-          <View className="flex-1 gap-1">
-            <Text className="text-sm font-bold text-primary" numberOfLines={1}>
-              {location}
-            </Text>
-            <Text className="text-xs font-medium text-muted-foreground">
-              {distanceLabel || "Toca para abrir en el mapa"}
-            </Text>
-          </View>
-        </Pressable>
+        {!hideExactAddress ? (
+          <Pressable
+            onPress={onLocationPress}
+            className="flex-row items-center gap-2 active:opacity-75"
+          >
+            <View className="size-10 rounded-2xl items-center justify-center">
+              <Image
+                source={icons.navigation}
+                className="size-5"
+                tintColor={colors.mutedForeground}
+                resizeMode="contain"
+              />
+            </View>
+            <View className="flex-1 gap-1">
+              <Text className="text-sm font-bold text-primary" numberOfLines={1}>
+                {location}
+              </Text>
+              <Text className="text-xs font-medium text-muted-foreground">
+                {distanceLabel || "Toca para abrir en el mapa"}
+              </Text>
+            </View>
+          </Pressable>
+        ) : null}
       </View>
 
       {/* 5. Barra de Aforo y Demanda */}

@@ -1,6 +1,7 @@
 import { icons } from "@/constants/icons";
 import { darkMapStyle } from "@/constants/mapStyle";
 import { colors } from "@/constants/theme";
+import { openWhatsApp } from "@/lib/whatsapp";
 import React from "react";
 import { Image, Linking, Platform, Pressable, Text, View } from "react-native";
 import MapView from "react-native-maps";
@@ -9,13 +10,78 @@ interface EventMeetingPointCardProps {
   location: string;
   latitude?: number;
   longitude?: number;
+  hideExactAddress?: boolean;
+  contactMethod?: "chat" | "external";
+  contactPhone?: string;
+  externalTicketUrl?: string;
+  eventTitle?: string;
+  onContactPress?: () => void;
 }
 
 export default function EventMeetingPointCard({
   location,
   latitude = -12.0464,
   longitude = -77.0428,
+  hideExactAddress = false,
+  contactMethod,
+  contactPhone,
+  externalTicketUrl,
+  eventTitle,
+  onContactPress,
 }: EventMeetingPointCardProps) {
+  const isExternal = contactMethod === "external" && Boolean(externalTicketUrl);
+
+  const handleContact = () => {
+    if (onContactPress) {
+      onContactPress();
+    } else if (isExternal && externalTicketUrl) {
+      Linking.openURL(externalTicketUrl).catch(() => {});
+    } else {
+      openWhatsApp(contactPhone, eventTitle || "Evento");
+    }
+  };
+
+  if (hideExactAddress) {
+    return (
+      <View className="bg-modal-background rounded-3xl p-5 gap-3.5">
+        <Text className="text-lg font-bold text-primary">
+          Punto de encuentro
+        </Text>
+
+        <View className="bg-modal-background rounded-2xl p-4 gap-3 border border-border">
+          <View className="flex-row items-center gap-2.5">
+            <View className="flex-1">
+              <Text className="text-sm font-bold text-primary">
+                Ubicación reservada
+              </Text>
+            </View>
+          </View>
+
+          <Text className="text-xs font-medium text-muted-foreground leading-relaxed">
+            La dirección exacta se proporcionará directamente a través del medio
+            de contacto con el anfitrión.
+          </Text>
+
+          <Pressable
+            onPress={handleContact}
+            className="w-full bg-modal-background border border-border py-3 rounded-xl flex-row items-center justify-center gap-2 active:opacity-75 mt-1"
+          >
+            <Image
+              source={isExternal ? icons.ticket : icons.whatsapp}
+              className="size-4"
+              tintColor={isExternal ? colors.primary : "#25D366"}
+              resizeMode="contain"
+            />
+            <Text className="text-xs font-bold text-primary">
+              {isExternal
+                ? "Ver detalles en plataforma de tickets"
+                : "Solicitar ubicación al anfitrión"}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
   const openUber = () => {
     const uberUrl = `uber://?action=setPickup&dropoff[latitude]=${latitude}&dropoff[longitude]=${longitude}&dropoff[formatted_address]=${encodeURIComponent(location)}`;
     const webFallback = `https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=${latitude}&dropoff[longitude]=${longitude}`;

@@ -32,7 +32,7 @@ export default function ProfileSegmentedTabs({
               : "font-medium text-muted-foreground",
           )}
         >
-          Favoritas
+          Favoritos
         </Text>
       </Pressable>
 

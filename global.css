@@ -94,7 +94,7 @@
   }
 
   .auth-screen {
-    @apply flex-1 bg-background;
+    @apply flex-1;
   }
 
   .auth-scroll {
@@ -134,11 +134,11 @@
   }
 
   .auth-card {
-    @apply mt-8 rounded-3xl border-none bg-card p-5;
+    @apply mt-8 rounded-3xl border-none border border-border p-5;
   }
 
   .auth-form {
-    @apply gap-7;
+    @apply gap-5;
   }
 
   .auth-field {
@@ -150,15 +150,15 @@
   }
 
   .auth-input {
-    @apply rounded-2xl border-none bg-card p-3 text-base font-medium text-primary;
+    @apply rounded-2xl border-none bg-modal-background p-3 text-sm font-regular text-primary;
   }
 
   .auth-input-error {
-    @apply border-destructive;
+    @apply border-delete;
   }
 
   .auth-error {
-    @apply text-xs font-medium text-destructive;
+    @apply text-xs font-medium text-delete;
   }
 
   .auth-helper {
@@ -166,11 +166,11 @@
   }
 
   .auth-button {
-    @apply items-center rounded-2xl bg-accent py-3;
+    @apply items-center rounded-2xl bg-accent-pink py-3;
   }
 
   .auth-button-disabled {
-    @apply bg-accent/45;
+    @apply bg-accent-pink/45;
   }
 
   .auth-button-text {
@@ -178,15 +178,15 @@
   }
 
   .auth-secondary-button {
-    @apply items-center rounded-2xl border border-accent/30 bg-accent/10 py-3;
+    @apply items-center rounded-2xl bg-accent py-3;
   }
 
   .auth-secondary-button-text {
-    @apply text-base font-semibold text-accent;
+    @apply text-base font-semibold text-primary;
   }
 
   .auth-divider-row {
-    @apply my-4 flex-row items-center gap-3;
+    @apply my-2 flex-row items-center gap-3;
   }
 
   .auth-divider-line {
@@ -210,7 +210,7 @@
   }
 
   .auth-google-button {
-    @apply flex-row items-center justify-center gap-3 rounded-2xl border border-border bg-card py-3;
+    @apply flex-row items-center justify-center gap-3 rounded-2xl  bg-modal-background py-3;
   }
 
   .auth-google-button-text {
@@ -354,11 +354,11 @@
   }
 
   .event-category-chip {
-    @apply bg-accent-pink/50 px-3 py-1 rounded-xl;
+    @apply bg-chip-background px-3 py-1 rounded-xl;
   }
 
   .event-category-text {
-    @apply text-xs font-bold text-primary uppercase tracking-normal;
+    @apply text-xs font-bold text-accent-pink uppercase tracking-normal;
   }
 
   .event-location-text {
@@ -401,7 +401,7 @@
   }
 
   .event-actions-row {
-    @apply flex-row items-center gap-2;
+    @apply flex-row items-center justify-center gap-2;
   }
 
   .event-contact-btn {
@@ -748,7 +748,7 @@
   }
 
   .form-chip {
-    @apply rounded-full border-none bg-card px-4 py-2;
+    @apply rounded-full border-none bg-modal-background px-4 py-2;
   }
 
   .form-chip-active {
@@ -906,13 +906,13 @@
     @apply bg-modal-background overflow-hidden border-none rounded-2xl max-h-[100%];
   }
   .map-modal-badges {
-    @apply absolute top-2 left-5 flex-row gap-2;
+    @apply absolute top-2 left-3 flex-row gap-2;
   }
   .map-modal-badge {
-    @apply px-3 py-1 rounded-xl;
+    @apply px-3 py-1 rounded-2xl bg-chip-background;
   }
   .map-modal-badge-text {
-    @apply text-xs font-bold text-center text-primary tracking-[0.5px];
+    @apply text-xs font-bold text-center text-primary uppercase;
   }
   .map-modal-content {
     @apply px-4 relative w-full gap-1 mt-4 justify-center;
@@ -963,10 +963,10 @@
     @apply text-sm font-bold text-primary;
   }
   .map-modal-btn-details {
-    @apply flex-row flex-1 bg-accent-pink items-center justify-center gap-1 rounded-xl py-3.5;
+    @apply flex-row flex-1 bg-chip-background items-center justify-center gap-1 rounded-xl py-3.5;
   }
   .map-modal-btn-details-text {
-    @apply text-sm font-bold text-modal-background;
+    @apply text-sm font-bold text-accent-pink;
   }
 
   /* Search Filter Modal */
@@ -974,7 +974,7 @@
     @apply flex-1 justify-end;
   }
   .sf-modal-container {
-    @apply bg-modal-background rounded-t-3xl shadow-lg flex-1 max-h-[60%] px-4 pt-4 pb-6;
+    @apply bg-background rounded-t-3xl shadow-lg flex-1 max-h-[60%] px-4 pt-4 pb-6;
   }
   .sf-modal-scroll {
     @apply flex-1;

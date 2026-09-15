@@ -36,7 +36,7 @@ export default function ProfileEventCard({
   return (
     <Pressable
       onPress={onPress}
-      className="bg-modal-background/60 rounded-2xl p-4 border.none gap-5 active:opacity-90"
+      className="bg-modal-background rounded-2xl p-4 border.none gap-5 active:opacity-90"
     >
       {/* Información principal del evento */}
       <View className="flex-row items-center gap-3">
@@ -49,23 +49,20 @@ export default function ProfileEventCard({
         <View className="flex-1 justify-center">
           {/* Badge de Fecha / Hora */}
           <View className="self-start">
-            <Text className="text-sm font-bold text-muted-foreground">
+            <Text className="text-sm font-medium text-muted-foreground">
               {item.dateBadge}
             </Text>
           </View>
 
           {/* Título */}
-          <Text
-            numberOfLines={1}
-            className="text-sm font-bold text-primary mt-1"
-          >
+          <Text numberOfLines={1} className="text-sm font-bold text-primary">
             {item.title}
           </Text>
 
           {/* Dirección */}
           <Text
             numberOfLines={1}
-            className="text-xs font-medium text-muted-foreground mt-0.5"
+            className="text-xs font-medium text-muted-foreground"
           >
             {item.location}
           </Text>
@@ -78,7 +75,7 @@ export default function ProfileEventCard({
         <View className="flex-row items-center gap-1.5">
           {item.status === "approved" ? (
             <Image
-              source={icons.qrCode}
+              source={icons.ticket}
               className="size-4"
               tintColor={colors.accentPink}
             />

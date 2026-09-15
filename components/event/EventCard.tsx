@@ -5,6 +5,7 @@ import { colors } from "@/constants/theme";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
 import { openWhatsApp } from "@/lib/whatsapp";
+import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { LinearGradient } from "expo-linear-gradient";
@@ -111,15 +112,15 @@ const EventCard = ({
           </View>
         </View>
         <View className="flex-row justify-between items-center">
-          <View className="gap-1 max-w-75">
+          <View className="gap-1">
             <View className="flex-row items-center gap-2">
               {/* Maximo de 30 caracteres para titulo*/}
-              <Text numberOfLines={1} className="event-title">
+              <Text numberOfLines={1} className="event-title max-w-60">
                 {title}
               </Text>
               {rating && rating > 0 ? (
                 <View className="event-rating-row">
-                  <Text className="event-rating-text">{rating}</Text>
+                  <Text className="event-rating-text">{rating.toFixed(1)}</Text>
                   <Image
                     source={icons.star}
                     className="event-meta-icon"
@@ -129,7 +130,7 @@ const EventCard = ({
                 </View>
               ) : null}
             </View>
-            <View className="flex-row items-center gap-2">
+            <View className="flex-row items-center gap-1">
               <Image
                 source={authorAvatar ? { uri: authorAvatar } : images.avatar}
                 className="w-4 h-4 rounded-full"
@@ -144,34 +145,20 @@ const EventCard = ({
             </View>
           </View>
 
-          <View>
-            <View className="event-actions-row">
-              <Pressable
-                className="event-contact-btn active:opacity-75"
-                onPress={handleContactPress}
-                hitSlop={8}
-              >
-                <Image
-                  source={isExternal ? icons.ticket : icons.messageSquareText}
-                  className="event-message-icon"
-                  tintColor={colors.primary}
-                  resizeMode="contain"
-                />
-              </Pressable>
-
-              <Pressable
-                className="event-bookmark-btn active:opacity-75"
-                onPress={handleFavoritePress}
-                hitSlop={8}
-              >
-                <Image
-                  source={icons.heart}
-                  className="event-bookmark-icon"
-                  tintColor={isFavorite ? colors.accentPink : colors.primary}
-                  resizeMode="contain"
-                />
-              </Pressable>
-            </View>
+          <View className="event-actions-row">
+            <Pressable
+              className={`size-10 items-center justify-center overflow-hidden rounded-full active:opacity-75 ${
+                isFavorite ? "bg-transparent" : "bg-card"
+              }`}
+              onPress={handleFavoritePress}
+              hitSlop={8}
+            >
+              <Ionicons
+                name={isFavorite ? "heart" : "heart-outline"}
+                size={22}
+                color={isFavorite ? colors.accentPink : colors.primary}
+              />
+            </Pressable>
           </View>
         </View>
       </View>

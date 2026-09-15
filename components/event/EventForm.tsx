@@ -597,8 +597,8 @@ export default function EventForm({
           <Text
             className={
               isValid && !submitting
-                ? "text-white font-bold text-base tracking-wide"
-                : "text-muted-foreground font-bold text-base"
+                ? "text-white font-bold text-lg"
+                : "text-muted-foreground font-bold text-lg"
             }
           >
             {submitting ? submittingLabel : submitLabel}

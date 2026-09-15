@@ -1,13 +1,20 @@
-import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import { BlurView } from "expo-blur";
 import { ChevronDown, Clock } from "lucide-react-native";
 import React, { useState } from "react";
-import { Image, Modal, Platform, Pressable, Text, View } from "react-native";
+import {
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 dayjs.locale("es");
 
@@ -249,7 +256,7 @@ export default function SchedulePicker({
           {/* Píldora 1: Fecha (ej. "Sáb 14 Oct ⌵") */}
           <Pressable
             onPress={() => setShowDatePicker(true)}
-            className="flex-row items-center px-3.5 py-1.5 bg-card rounded-full border-none active:opacity-75"
+            className="flex-row items-center px-3.5 py-1.5 bg-modal-background rounded-full border-none active:opacity-75"
           >
             <Text className="text-primary text-sm font-medium">
               {formatDisplayDate(value.date)}
@@ -264,7 +271,7 @@ export default function SchedulePicker({
           {/* Píldora 2: Rango de Horario (ej. "8:00 PM - 2:30 AM") */}
           <Pressable
             onPress={handleOpenTimeModal}
-            className="flex-row items-center px-3.5 py-1.5 bg-card rounded-full border-none active:opacity-75"
+            className="flex-row items-center px-3.5 py-1.5 bg-modal-background rounded-full border-none active:opacity-75"
           >
             <Text className="text-primary text-sm font-medium">
               {value.startTime} - {value.endTime}
@@ -291,17 +298,39 @@ export default function SchedulePicker({
         animationType="fade"
         onRequestClose={() => setShowTimeModal(false)}
       >
-        <Pressable
-          onPress={() => setShowTimeModal(false)}
-          className="flex-1 bg-black/50 items-center justify-center p-4"
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 16,
+          }}
         >
+          {/* Backdrop con Blur y overlay oscuro transparente */}
+          <Pressable
+            style={StyleSheet.absoluteFillObject}
+            onPress={() => setShowTimeModal(false)}
+          >
+            <BlurView
+              intensity={10}
+              tint="dark"
+              style={StyleSheet.absoluteFillObject}
+            />
+            <View
+              style={[
+                StyleSheet.absoluteFillObject,
+                { backgroundColor: colors.BackgroundModal },
+              ]}
+            />
+          </Pressable>
+
           <Pressable
             onPress={(e) => e.stopPropagation()}
-            className="w-full max-w-sm bg-modal-background border-none rounded-2xl p-5"
+            className="w-full max-w-sm bg-background rounded-3xl p-4"
           >
             <View className="py-4 gap-3">
               {/* Campo Hora de Inicio */}
-              <View className="flex-row items-center justify-between bg-card rounded-xl p-3 border-none">
+              <View className="flex-row items-center justify-between bg-modal-background rounded-xl p-3 border-none">
                 <View>
                   <Text className="text-muted-foreground text-xs font-medium">
                     Hora de inicio
@@ -321,7 +350,7 @@ export default function SchedulePicker({
               </View>
 
               {/* Campo Hora de Fin */}
-              <View className="flex-row items-center justify-between bg-card rounded-xl p-3 border-none">
+              <View className="flex-row items-center justify-between bg-modal-background rounded-xl p-3 border-none">
                 <View>
                   <View className="flex-row items-center gap-1.5">
                     <Text className="text-muted-foreground text-xs font-medium">
@@ -360,12 +389,12 @@ export default function SchedulePicker({
               onPress={handleConfirmTime}
               className="w-full bg-accent-pink py-3 rounded-xl items-center justify-center mt-2 active:opacity-85"
             >
-              <Text className="text-white font-semibold text-sm">
+              <Text className="text-primary font-semibold text-sm">
                 Confirmar
               </Text>
             </Pressable>
           </Pressable>
-        </Pressable>
+        </View>
       </Modal>
 
       {/* Selector nativo de Hora (Inicio / Fin) */}

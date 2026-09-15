@@ -47,21 +47,38 @@ const SignUp = () => {
     }
   };
 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [code, setCode] = useState("");
 
   // Validation states
+  const [firstNameTouched, setFirstNameTouched] = useState(false);
+  const [lastNameTouched, setLastNameTouched] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
+  const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
 
   // Client-side validation
+  const firstNameValid = firstName.length === 0 || firstName.trim().length >= 2;
+  const lastNameValid = lastName.length === 0 || lastName.trim().length >= 2;
   const emailValid =
     emailAddress.length === 0 ||
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
   const passwordValid = password.length === 0 || password.length >= 8;
+  const confirmPasswordValid =
+    confirmPassword.length === 0 || confirmPassword === password;
+
   const formValid =
-    emailAddress.length > 0 && password.length >= 8 && emailValid;
+    firstName.trim().length >= 2 &&
+    lastName.trim().length >= 2 &&
+    emailAddress.length > 0 &&
+    emailValid &&
+    password.length >= 8 &&
+    confirmPassword.length > 0 &&
+    confirmPassword === password;
 
   const handleSubmit = async () => {
     if (!formValid) return;
@@ -69,6 +86,8 @@ const SignUp = () => {
     const { error } = await signUp.password({
       emailAddress,
       password,
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
     });
 
     if (error) {
@@ -102,7 +121,12 @@ const SignUp = () => {
           }
 
           posthog.identify(session.user.id, {
-            $set: { email: emailAddress },
+            $set: {
+              email: emailAddress,
+              first_name: firstName.trim(),
+              last_name: lastName.trim(),
+              name: `${firstName.trim()} ${lastName.trim()}`.trim(),
+            },
             $set_once: { sign_up_date: new Date().toISOString() },
           });
           posthog.capture("user_signed_up");
@@ -156,9 +180,9 @@ const SignUp = () => {
                   <Text className="auth-wordmark">Partify</Text>
                 </View>
                 <View className="gap-2">
-                  <Text className="auth-title">Verify your email</Text>
+                  <Text className="auth-title">Verifica tu correo</Text>
                   <Text className="auth-subtitle">
-                    We sent a verification code to {emailAddress}
+                    Enviamos un código de verificación a {emailAddress}
                   </Text>
                 </View>
               </View>
@@ -167,11 +191,11 @@ const SignUp = () => {
               <View className="auth-card">
                 <View className="auth-form">
                   <View className="auth-field">
-                    <Text className="auth-label">Verification Code</Text>
+                    <Text className="auth-label">Código de verificación</Text>
                     <TextInput
                       className="auth-input"
                       value={code}
-                      placeholder="Enter 6-digit code"
+                      placeholder="Ingresa el código de 6 dígitos"
                       onChangeText={setCode}
                       keyboardType="number-pad"
                       autoComplete="one-time-code"
@@ -192,8 +216,8 @@ const SignUp = () => {
                     >
                       <Text className="auth-button-text">
                         {fetchStatus === "fetching"
-                          ? "Verifying..."
-                          : "Verify Email"}
+                          ? "Verificando..."
+                          : "Verificar correo"}
                       </Text>
                     </Pressable>
 
@@ -203,7 +227,7 @@ const SignUp = () => {
                       disabled={fetchStatus === "fetching"}
                     >
                       <Text className="auth-secondary-button-text">
-                        Resend Code
+                        Reenviar código
                       </Text>
                     </Pressable>
                   </View>
@@ -236,9 +260,9 @@ const SignUp = () => {
                 <Text className="auth-wordmark">Partify</Text>
               </View>
               <View className="gap-2">
-                <Text className="auth-title">Create your account</Text>
+                <Text className="auth-title">Crea tu cuenta</Text>
                 <Text className="auth-subtitle">
-                  Start your journey with Partify
+                  Comienza tu experiencia en Partify
                 </Text>
               </View>
             </View>
@@ -246,13 +270,49 @@ const SignUp = () => {
             {/* Sign-Up Form */}
             <View className="auth-card">
               <View className="auth-form">
+                {/* Nombre y Apellido */}
+                <View className="flex-row gap-3">
+                  <View className="auth-field flex-1">
+                    <Text className="auth-label">Nombre</Text>
+                    <TextInput
+                      className={`auth-input ${firstNameTouched && !firstNameValid && "auth-input-error"}`}
+                      value={firstName}
+                      placeholder="Ej. Juan"
+                      onChangeText={setFirstName}
+                      onBlur={() => setFirstNameTouched(true)}
+                      autoCapitalize="words"
+                      autoComplete="given-name"
+                    />
+                    {firstNameTouched && !firstNameValid && (
+                      <Text className="auth-error">Mínimo 2 caracteres</Text>
+                    )}
+                  </View>
+
+                  <View className="auth-field flex-1">
+                    <Text className="auth-label">Apellido</Text>
+                    <TextInput
+                      className={`auth-input ${lastNameTouched && !lastNameValid && "auth-input-error"}`}
+                      value={lastName}
+                      placeholder="Ej. Pérez"
+                      onChangeText={setLastName}
+                      onBlur={() => setLastNameTouched(true)}
+                      autoCapitalize="words"
+                      autoComplete="family-name"
+                    />
+                    {lastNameTouched && !lastNameValid && (
+                      <Text className="auth-error">Mínimo 2 caracteres</Text>
+                    )}
+                  </View>
+                </View>
+
+                {/* Email */}
                 <View className="auth-field">
-                  <Text className="auth-label">Email</Text>
+                  <Text className="auth-label">Correo electrónico</Text>
                   <TextInput
                     className={`auth-input ${emailTouched && !emailValid && "auth-input-error"}`}
                     autoCapitalize="none"
                     value={emailAddress}
-                    placeholder="name@example.com"
+                    placeholder="nombre@ejemplo.com"
                     onChangeText={setEmailAddress}
                     onBlur={() => setEmailTouched(true)}
                     keyboardType="email-address"
@@ -260,7 +320,7 @@ const SignUp = () => {
                   />
                   {emailTouched && !emailValid && (
                     <Text className="auth-error">
-                      Please enter a valid email address
+                      Por favor, ingresa un correo electrónico válido
                     </Text>
                   )}
                   {errors.fields.emailAddress && (
@@ -270,12 +330,13 @@ const SignUp = () => {
                   )}
                 </View>
 
+                {/* Contraseña */}
                 <View className="auth-field">
-                  <Text className="auth-label">Password</Text>
+                  <Text className="auth-label">Contraseña</Text>
                   <TextInput
                     className={`auth-input ${passwordTouched && !passwordValid && "auth-input-error"}`}
                     value={password}
-                    placeholder="Create a strong password"
+                    placeholder="Crea una contraseña segura"
                     secureTextEntry
                     onChangeText={setPassword}
                     onBlur={() => setPasswordTouched(true)}
@@ -283,12 +344,31 @@ const SignUp = () => {
                   />
                   {passwordTouched && !passwordValid && (
                     <Text className="auth-error">
-                      Password must be at least 8 characters
+                      La contraseña debe tener al menos 8 caracteres
                     </Text>
                   )}
                   {errors.fields.password && (
                     <Text className="auth-error">
                       {errors.fields.password.message}
+                    </Text>
+                  )}
+                </View>
+
+                {/* Confirmar Contraseña */}
+                <View className="auth-field">
+                  <Text className="auth-label">Confirmar contraseña</Text>
+                  <TextInput
+                    className={`auth-input ${confirmPasswordTouched && !confirmPasswordValid && "auth-input-error"}`}
+                    value={confirmPassword}
+                    placeholder="Repite tu contraseña"
+                    secureTextEntry
+                    onChangeText={setConfirmPassword}
+                    onBlur={() => setConfirmPasswordTouched(true)}
+                    autoComplete="password-new"
+                  />
+                  {confirmPasswordTouched && !confirmPasswordValid && (
+                    <Text className="auth-error">
+                      Las contraseñas no coinciden
                     </Text>
                   )}
                 </View>
@@ -300,14 +380,14 @@ const SignUp = () => {
                 >
                   <Text className="auth-button-text">
                     {fetchStatus === "fetching"
-                      ? "Creating Account..."
-                      : "Create Account"}
+                      ? "Creando cuenta..."
+                      : "Crear cuenta"}
                   </Text>
                 </Pressable>
 
                 <View className="auth-divider-row">
                   <View className="auth-divider-line" />
-                  <Text className="auth-divider-text">or</Text>
+                  <Text className="auth-divider-text">o</Text>
                   <View className="auth-divider-line" />
                 </View>
 
@@ -318,7 +398,9 @@ const SignUp = () => {
                 >
                   <GoogleIcon size={18} />
                   <Text className="auth-google-button-text">
-                    {googleLoading ? "Signing up..." : "Continue with Google"}
+                    {googleLoading
+                      ? "Registrándose..."
+                      : "Continuar con Google"}
                   </Text>
                 </Pressable>
               </View>
@@ -326,10 +408,10 @@ const SignUp = () => {
 
             {/* Sign-In Link */}
             <View className="auth-link-row">
-              <Text className="auth-link-copy">Already have an account?</Text>
+              <Text className="auth-link-copy">¿Ya tienes una cuenta?</Text>
               <Link href="/(auth)/sign-in" asChild>
                 <Pressable>
-                  <Text className="auth-link">Sign In</Text>
+                  <Text className="auth-link">Iniciar sesión</Text>
                 </Pressable>
               </Link>
             </View>

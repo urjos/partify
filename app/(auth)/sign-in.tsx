@@ -196,9 +196,9 @@ const SignIn = () => {
                     <Text className="auth-wordmark-sub">SUBSCRIPTIONS</Text>
                   </View>
                 </View>
-                <Text className="auth-title">Verify your identity</Text>
+                <Text className="auth-title">Verifica tu identidad</Text>
                 <Text className="auth-subtitle">
-                  We sent a verification code to your email
+                  Enviamos un código de verificación a tu correo
                 </Text>
               </View>
 
@@ -206,11 +206,11 @@ const SignIn = () => {
               <View className="auth-card">
                 <View className="auth-form">
                   <View className="auth-field">
-                    <Text className="auth-label">Verification Code</Text>
+                    <Text className="auth-label">Código de verificación</Text>
                     <TextInput
                       className="auth-input"
                       value={code}
-                      placeholder="Enter 6-digit code"
+                      placeholder="Ingresa el código de 6 dígitos"
                       placeholderTextColor="rgba(0, 0, 0, 0.4)"
                       onChangeText={setCode}
                       keyboardType="number-pad"
@@ -230,7 +230,9 @@ const SignIn = () => {
                     disabled={!code || fetchStatus === "fetching"}
                   >
                     <Text className="auth-button-text">
-                      {fetchStatus === "fetching" ? "Verifying..." : "Verify"}
+                      {fetchStatus === "fetching"
+                        ? "Verificando..."
+                        : "Verificar"}
                     </Text>
                   </Pressable>
 
@@ -240,7 +242,7 @@ const SignIn = () => {
                     disabled={fetchStatus === "fetching"}
                   >
                     <Text className="auth-secondary-button-text">
-                      Resend Code
+                      Reenviar código
                     </Text>
                   </Pressable>
 
@@ -250,7 +252,7 @@ const SignIn = () => {
                     disabled={fetchStatus === "fetching"}
                   >
                     <Text className="auth-secondary-button-text">
-                      Start Over
+                      Volver a empezar
                     </Text>
                   </Pressable>
                 </View>
@@ -282,8 +284,10 @@ const SignIn = () => {
                 <Text className="auth-wordmark">Partify</Text>
               </View>
               <View className="gap-2">
-                <Text className="auth-title">Welcome back</Text>
-                <Text className="auth-subtitle">Sign in to continue</Text>
+                <Text className="auth-title">Bienvenido de nuevo</Text>
+                <Text className="auth-subtitle">
+                  Inicia sesión para continuar
+                </Text>
               </View>
             </View>
 
@@ -291,12 +295,12 @@ const SignIn = () => {
             <View className="auth-card">
               <View className="auth-form">
                 <View className="auth-field">
-                  <Text className="auth-label">Email</Text>
+                  <Text className="auth-label">Correo electrónico</Text>
                   <TextInput
                     className={`auth-input ${emailTouched && !emailValid && "auth-input-error"}`}
                     autoCapitalize="none"
                     value={emailAddress}
-                    placeholder="name@example.com"
+                    placeholder="nombre@ejemplo.com"
                     onChangeText={setEmailAddress}
                     onBlur={() => setEmailTouched(true)}
                     keyboardType="email-address"
@@ -304,7 +308,7 @@ const SignIn = () => {
                   />
                   {emailTouched && !emailValid && (
                     <Text className="auth-error">
-                      Please enter a valid email address
+                      Por favor, ingresa un correo electrónico válido
                     </Text>
                   )}
                   {errors.fields.identifier && (
@@ -315,18 +319,20 @@ const SignIn = () => {
                 </View>
 
                 <View className="auth-field">
-                  <Text className="auth-label">Password</Text>
+                  <Text className="auth-label">Contraseña</Text>
                   <TextInput
                     className={`auth-input ${passwordTouched && !passwordValid && "auth-input-error"}`}
                     value={password}
-                    placeholder="Enter your password"
+                    placeholder="Ingresa tu contraseña"
                     secureTextEntry
                     onChangeText={setPassword}
                     onBlur={() => setPasswordTouched(true)}
                     autoComplete="password"
                   />
                   {passwordTouched && !passwordValid && (
-                    <Text className="auth-error">Password is required</Text>
+                    <Text className="auth-error">
+                      La contraseña es requerida
+                    </Text>
                   )}
                   {errors.fields.password && (
                     <Text className="auth-error">
@@ -341,13 +347,15 @@ const SignIn = () => {
                   disabled={!formValid || fetchStatus === "fetching"}
                 >
                   <Text className="auth-button-text">
-                    {fetchStatus === "fetching" ? "Signing In..." : "Sign In"}
+                    {fetchStatus === "fetching"
+                      ? "Iniciando sesión..."
+                      : "Iniciar sesión"}
                   </Text>
                 </Pressable>
 
                 <View className="auth-divider-row">
                   <View className="auth-divider-line" />
-                  <Text className="auth-divider-text">or</Text>
+                  <Text className="auth-divider-text">o</Text>
                   <View className="auth-divider-line" />
                 </View>
 
@@ -358,17 +366,19 @@ const SignIn = () => {
                 >
                   <GoogleIcon size={18} />
                   <Text className="auth-google-button-text">
-                    {googleLoading ? "Signing in..." : "Continue with Google"}
+                    {googleLoading
+                      ? "Iniciando sesión..."
+                      : "Continuar con Google"}
                   </Text>
                 </Pressable>
               </View>
             </View>
             {/* Sign-Up Link */}
             <View className="auth-link-row">
-              <Text className="auth-link-copy">Don't have an account?</Text>
+              <Text className="auth-link-copy">¿No tienes una cuenta?</Text>
               <Link href="/(auth)/sign-up" asChild>
                 <Pressable>
-                  <Text className="auth-link">Create Account</Text>
+                  <Text className="auth-link">Crear cuenta</Text>
                 </Pressable>
               </Link>
             </View>

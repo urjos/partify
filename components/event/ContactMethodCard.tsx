@@ -1,3 +1,4 @@
+import FormErrorMessage from "@/components/shared/FormErrorMessage";
 import { colors } from "@/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
@@ -12,6 +13,46 @@ export interface ContactMethodCardProps {
   onContactPhoneChange: (phone: string) => void;
 }
 
+const formatPeruPhone = (text: string): string => {
+  const digits = text.replace(/\D/g, "");
+  const clean =
+    digits.startsWith("51") && digits.length > 9 ? digits.slice(2) : digits;
+  const max = clean.slice(0, 9);
+
+  if (max.length <= 3) return max;
+  if (max.length <= 6) return `${max.slice(0, 3)} ${max.slice(3)}`;
+  return `${max.slice(0, 3)} ${max.slice(3, 6)} ${max.slice(6)}`;
+};
+
+const getPeruPhoneValidationMessage = (rawText: string): string | null => {
+  if (!rawText || rawText.trim() === "") return null;
+  const digits = rawText.replace(/\D/g, "");
+  const clean =
+    digits.startsWith("51") && digits.length > 9 ? digits.slice(2) : digits;
+
+  if (clean.length === 0) return null;
+  if (!clean.startsWith("9")) {
+    return "El número debe comenzar con 9 (ej. 987 654 321).";
+  }
+  if (clean.length < 9) {
+    return `Debe tener 9 dígitos (ingresaste ${clean.length}).`;
+  }
+  return null;
+};
+
+const getLinkValidationMessage = (rawUrl: string): string | null => {
+  if (!rawUrl || rawUrl.trim() === "") return null;
+  const clean = rawUrl.trim();
+
+  const urlPattern =
+    /^(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/i;
+
+  if (!urlPattern.test(clean)) {
+    return "Ingresa un enlace válido (ej. https://passline.com/evento/tu-evento).";
+  }
+  return null;
+};
+
 export default function ContactMethodCard({
   contactMethod,
   onContactMethodChange,
@@ -20,6 +61,35 @@ export default function ContactMethodCard({
   contactPhone,
   onContactPhoneChange,
 }: ContactMethodCardProps) {
+  const phoneError = getPeruPhoneValidationMessage(contactPhone);
+  const isPhoneValid =
+    contactPhone.replace(/\D/g, "").length === 9 && !phoneError;
+
+  const urlError = getLinkValidationMessage(externalUrl);
+  const isUrlValid = externalUrl.trim().length > 0 && !urlError;
+
+  const handlePhoneChange = (text: string) => {
+    const formatted = formatPeruPhone(text);
+    onContactPhoneChange(formatted);
+  };
+
+  const handleUrlChange = (text: string) => {
+    const noSpaces = text.replace(/\s/g, "");
+    onExternalUrlChange(noSpaces);
+  };
+
+  const phoneBorderClass = phoneError
+    ? "border-delete"
+    : isPhoneValid
+    ? "border-success"
+    : "border-border/40";
+
+  const urlBorderClass = urlError
+    ? "border-delete"
+    : isUrlValid
+    ? "border-success"
+    : "border-border/40";
+
   return (
     <View className="gap-5">
       <Text className="text-xl font-bold text-primary">Medio de contacto</Text>
@@ -60,17 +130,24 @@ export default function ContactMethodCard({
           {/* Campo de Número de WhatsApp cuando se selecciona Chat directo */}
           {contactMethod === "chat" ? (
             <View className="pl-7 gap-1">
-              <View className="flex-row items-center bg-modal-background px-3.5 rounded-l-lg gap-1">
+              <View
+                className={`flex-row items-center bg-modal-background px-3.5 rounded-xl border ${phoneBorderClass}`}
+              >
                 <Ionicons name="logo-whatsapp" size={18} color="#25D366" />
+                <Text className="text-xs font-bold text-muted-foreground ml-1.5 mr-0.5">
+                  +51
+                </Text>
                 <TextInput
-                  className="flex-1 text-primary text-sm font-semibold"
-                  placeholder="Ej. +51 987 654 321"
+                  className="flex-1 text-primary text-sm font-semibold py-2.5"
+                  placeholder="987 654 321"
                   placeholderTextColor={colors.mutedForeground}
                   value={contactPhone}
-                  onChangeText={onContactPhoneChange}
+                  onChangeText={handlePhoneChange}
                   keyboardType="phone-pad"
+                  maxLength={11}
                 />
               </View>
+              <FormErrorMessage message={phoneError} />
             </View>
           ) : null}
         </View>
@@ -106,17 +183,33 @@ export default function ContactMethodCard({
 
           {/* Campo de URL cuando se selecciona Ticketing externo */}
           {contactMethod === "external" ? (
-            <View className="pl-8 gap-1">
-              <TextInput
-                className="bg-modal-background text-primary text-sm font-medium px-3.5 rounded-xl"
-                placeholder="https://passline.com/evento/tu-evento"
-                placeholderTextColor={colors.mutedForeground}
-                value={externalUrl}
-                onChangeText={onExternalUrlChange}
-                autoCapitalize="none"
-                keyboardType="url"
-                style={{ paddingLeft: 8 }}
-              />
+            <View className="pl-7 gap-1">
+              <View
+                className={`flex-row items-center bg-modal-background px-3.5 rounded-xl border ${urlBorderClass}`}
+              >
+                <Ionicons
+                  name="link-outline"
+                  size={18}
+                  color={
+                    urlError
+                      ? colors.delete
+                      : isUrlValid
+                      ? colors.success
+                      : colors.mutedForeground
+                  }
+                />
+                <TextInput
+                  className="flex-1 text-primary text-sm font-medium py-2.5 pl-2"
+                  placeholder="https://passline.com/evento/tu-evento"
+                  placeholderTextColor={colors.mutedForeground}
+                  value={externalUrl}
+                  onChangeText={handleUrlChange}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardType="url"
+                />
+              </View>
+              <FormErrorMessage message={urlError} />
             </View>
           ) : null}
         </View>

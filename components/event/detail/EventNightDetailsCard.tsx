@@ -30,7 +30,7 @@ export default function EventNightDetailsCard({
   let drinkTitle = "Bebidas";
   let drinkDesc = "Consumo en barra disponible.";
   if (corkageFree && openBar) {
-    drinkTitle = "Corcho y Barra Libre";
+    drinkTitle = "Corcho y barra libre";
     drinkDesc = "Tragos incluidos y puedes traer tus bebidas.";
   } else if (corkageFree) {
     drinkTitle = "Corcho libre";
@@ -41,7 +41,7 @@ export default function EventNightDetailsCard({
   }
 
   // 2. Dress Code
-  const dressTitle = "Dress Code";
+  const dressTitle = "Código de vestimenta";
   const dressDesc =
     dressCodeDetails && dressCodeDetails.trim().length > 0
       ? `${dressCode || "Casual"} (${dressCodeDetails})`
@@ -88,7 +88,7 @@ export default function EventNightDetailsCard({
               />
               <Text
                 className="text-sm font-bold text-primary flex-1"
-                numberOfLines={1}
+                numberOfLines={2}
               >
                 {drinkTitle}
               </Text>
@@ -108,7 +108,7 @@ export default function EventNightDetailsCard({
               />
               <Text
                 className="text-sm font-bold text-primary flex-1"
-                numberOfLines={1}
+                numberOfLines={2}
               >
                 {dressTitle}
               </Text>

@@ -203,7 +203,7 @@ export default function MapEventModal({
                       <Image
                         source={icons.right}
                         className="size-4"
-                        tintColor={colors.modalBackground}
+                        tintColor={colors.accentPink}
                         resizeMode="contain"
                       />
                     </Pressable>

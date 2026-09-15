@@ -1,7 +1,13 @@
 import audioLines from "@/assets/icons/audio-lines.png";
 import back from "@/assets/icons/back.png";
 import bookmark from "@/assets/icons/bookmark.png";
+import facebook from "@/assets/icons/brands/facebook.png";
+import instagram from "@/assets/icons/brands/instagram.png";
+import spotify from "@/assets/icons/brands/spotify.png";
+import tiktok from "@/assets/icons/brands/tiktok.png";
+import whatsapp from "@/assets/icons/brands/whatsapp.png";
 import calendar from "@/assets/icons/calendar.png";
+import cameraAdd from "@/assets/icons/camera-add.png";
 import carFront from "@/assets/icons/car-front.png";
 import chevronDown from "@/assets/icons/chevron-down.png";
 import checkCircle from "@/assets/icons/circle-check.png";
@@ -24,6 +30,7 @@ import logowb2 from "@/assets/icons/partify-logo-3.png";
 import logo from "@/assets/icons/partify-logo.png";
 import paymentMethod from "@/assets/icons/payment-method.png";
 import pencil from "@/assets/icons/pencil.png";
+import phone from "@/assets/icons/phone.png";
 import plus from "@/assets/icons/plus.png";
 import qrCode from "@/assets/icons/qr-code.png";
 import right from "@/assets/icons/right.png";
@@ -35,7 +42,6 @@ import ticket from "@/assets/icons/ticket.png";
 import uber from "@/assets/icons/uber.png";
 import user from "@/assets/icons/user.png";
 import verified from "@/assets/icons/verified.png";
-import whatsapp from "@/assets/icons/whatsapp.png";
 import x from "@/assets/icons/x.png";
 
 export const icons = {
@@ -78,6 +84,12 @@ export const icons = {
   paymentMethod,
   uber,
   carFront,
+  tiktok,
+  instagram,
+  facebook,
+  spotify,
+  phone,
+  cameraAdd,
 } as const;
 
 export type IconKey = keyof typeof icons;

@@ -220,14 +220,14 @@ export default function EventDetail() {
           <Pressable
             onPress={handleToggleFavorite}
             className={`absolute bottom-4 right-4 size-11 rounded-full items-center justify-center overflow-hidden active:opacity-75 z-20 border-none ${
-              isFavorite ? "bg-chip-background" : "bg-modal-background"
+              isFavorite ? "bg-transparent" : "bg-modal-background"
             }`}
             hitSlop={8}
           >
-            <Image
-              source={icons.heart}
-              className="size-5"
-              tintColor={isFavorite ? colors.accentPink : colors.primary}
+            <Ionicons
+              name={isFavorite ? "heart" : "heart-outline"}
+              size={24}
+              color={isFavorite ? colors.accentPink : colors.primary}
             />
           </Pressable>
         </View>
@@ -252,6 +252,7 @@ export default function EventDetail() {
             rating={event.rating}
             ratingsCount={event.ratingsCount}
             userRating={userRating}
+            hideExactAddress={event.hideExactAddress}
             onRate={handleRateEvent}
             onLocationPress={() => {}}
           />
@@ -288,11 +289,16 @@ export default function EventDetail() {
             externalTicketUrl={event.externalTicketUrl}
           />
 
-          {/* Card 5: Punto de Encuentro (Mapa, Uber y Waze) */}
+          {/* Card 5: Punto de Encuentro (Mapa, Uber y Waze o Privacidad) */}
           <EventMeetingPointCard
             location={event.location}
             latitude={event.latitude}
             longitude={event.longitude}
+            hideExactAddress={event.hideExactAddress}
+            contactMethod={event.contactMethod}
+            contactPhone={event.contactPhone}
+            externalTicketUrl={event.externalTicketUrl}
+            eventTitle={event.title}
           />
         </View>
       </ScrollView>

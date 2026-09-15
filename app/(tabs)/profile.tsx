@@ -13,6 +13,7 @@ import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { useClerk, useUser } from "@clerk/expo";
+import dayjs from "dayjs";
 import { router } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
@@ -58,10 +59,12 @@ const Profile = () => {
         id: e.id,
         title: e.title,
         location: e.location,
-        dateBadge: e.dateLabel || "Próximamente",
+        dateBadge: e.startAt
+          ? `${dayjs(e.startAt).locale("es").format("D/M")} - ${dayjs(e.startAt).locale("es").format("h:mm a")}`
+          : "Próximamente",
         image: getEventImage(e),
         status: "approved",
-        statusLabel: "Guardada en Favoritas",
+        statusLabel: "Guardada en Favoritos",
         contactPhone: e.contactPhone,
         externalTicketUrl: e.externalTicketUrl,
         contactMethod: e.contactMethod,
@@ -141,13 +144,13 @@ const Profile = () => {
         onEditPress={handleEditProfile}
       />
 
-      {/* Selector de Pestañas (Favoritas / Historial) */}
+      {/* Selector de Pestañas (Favoritos / Historial) */}
       <ProfileSegmentedTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Título de la Sección de Eventos */}
       <View className="flex-row items-center justify-between mb-5">
-        <Text className="text-base font-bold text-primary">
-          {activeTab === "favorites" ? "Favoritas" : "Historial"} (
+        <Text className="text-medium font-bold text-primary">
+          {activeTab === "favorites" ? "Favoritos" : "Historial"} (
           {currentEvents.length})
         </Text>
       </View>
@@ -184,8 +187,8 @@ const Profile = () => {
         onRefresh={() => fetchEvents(api)}
         refreshing={loading}
         ListEmptyComponent={
-          <View className="bg-card rounded-2xl p-6 items-center justify-center border border-border/20">
-            <Text className="text-sm font-medium text-muted-foreground text-center">
+          <View className="bg-modal-background rounded-2xl p-4 items-center justify-center">
+            <Text className="text-xs font-medium text-muted-foreground">
               {activeTab === "favorites"
                 ? "No tienes eventos guardados en tus favoritos aún. ¡Toca el corazón en cualquier evento para guardarlo!"
                 : "No tienes eventos en tu historial aún."}

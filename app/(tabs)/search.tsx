@@ -134,17 +134,6 @@ export default function Search() {
         className="absolute top-0 left-0 right-0 z-10 "
       >
         <View className="search-header-container">
-          <Pressable
-            onPress={() => router.back()}
-            className="search-back-btn page-all"
-          >
-            <Image
-              source={icons.back}
-              className="search-icon"
-              tintColor={colors.primary}
-              resizeMode="contain"
-            />
-          </Pressable>
           <View className="search-bar-row page-all">
             <View className="search-input-container">
               <Image

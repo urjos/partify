@@ -108,7 +108,7 @@ export default function App() {
             onPress={() => router.push(`/(events)/${item.id}`)}
           />
         )}
-        ItemSeparatorComponent={() => <View className="h-5" />}
+        ItemSeparatorComponent={() => <View className="h-9" />}
         showsVerticalScrollIndicator={false}
         onRefresh={() => fetchEvents(api)}
         refreshing={loading}

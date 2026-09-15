@@ -81,7 +81,7 @@ export default function LocationPrivacyCard({
               Ocultar dirección exacta
             </Text>
             <Text className="text-xs text-muted-foreground">
-              Solo visible tras confirmar la compra del ticket
+              Solicitar ubicación por el medio de contacto.
             </Text>
           </View>
           <AnimatedToggle
