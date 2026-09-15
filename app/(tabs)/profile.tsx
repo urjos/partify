@@ -7,14 +7,16 @@ import ProfilePreferences from "@/components/profile/ProfilePreferences";
 import ProfileSegmentedTabs, {
   ProfileTab,
 } from "@/components/profile/ProfileSegmentedTabs";
+import ProfileSpotifyCard from "@/components/profile/ProfileSpotifyCard";
 import ProfileStats from "@/components/profile/ProfileStats";
 import images from "@/constants/images";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
+import { useUserStore } from "@/lib/store/userStore";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { useClerk, useUser } from "@clerk/expo";
 import dayjs from "dayjs";
-import { router } from "expo-router";
+import { router, type Href } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
 import React, { useMemo, useState } from "react";
@@ -37,20 +39,32 @@ const Profile = () => {
   const posthog = usePostHog();
   const api = useApi();
 
+  const userProfile = useUserStore((state) => state.profile);
+  const fetchProfile = useUserStore((state) => state.fetchProfile);
+
   const events = useEventStore((state) => state.events);
   const fetchEvents = useEventStore((state) => state.fetchEvents);
   const loading = useEventStore((state) => state.loading);
+
+  React.useEffect(() => {
+    fetchProfile(api);
+  }, [api, fetchProfile]);
 
   const [activeTab, setActiveTab] = useState<ProfileTab>("favorites");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   const displayName =
+    userProfile.name ||
     user?.fullName ||
     user?.firstName ||
     user?.emailAddresses[0]?.emailAddress?.split("@")[0] ||
     "Mateo Silva";
 
-  const userAvatar = user?.imageUrl ? { uri: user.imageUrl } : images.noriel;
+  const userAvatar = userProfile.avatarUri
+    ? { uri: userProfile.avatarUri }
+    : user?.imageUrl
+    ? { uri: user.imageUrl }
+    : images.noriel;
 
   const favoriteEvents: ProfileEventItem[] = useMemo(() => {
     return events
@@ -105,10 +119,7 @@ const Profile = () => {
   };
 
   const handleEditProfile = () => {
-    Alert.alert(
-      "Editar Perfil",
-      "La edición de perfil estará disponible en la próxima actualización.",
-    );
+    router.push(`/(user)/edit/${user?.id || "me"}` as Href);
   };
 
   const handleContactOrganizer = (item: ProfileEventItem) => {
@@ -133,8 +144,18 @@ const Profile = () => {
       <ProfileHeroCard
         name={displayName}
         avatarSource={userAvatar}
+        bio={userProfile.bio}
         isVerified={true}
+        socials={userProfile.socials}
       />
+
+      {/* Tarjeta de Playlist de Spotify (si está configurada) */}
+      {userProfile.spotifyPlaylist ? (
+        <ProfileSpotifyCard
+          playlistUrl={userProfile.spotifyPlaylist}
+          onEditPress={handleEditProfile}
+        />
+      ) : null}
 
       {/* Tarjetas de Estadísticas y Acción */}
       <ProfileStats
@@ -184,7 +205,10 @@ const Profile = () => {
         ListFooterComponent={renderListFooter}
         ItemSeparatorComponent={() => <View className="h-5" />}
         showsVerticalScrollIndicator={false}
-        onRefresh={() => fetchEvents(api)}
+        onRefresh={() => {
+          fetchEvents(api);
+          fetchProfile(api);
+        }}
         refreshing={loading}
         ListEmptyComponent={
           <View className="bg-modal-background rounded-2xl p-4 items-center justify-center">

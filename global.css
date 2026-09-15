@@ -9,7 +9,9 @@
   --color-foreground: #f5f4f2;
 
   --color-modal-background: #0c0c0c;
+  --color-submodal-background: #171717;
   --color-chip-background: #241320;
+  --color-chip-active: rgba(234, 75, 200, 0.35);
   --color-subchip-background: #1d1225;
   --color-card: #1b1b1f;
   --color-muted: #27272a;
@@ -748,11 +750,11 @@
   }
 
   .form-chip {
-    @apply rounded-full border-none bg-modal-background px-4 py-2;
+    @apply rounded-full border-none bg-chip-background px-4 py-2;
   }
 
   .form-chip-active {
-    @apply bg-primary;
+    @apply bg-chip-active;
   }
 
   .form-chip-text {
@@ -760,7 +762,7 @@
   }
 
   .form-chip-text-active {
-    @apply text-muted;
+    @apply text-primary;
   }
 
   .form-toggle-row {

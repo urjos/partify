@@ -10,7 +10,7 @@ type AnimatedToggleProps = {
 const TRACK_WIDTH = 52;
 const TRACK_HEIGHT = 30;
 const KNOB_SIZE = 24;
-const KNOB_MARGIN = 3;
+const KNOB_MARGIN = 2;
 
 const AnimatedToggle = ({ value, onValueChange }: AnimatedToggleProps) => {
   const progress = useRef(new Animated.Value(value ? 1 : 0)).current;
@@ -20,18 +20,23 @@ const AnimatedToggle = ({ value, onValueChange }: AnimatedToggleProps) => {
       toValue: value ? 1 : 0,
       useNativeDriver: false,
       bounciness: 6,
-      speed: 16,
+      speed: 18,
     }).start();
   }, [value, progress]);
 
   const knobTranslateX = progress.interpolate({
     inputRange: [0, 1],
-    outputRange: [KNOB_MARGIN, TRACK_WIDTH - KNOB_SIZE - KNOB_MARGIN],
+    outputRange: [KNOB_MARGIN, TRACK_WIDTH - KNOB_SIZE - KNOB_MARGIN - 2],
   });
 
   const trackColor = progress.interpolate({
     inputRange: [0, 1],
     outputRange: [colors.modalBackground, colors.accentPink],
+  });
+
+  const borderColor = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.card, colors.accentPink],
   });
 
   return (
@@ -47,6 +52,8 @@ const AnimatedToggle = ({ value, onValueChange }: AnimatedToggleProps) => {
           height: TRACK_HEIGHT,
           borderRadius: TRACK_HEIGHT / 2,
           backgroundColor: trackColor,
+          borderColor,
+          borderWidth: 1,
           justifyContent: "center",
         }}
       >
