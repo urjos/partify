@@ -69,8 +69,7 @@ const POPULAR_DISTRICTS: PlacePrediction[] = [
 
 const GOOGLE_API_KEY =
   process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ||
-  process.env.GOOGLE_MAPS_API_KEY ||
-  "AIzaSyCoD0pbkW2uzW6zq-R7WWbcqxUry9lbwYc";
+  process.env.GOOGLE_MAPS_API_KEY;
 
 export default function LocationSearchModal({
   visible,
