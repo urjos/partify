@@ -63,8 +63,8 @@ const Profile = () => {
   const userAvatar = userProfile.avatarUri
     ? { uri: userProfile.avatarUri }
     : user?.imageUrl
-    ? { uri: user.imageUrl }
-    : images.noriel;
+      ? { uri: user.imageUrl }
+      : images.noriel;
 
   const favoriteEvents: ProfileEventItem[] = useMemo(() => {
     return events
@@ -147,6 +147,7 @@ const Profile = () => {
         bio={userProfile.bio}
         isVerified={true}
         socials={userProfile.socials}
+        onEditPress={handleEditProfile}
       />
 
       {/* Tarjeta de Playlist de Spotify (si está configurada) */}
@@ -162,7 +163,6 @@ const Profile = () => {
         rating={4.9}
         attendedCount={attendedCount}
         organizedCount={organizedCount}
-        onEditPress={handleEditProfile}
       />
 
       {/* Selector de Pestañas (Favoritos / Historial) */}

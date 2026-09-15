@@ -1,7 +1,7 @@
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 
 interface ProfileStatsProps {
   rating?: number;
@@ -66,21 +66,6 @@ export default function ProfileStats({
           </Text>
         </View>
       </View>
-
-      {/* Botón Editar Perfil */}
-      <Pressable
-        onPress={onEditPress}
-        className="w-full bg-modal-background rounded-2xl py-3.5 px-4 flex-row items-center justify-center gap-2 active:opacity-75"
-      >
-        <Image
-          source={icons.pencil}
-          className="size-4"
-          tintColor={colors.primary}
-        />
-        <Text className="text-sm font-semibold text-primary">
-          Editar perfil
-        </Text>
-      </Pressable>
     </View>
   );
 }

@@ -36,6 +36,7 @@ export default function EditVibeMusicCard({
   onSpotifyPlaylistChange,
 }: EditVibeMusicCardProps) {
   const [showAllGenres, setShowAllGenres] = useState(false);
+  const [isSpotifyFocused, setIsSpotifyFocused] = useState(false);
 
   const displayedGenres = showAllGenres ? MUSIC_TYPES : MUSIC_TYPES.slice(0, 6);
 
@@ -132,6 +133,9 @@ export default function EditVibeMusicCard({
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="url"
+              selection={isSpotifyFocused ? undefined : { start: 0, end: 0 }}
+              onFocus={() => setIsSpotifyFocused(true)}
+              onBlur={() => setIsSpotifyFocused(false)}
             />
 
             <Pressable

@@ -30,22 +30,6 @@ interface UserStore {
   setAvatarUri: (uri: string | null) => void;
 }
 
-const DEFAULT_PROFILE: UserProfile = {
-  name: "Mateo Silva",
-  username: "mateosilva",
-  bio: "Amante de rooftops íntimos, house melódico y buen rollo. Organizo y asisto a sesiones exclusivas en Miraflores y Barranco.",
-  avatarUri: null,
-  location: "Miraflores, Lima",
-  genres: ["Electrónica", "Indie", "Pop"],
-  spotifyPlaylist: "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M",
-  socials: {
-    instagram: "mateo.silva_",
-    tiktok: "",
-  },
-  phone: "+51 987 654 321",
-  visibleInRadar: true,
-};
-
 const mapMongoUserToProfile = (
   data: any,
   current: UserProfile,
@@ -71,7 +55,21 @@ const mapMongoUserToProfile = (
 };
 
 export const useUserStore = create<UserStore>((set) => ({
-  profile: DEFAULT_PROFILE,
+  profile: {
+    name: "",
+    username: "",
+    bio: "",
+    avatarUri: null,
+    location: "",
+    genres: [],
+    spotifyPlaylist: "",
+    socials: {
+      instagram: "",
+      tiktok: "",
+    },
+    phone: "",
+    visibleInRadar: false,
+  },
   loading: false,
 
   fetchProfile: async (api) => {
@@ -113,7 +111,8 @@ export const useUserStore = create<UserStore>((set) => ({
         bio: updates.bio ?? currentProfile.bio,
         location: updates.location ?? currentProfile.location,
         genres: updates.genres ?? currentProfile.genres,
-        spotifyPlaylist: updates.spotifyPlaylist ?? currentProfile.spotifyPlaylist,
+        spotifyPlaylist:
+          updates.spotifyPlaylist ?? currentProfile.spotifyPlaylist,
         socials: updates.socials ?? currentProfile.socials,
         phone: updates.phone ?? currentProfile.phone,
         visibleInRadar:

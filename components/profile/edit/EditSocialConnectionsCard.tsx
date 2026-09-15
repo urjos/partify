@@ -87,7 +87,6 @@ export default function EditSocialConnectionsCard({
       <Text className="text-lg font-bold text-primary">Conexiones</Text>
 
       <View className="bg-modal-background rounded-3xl p-4 gap-4">
-        {/* Instagram */}
         {(Object.keys(networkConfig) as Array<keyof UserSocials>).map(
           (netKey, index) => {
             const config = networkConfig[netKey];
@@ -123,12 +122,19 @@ export default function EditSocialConnectionsCard({
                       </Text>
                     </View>
                   </View>
-
-                  <Text
-                    className={`text-xs font-bold ${isLinked && "text-success"}`}
-                  >
-                    {isLinked && "Vinculado"}
-                  </Text>
+                  {isLinked && (
+                    <View className="flex-row items-center gap-1 bg-success/15 px-2 py-1 rounded-full">
+                      <Image
+                        source={icons.link}
+                        className="size-4"
+                        resizeMode="contain"
+                        tintColor={colors.success}
+                      />
+                      <Text className="text-xs font-semibold text-success">
+                        Vinculado
+                      </Text>
+                    </View>
+                  )}
                 </Pressable>
               </View>
             );
@@ -172,12 +178,13 @@ export default function EditSocialConnectionsCard({
             padding: 20,
           }}
         >
+          {/* Backdrop con Blur y overlay oscuro transparente */}
           <Pressable
             style={StyleSheet.absoluteFillObject}
             onPress={() => setActiveNetwork(null)}
           >
             <BlurView
-              intensity={25}
+              intensity={10}
               tint="dark"
               style={StyleSheet.absoluteFillObject}
             />
@@ -192,76 +199,106 @@ export default function EditSocialConnectionsCard({
           {activeNetwork && (
             <Pressable
               onPress={(e) => e.stopPropagation()}
-              className="w-full max-w-sm bg-modal-background rounded-3xl p-5 gap-4"
+              className="w-full max-w-sm bg-modal-background rounded-3xl p-5 gap-4 border border-card"
             >
               <View className="flex-row items-center gap-3">
                 <Image
                   source={networkConfig[activeNetwork].icon}
                   className="size-6"
                   resizeMode="contain"
+                  tintColor={colors.primary}
                 />
                 <Text className="text-lg font-bold text-primary">
-                  Vincular {networkConfig[activeNetwork].label}
+                  {socials[activeNetwork]
+                    ? `Gestionar ${networkConfig[activeNetwork].label}`
+                    : `Conectar ${networkConfig[activeNetwork].label}`}
                 </Text>
               </View>
 
-              <Text className="text-xs text-muted-foreground">
-                Ingresa tu nombre de usuario para que otros usuarios puedan
-                visitar tu perfil.
+              <Text className="text-xs text-muted-foreground leading-relaxed">
+                {socials[activeNetwork]
+                  ? `Tu cuenta @${socials[activeNetwork]} está vinculada a tu perfil de Partify. Puedes desvincularla en cualquier momento.`
+                  : `Inicia sesión de forma segura con tu cuenta de ${networkConfig[activeNetwork].label} para mostrar tu perfil verificado en tus eventos.`}
               </Text>
 
-              <View className="flex-row items-center bg-card rounded-2xl px-3.5 py-2.5">
-                <Text className="text-sm font-bold text-accent-pink mr-1">
-                  @
-                </Text>
-                <TextInput
-                  className="flex-1 text-sm font-semibold text-primary"
-                  value={tempHandle}
-                  onChangeText={(text) =>
-                    setTempHandle(
-                      text.replace(/[^a-zA-Z0-9._]/g, "").toLowerCase(),
-                    )
-                  }
-                  placeholder={networkConfig[activeNetwork].placeholder}
-                  placeholderTextColor={colors.mutedForeground}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  autoFocus
-                />
-              </View>
+              {socials[activeNetwork] ? (
+                <View className="flex-row items-center bg-card rounded-2xl px-4 py-3 gap-2 border border-card">
+                  <Image
+                    source={icons.link}
+                    className="size-4"
+                    tintColor={colors.success}
+                  />
+                  <Text className="text-sm font-bold text-primary">
+                    @{socials[activeNetwork]}
+                  </Text>
+                </View>
+              ) : (
+                <View className="flex-row items-center bg-card rounded-2xl px-3.5 py-2.5 border border-card">
+                  <Text className="text-sm font-bold text-accent-pink mr-1">
+                    @
+                  </Text>
+                  <TextInput
+                    className="flex-1 text-sm font-semibold text-primary"
+                    value={tempHandle}
+                    onChangeText={(text) =>
+                      setTempHandle(
+                        text.replace(/[^a-zA-Z0-9._]/g, "").toLowerCase(),
+                      )
+                    }
+                    placeholder={networkConfig[activeNetwork].placeholder}
+                    placeholderTextColor={colors.mutedForeground}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoFocus
+                  />
+                </View>
+              )}
 
               <View className="flex-row gap-3 mt-2">
                 {socials[activeNetwork] ? (
-                  <Pressable
-                    onPress={() => {
-                      onUnlinkSocial(activeNetwork);
-                      setActiveNetwork(null);
-                    }}
-                    className="flex-1 items-center justify-center py-3 rounded-2xl bg-delete/15 active:opacity-75"
-                  >
-                    <Text className="text-sm font-bold text-delete">
-                      Desvincular
-                    </Text>
-                  </Pressable>
-                ) : (
-                  <Pressable
-                    onPress={() => setActiveNetwork(null)}
-                    className="flex-1 items-center justify-center py-3 rounded-2xl bg-card active:opacity-75"
-                  >
-                    <Text className="text-sm font-bold text-muted-foreground">
-                      Cancelar
-                    </Text>
-                  </Pressable>
-                )}
+                  <>
+                    <Pressable
+                      onPress={() => setActiveNetwork(null)}
+                      className="flex-1 items-center justify-center py-3.5 rounded-2xl bg-card active:opacity-75"
+                    >
+                      <Text className="text-sm font-bold text-muted-foreground">
+                        Cerrar
+                      </Text>
+                    </Pressable>
 
-                <Pressable
-                  onPress={handleSaveSocial}
-                  className="flex-1 items-center justify-center py-3 rounded-2xl bg-accent-pink active:opacity-85"
-                >
-                  <Text className="text-sm font-bold text-primary">
-                    Guardar
-                  </Text>
-                </Pressable>
+                    <Pressable
+                      onPress={() => {
+                        onUnlinkSocial(activeNetwork);
+                        setActiveNetwork(null);
+                      }}
+                      className="flex-1 items-center justify-center py-3.5 rounded-2xl bg-delete/15 active:opacity-75"
+                    >
+                      <Text className="text-sm font-bold text-delete">
+                        Desvincular
+                      </Text>
+                    </Pressable>
+                  </>
+                ) : (
+                  <>
+                    <Pressable
+                      onPress={() => setActiveNetwork(null)}
+                      className="flex-1 items-center justify-center py-3.5 rounded-2xl bg-card active:opacity-75"
+                    >
+                      <Text className="text-sm font-bold text-muted-foreground">
+                        Cancelar
+                      </Text>
+                    </Pressable>
+
+                    <Pressable
+                      onPress={handleSaveSocial}
+                      className="flex-1 items-center justify-center py-3.5 rounded-2xl bg-accent-pink active:opacity-85"
+                    >
+                      <Text className="text-sm font-bold text-primary">
+                        Conectar cuenta
+                      </Text>
+                    </Pressable>
+                  </>
+                )}
               </View>
             </Pressable>
           )}
@@ -283,12 +320,13 @@ export default function EditSocialConnectionsCard({
             padding: 20,
           }}
         >
+          {/* Backdrop con Blur y overlay oscuro transparente */}
           <Pressable
             style={StyleSheet.absoluteFillObject}
             onPress={() => setEditingPhone(false)}
           >
             <BlurView
-              intensity={25}
+              intensity={10}
               tint="dark"
               style={StyleSheet.absoluteFillObject}
             />
@@ -302,7 +340,7 @@ export default function EditSocialConnectionsCard({
 
           <Pressable
             onPress={(e) => e.stopPropagation()}
-            className="w-full max-w-sm bg-modal-background rounded-3xl p-5 gap-4 border border-border/30"
+            className="w-full max-w-sm bg-modal-background rounded-3xl p-5 gap-4"
           >
             <View className="flex-row items-center gap-2.5">
               <Image

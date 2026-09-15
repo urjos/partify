@@ -18,6 +18,7 @@ import filter from "@/assets/icons/filter.png";
 import flame from "@/assets/icons/flame.png";
 import heart from "@/assets/icons/heart.png";
 import home from "@/assets/icons/home.png";
+import link from "@/assets/icons/link.png";
 import loader from "@/assets/icons/loader.png";
 import mapPin from "@/assets/icons/map-pin.png";
 import martini from "@/assets/icons/martini.png";
@@ -90,6 +91,7 @@ export const icons = {
   spotify,
   phone,
   cameraAdd,
+  link,
 } as const;
 
 export type IconKey = keyof typeof icons;

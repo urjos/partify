@@ -63,13 +63,7 @@ export default function EditAvatarSection({
   };
 
   return (
-    <View className="items-center justify-center my-4 relative">
-      {/* Resplandor decorativo superior estilo neón */}
-      <View
-        pointerEvents="none"
-        className="absolute -top-6 w-44 h-44 rounded-full bg-accent-pink/20 blur-3xl"
-      />
-
+    <View className="items-center justify-center my-4">
       {/* Avatar circular con anillo neón (idéntico a ProfileHeroCard) */}
       <View className="p-1 rounded-full border-2 border-accent-pink shadow-lg shadow-accent-pink/40 items-center justify-center">
         <Image

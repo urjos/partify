@@ -21,6 +21,7 @@ interface ProfileHeroCardProps {
     facebook?: string;
     tiktok?: string;
   };
+  onEditPress?: () => void;
 }
 
 export default function ProfileHeroCard({
@@ -29,6 +30,7 @@ export default function ProfileHeroCard({
   bio,
   isVerified = true,
   socials,
+  onEditPress,
 }: ProfileHeroCardProps) {
   const resolvedAvatar = avatarSource || images.avatar;
 
@@ -61,6 +63,17 @@ export default function ProfileHeroCard({
 
   return (
     <View className="bg-modal-background rounded-3xl p-6 items-center border-none relative overflow-hidden">
+      <Pressable
+        onPress={onEditPress}
+        className=" rounded-full p-3 absolute right-4 top-4 gap-2 active:opacity-75"
+      >
+        <Image
+          source={icons.pencil}
+          className="size-4"
+          tintColor={colors.mutedForeground}
+        />
+      </Pressable>
+
       {/* Resplandor decorativo superior estilo neón */}
       <View
         pointerEvents="none"
@@ -106,7 +119,7 @@ export default function ProfileHeroCard({
 
       {/* Iconos de Redes Sociales Vinculadas */}
       {hasSocials && (
-        <View className="flex-row items-center justify-center gap-3 mt-4">
+        <View className="flex-row items-center justify-center gap-2 mt-4">
           {socials?.instagram?.trim() ? (
             <Pressable
               onPress={() => openSocialLink("instagram", socials.instagram!)}
@@ -114,7 +127,7 @@ export default function ProfileHeroCard({
             >
               <Image
                 source={icons.instagram}
-                className="size-7"
+                className="size-6"
                 resizeMode="contain"
                 tintColor={colors.mutedForeground}
               />
