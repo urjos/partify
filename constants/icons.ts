@@ -16,6 +16,7 @@ import clothes from "@/assets/icons/clothes.png";
 import ellipsis from "@/assets/icons/ellipsis-vertical.png";
 import filter from "@/assets/icons/filter.png";
 import flame from "@/assets/icons/flame.png";
+import heartSolid from "@/assets/icons/heart-solid.png";
 import heart from "@/assets/icons/heart.png";
 import home from "@/assets/icons/home.png";
 import link from "@/assets/icons/link.png";
@@ -92,6 +93,7 @@ export const icons = {
   phone,
   cameraAdd,
   link,
+  heartSolid,
 } as const;
 
 export type IconKey = keyof typeof icons;

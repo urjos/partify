@@ -13,9 +13,9 @@ import images from "@/constants/images";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
 import { useUserStore } from "@/lib/store/userStore";
+import { formatDateProfile } from "@/lib/utils";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { useClerk, useUser } from "@clerk/expo";
-import dayjs from "dayjs";
 import { router, type Href } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
@@ -73,11 +73,9 @@ const Profile = () => {
         id: e.id,
         title: e.title,
         location: e.location,
-        dateBadge: e.startAt
-          ? `${dayjs(e.startAt).locale("es").format("D/M")} - ${dayjs(e.startAt).locale("es").format("h:mm a")}`
-          : "Próximamente",
+        dateBadge: formatDateProfile(e.startAt),
         image: getEventImage(e),
-        status: "approved",
+        status: "favorited",
         statusLabel: "Guardada en Favoritos",
         contactPhone: e.contactPhone,
         externalTicketUrl: e.externalTicketUrl,
@@ -92,7 +90,7 @@ const Profile = () => {
         id: e.id,
         title: e.title,
         location: e.location,
-        dateBadge: e.dateLabel || "Próximamente",
+        dateBadge: formatDateProfile(e.startAt),
         image: getEventImage(e),
         status: e.isOwner ? "confirmed" : "approved",
         statusLabel: e.isOwner ? "Tu evento publicado" : "Pase Aprobado",

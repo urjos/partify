@@ -224,10 +224,10 @@ export default function EventDetail() {
             }`}
             hitSlop={8}
           >
-            <Ionicons
-              name={isFavorite ? "heart" : "heart-outline"}
-              size={24}
-              color={isFavorite ? colors.accentPink : colors.primary}
+            <Image
+              source={isFavorite ? icons.heartSolid : icons.heart}
+              className="size-6"
+              tintColor={colors.accentPink}
             />
           </Pressable>
         </View>

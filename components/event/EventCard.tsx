@@ -6,7 +6,6 @@ import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
 import { locationFormattedDistrict } from "@/lib/utils";
 import { openWhatsApp } from "@/lib/whatsapp";
-import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { LinearGradient } from "expo-linear-gradient";
@@ -154,10 +153,10 @@ const EventCard = ({
               onPress={handleFavoritePress}
               hitSlop={8}
             >
-              <Ionicons
-                name={isFavorite ? "heart" : "heart-outline"}
-                size={22}
-                color={isFavorite ? colors.accentPink : colors.primary}
+              <Image
+                source={isFavorite ? icons.heartSolid : icons.heart}
+                className="size-6"
+                tintColor={colors.accentPink}
               />
             </Pressable>
           </View>

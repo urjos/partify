@@ -16,7 +16,7 @@ export interface ProfileEventItem {
   location: string;
   dateBadge: string;
   image: ImageSourcePropType | { uri: string };
-  status: "approved" | "confirmed";
+  status: "approved" | "confirmed" | "favorited";
   statusLabel: string;
   contactPhone?: string;
   externalTicketUrl?: string;
@@ -37,13 +37,13 @@ export default function ProfileEventCard({
   return (
     <Pressable
       onPress={onPress}
-      className="bg-modal-background rounded-2xl flex-row p-3 border.none gap-3 active:opacity-90"
+      className="bg-modal-background rounded-2xl h-32 flex-row p-3 gap-3 active:opacity-90"
     >
-      <View className="h-full">
+      <View className="aspect-4/5 overflow-hidden rounded-xl">
         <Image
           source={item.image}
-          className="size-20  overflow-hidden"
-          resizeMode="contain"
+          className="h-full w-full"
+          resizeMode="cover"
         />
       </View>
       {/* Información principal del evento */}
@@ -72,19 +72,17 @@ export default function ProfileEventCard({
         <View className="flex-row items-center justify-between ">
           {/* Estado del ticket / reserva */}
           <View className="flex-row items-center gap-1.5">
-            {item.status === "approved" ? (
-              <Image
-                source={icons.ticket}
-                className="size-4"
-                tintColor={colors.accentPink}
-              />
-            ) : (
-              <Image
-                source={icons.checkCircle}
-                className="size-4"
-                tintColor={colors.accentPink}
-              />
-            )}
+            <Image
+              source={
+                item.status === "approved"
+                  ? icons.ticket
+                  : item.status === "confirmed"
+                    ? icons.checkCircle
+                    : icons.heartSolid
+              }
+              className="size-4"
+              tintColor={colors.accentPink}
+            />
             <Text className="text-xs font-medium text-accent-pink/80">
               {item.statusLabel}
             </Text>

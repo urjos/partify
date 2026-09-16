@@ -59,3 +59,8 @@ export const locationFormattedDistrictAndCity = (location?: string): string => {
       .join(", ") || location
   );
 };
+
+export const formatDateProfile = (date?: string): string => {
+  if (!date) return "Próximamente";
+  return `${dayjs(date).locale("es").format("D/M")} - ${dayjs(date).locale("es").format("h:mm a")}`;
+};
