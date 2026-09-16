@@ -25,3 +25,37 @@ export const formatStatusLabel = (value?: string): string => {
   if (!value) return "Unknown";
   return value.charAt(0).toUpperCase() + value.slice(1);
 };
+
+export const locationFormattedDistrict = (location?: string): string => {
+  if (!location) return "No location identified";
+  return location?.split(",").slice(-2, -1)[0]?.trim() || location;
+};
+
+export const locationFormattedDistrictAndAddress = (
+  location?: string,
+): string => {
+  if (!location) return "No location identified";
+  return (
+    location
+      ?.split(",")
+      .slice(-3, -1)
+      .map((s) => s.trim())
+      .join(", ") || location
+  );
+};
+
+export const locationFormattedAddress = (location?: string): string => {
+  if (!location) return "No location identified";
+  return location?.split(",").slice(-3, -2)[0]?.trim() || location;
+};
+
+export const locationFormattedDistrictAndCity = (location?: string): string => {
+  if (!location) return "No location identified";
+  return (
+    location
+      ?.split(",")
+      .slice(-2)
+      .map((s) => s.trim())
+      .join(", ") || location
+  );
+};

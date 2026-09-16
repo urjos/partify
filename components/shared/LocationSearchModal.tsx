@@ -1,6 +1,5 @@
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
-import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -13,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Header from "../home/Header";
 
 interface LocationSearchModalProps {
   visible: boolean;
@@ -67,9 +67,10 @@ const POPULAR_DISTRICTS: PlacePrediction[] = [
   },
 ];
 
-const GOOGLE_API_KEY =
-  process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ||
-  process.env.GOOGLE_MAPS_API_KEY;
+// Expo solo incorpora en el bundle las variables con el prefijo EXPO_PUBLIC_.
+// Esta debe ser una clave de Google Maps restringida para la app, nunca una
+// clave de servidor sin restricciones.
+const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 export default function LocationSearchModal({
   visible,
@@ -80,11 +81,13 @@ export default function LocationSearchModal({
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   useEffect(() => {
     if (visible) {
       setQuery("");
       setPredictions([]);
+      setSearchError(null);
     }
   }, [visible]);
 
@@ -94,33 +97,76 @@ export default function LocationSearchModal({
     if (!trimmed || trimmed.length < 2) {
       setPredictions([]);
       setLoading(false);
+      setSearchError(null);
+      return;
+    }
+
+    if (!GOOGLE_API_KEY) {
+      setPredictions([]);
+      setLoading(false);
+      setSearchError("La búsqueda de ubicaciones no está configurada.");
       return;
     }
 
     setLoading(true);
+    setSearchError(null);
     const timeoutId = setTimeout(async () => {
       try {
-        const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
-          trimmed,
-        )}&key=${GOOGLE_API_KEY}&components=country:pe&language=es&types=geocode|establishment`;
+        const response = await fetch(
+          "https://places.googleapis.com/v1/places:autocomplete",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Goog-Api-Key": GOOGLE_API_KEY,
+            },
+            body: JSON.stringify({
+              input: trimmed,
+              includedRegionCodes: ["pe"],
+              languageCode: "es",
+            }),
+          },
+        );
 
-        const response = await fetch(url);
         const data = await response.json();
 
-        if (data.status === "OK" && Array.isArray(data.predictions)) {
-          const mapped: PlacePrediction[] = data.predictions.map((p: any) => ({
-            placeId: p.place_id,
-            mainText: p.structured_formatting?.main_text || p.description,
-            secondaryText: p.structured_formatting?.secondary_text || "",
-            fullText: p.description,
-          }));
+        if (response.ok && Array.isArray(data.suggestions)) {
+          const mapped: PlacePrediction[] = data.suggestions
+            .filter((s: any) => s.placePrediction)
+            .map((s: any) => {
+              const pred = s.placePrediction;
+              return {
+                placeId: pred.placeId || pred.place || Math.random().toString(),
+                mainText:
+                  pred.structuredFormat?.mainText?.text ||
+                  pred.text?.text ||
+                  trimmed,
+                secondaryText: pred.structuredFormat?.secondaryText?.text || "",
+                fullText: pred.text?.text || trimmed,
+              };
+            });
           setPredictions(mapped);
+        } else if (data.error) {
+          console.warn("Google Places API error:", data.error);
+          setPredictions([]);
+          const isBlocked =
+            data.error.code === 403 ||
+            data.error.status === "PERMISSION_DENIED" ||
+            data.error.message?.includes("blocked");
+          setSearchError(
+            isBlocked
+              ? "Debes habilitar 'Places API (New)' en Google Cloud Console para esta API Key."
+              : data.error.message ||
+                  "No se pudieron cargar las sugerencias de Google Maps.",
+          );
         } else {
           setPredictions([]);
+          setSearchError(null);
         }
       } catch (err) {
         console.warn("Google Places autocomplete error:", err);
         setPredictions([]);
+        setSearchError("No se pudo conectar con Google Maps.");
       } finally {
         setLoading(false);
       }
@@ -148,32 +194,23 @@ export default function LocationSearchModal({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View style={{ flex: 1, backgroundColor: colors.modalBackground }}>
-        <SafeAreaView edges={["top", "bottom"]} className="flex-1 pafe-all">
+      <View className="flex-1 bg-background page-all">
+        <SafeAreaView edges={["top", "bottom"]} className="flex-1">
           {/* Header con botón cerrar y título */}
-          <View className="flex-row items-center justify-between pb-4">
-            <Text className="text-xl font-bold text-primary">
-              Buscar ubicación
-            </Text>
-            <Pressable
-              onPress={onClose}
-              hitSlop={10}
-              className="size-9 rounded-full bg-card items-center justify-center active:opacity-75"
-            >
-              <Image
-                source={icons.x}
-                className="size-4"
-                tintColor={colors.primary}
-                resizeMode="contain"
-              />
-            </Pressable>
+          <View className="flex-row items-center justify-between">
+            <Header
+              title="Buscar ubicación"
+              isPressable={false}
+              isIconClose={true}
+              onClose={onClose}
+            />
           </View>
 
           {/* Campo de búsqueda estilo Google Maps */}
-          <View className="flex-row items-center bg-card rounded-2xl px-3.5 py-2.5 border border-card gap-2.5 mb-4">
+          <View className="flex-row items-center bg-modal-background rounded-2xl px-3.5 py-2.5 gap-2.5 mb-4">
             <Image
               source={icons.mapPin}
-              tintColor={colors.accentPink}
+              tintColor={colors.mutedForeground}
               className="size-5"
               resizeMode="contain"
             />
@@ -209,7 +246,7 @@ export default function LocationSearchModal({
             keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={
-              <Text className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+              <Text className="text-xs font-medium text-muted-foreground mb-4">
                 {query.trim().length >= 2
                   ? "Resultados de Google Maps"
                   : "Ubicaciones sugeridas"}
@@ -219,7 +256,8 @@ export default function LocationSearchModal({
               !loading && query.trim().length >= 2 ? (
                 <View className="items-center justify-center py-8 gap-3">
                   <Text className="text-sm font-medium text-muted-foreground text-center">
-                    No se encontraron sugerencias para "{query}".
+                    {searchError ||
+                      `No se encontraron sugerencias para "${query}".`}
                   </Text>
                   <Pressable
                     onPress={handleCustomConfirm}
@@ -239,21 +277,11 @@ export default function LocationSearchModal({
               return (
                 <Pressable
                   onPress={() => handleSelect(item)}
-                  className={`flex-row items-center py-3.5 border-b border-card active:opacity-75 ${
-                    isSelected && "bg-card/40 rounded-xl px-2"
+                  className={`flex-row items-center py-3.5 border-card active:opacity-75 ${
+                    isSelected && "bg-card/40 rounded-xl"
                   }`}
                 >
-                  <View className="size-8 rounded-full bg-modal-background items-center justify-center mr-3 border border-border/20">
-                    <Image
-                      source={icons.mapPin}
-                      tintColor={
-                        isSelected ? colors.accentPink : colors.mutedForeground
-                      }
-                      className="size-4"
-                      resizeMode="contain"
-                    />
-                  </View>
-                  <View className="flex-1">
+                  <View className="flex-1 px-4">
                     <Text className="text-sm font-bold text-primary">
                       {item.mainText}
                     </Text>
@@ -263,13 +291,6 @@ export default function LocationSearchModal({
                       </Text>
                     )}
                   </View>
-                  {isSelected && (
-                    <Ionicons
-                      name="checkmark"
-                      size={18}
-                      color={colors.accentPink}
-                    />
-                  )}
                 </Pressable>
               );
             }}

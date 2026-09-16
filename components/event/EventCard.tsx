@@ -4,6 +4,7 @@ import images from "@/constants/images";
 import { colors } from "@/constants/theme";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
+import { locationFormattedDistrict } from "@/lib/utils";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
@@ -102,7 +103,7 @@ const EventCard = ({
               <Text className="event-category-text">{category}</Text>
             </View>
             <Text numberOfLines={1} className="event-location-text">
-              {location?.split(",").slice(-2, -1)[0]?.trim() || location}
+              {locationFormattedDistrict(location)}
             </Text>
           </View>
           <View className="event-meta-row">

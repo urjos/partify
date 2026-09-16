@@ -1,5 +1,6 @@
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
+import { locationFormattedDistrictAndAddress } from "@/lib/utils";
 import React from "react";
 import {
   Image,
@@ -36,17 +37,18 @@ export default function ProfileEventCard({
   return (
     <Pressable
       onPress={onPress}
-      className="bg-modal-background rounded-2xl p-4 border.none gap-5 active:opacity-90"
+      className="bg-modal-background rounded-2xl flex-row p-3 border.none gap-3 active:opacity-90"
     >
-      {/* Información principal del evento */}
-      <View className="flex-row items-center gap-3">
+      <View className="h-full">
         <Image
           source={item.image}
-          className="size-18 rounded-xl bg-muted"
-          resizeMode="cover"
+          className="size-20  overflow-hidden"
+          resizeMode="contain"
         />
-
-        <View className="flex-1 justify-center">
+      </View>
+      {/* Información principal del evento */}
+      <View className="flex-1 gap-3">
+        <View>
           {/* Badge de Fecha / Hora */}
           <View className="self-start">
             <Text className="text-sm font-medium text-muted-foreground">
@@ -64,47 +66,47 @@ export default function ProfileEventCard({
             numberOfLines={1}
             className="text-xs font-medium text-muted-foreground"
           >
-            {item.location}
+            {locationFormattedDistrictAndAddress(item.location)}
           </Text>
+        </View>
+        <View className="flex-row items-center justify-between ">
+          {/* Estado del ticket / reserva */}
+          <View className="flex-row items-center gap-1.5">
+            {item.status === "approved" ? (
+              <Image
+                source={icons.ticket}
+                className="size-4"
+                tintColor={colors.accentPink}
+              />
+            ) : (
+              <Image
+                source={icons.checkCircle}
+                className="size-4"
+                tintColor={colors.accentPink}
+              />
+            )}
+            <Text className="text-xs font-medium text-accent-pink/80">
+              {item.statusLabel}
+            </Text>
+          </View>
+
+          {/* Botón Contactar */}
+          <Pressable
+            onPress={onContact}
+            hitSlop={6}
+            className="flex-row items-center gap-2 bg-muted/60 px-3 py-1.5 rounded-xl active:opacity-75"
+          >
+            <Image
+              source={icons.messageSquareText}
+              className="size-4"
+              tintColor={colors.primary}
+            />
+            <Text className="text-xs font-bold text-primary">Contactar</Text>
+          </Pressable>
         </View>
       </View>
 
       {/* Barra de acción inferior */}
-      <View className="flex-row items-center justify-between ">
-        {/* Estado del ticket / reserva */}
-        <View className="flex-row items-center gap-1.5">
-          {item.status === "approved" ? (
-            <Image
-              source={icons.ticket}
-              className="size-4"
-              tintColor={colors.accentPink}
-            />
-          ) : (
-            <Image
-              source={icons.checkCircle}
-              className="size-4"
-              tintColor={colors.accentPink}
-            />
-          )}
-          <Text className="text-xs font-semibold text-primary">
-            {item.statusLabel}
-          </Text>
-        </View>
-
-        {/* Botón Contactar */}
-        <Pressable
-          onPress={onContact}
-          hitSlop={6}
-          className="flex-row items-center gap-2 bg-muted/60 px-3 py-1.5 rounded-xl active:opacity-75"
-        >
-          <Image
-            source={icons.messageSquareText}
-            className="size-4"
-            tintColor={colors.primary}
-          />
-          <Text className="text-xs font-bold text-primary">Contactar</Text>
-        </Pressable>
-      </View>
     </Pressable>
   );
 }

@@ -1,4 +1,5 @@
 import { icons } from "@/constants/icons";
+import { colors } from "@/constants/theme";
 import { router } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
@@ -8,7 +9,9 @@ interface HeaderProps {
   isPressable: boolean;
   logo?: boolean;
   onPress?: () => void;
+  onClose?: () => void;
   className?: string;
+  isIconClose?: boolean;
 }
 
 const Header = ({
@@ -17,6 +20,8 @@ const Header = ({
   logo,
   onPress,
   className,
+  isIconClose,
+  onClose,
 }: HeaderProps) => {
   /*
   const { user } = useUser();
@@ -43,6 +48,20 @@ const Header = ({
             <Image
               source={icons.plus}
               className="size-8"
+              resizeMode="contain"
+            />
+          </Pressable>
+        )}
+        {isIconClose && (
+          <Pressable
+            onPress={onClose}
+            hitSlop={10}
+            className="size-9 rounded-full items-center justify-center active:opacity-75"
+          >
+            <Image
+              source={icons.x}
+              className="size-6"
+              tintColor={colors.mutedForeground}
               resizeMode="contain"
             />
           </Pressable>
