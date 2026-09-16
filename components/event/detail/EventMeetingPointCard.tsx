@@ -1,3 +1,4 @@
+import PinMap from "@/components/search/map/PinMap";
 import { icons } from "@/constants/icons";
 import { darkMapStyle } from "@/constants/mapStyle";
 import { colors } from "@/constants/theme";
@@ -135,18 +136,7 @@ export default function EventMeetingPointCard({
         />
 
         {/* Pin central fijo (evita parpadeo y saltos de render en react-native-maps) */}
-        <View
-          className="absolute inset-0 items-center justify-center"
-          pointerEvents="none"
-        >
-          <View className="size-8 rounded-full bg-card items-center justify-center shadow-lg border border-border/40">
-            <Image
-              source={icons.mapPin}
-              className="size-4"
-              tintColor={colors.destructive}
-            />
-          </View>
-        </View>
+        <PinMap />
 
         {/* Overlay Pill inferior con la dirección */}
         <View className="absolute bottom-2.5 left-2.5 right-2.5 bg-card/95 px-3.5 py-2 rounded-xl flex-row items-center justify-between backdrop-blur-md">

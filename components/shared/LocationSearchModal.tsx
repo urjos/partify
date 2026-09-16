@@ -67,10 +67,7 @@ const POPULAR_DISTRICTS: PlacePrediction[] = [
   },
 ];
 
-// Expo solo incorpora en el bundle las variables con el prefijo EXPO_PUBLIC_.
-// Esta debe ser una clave de Google Maps restringida para la app, nunca una
-// clave de servidor sin restricciones.
-const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
+const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_NEW_API_KEY;
 
 export default function LocationSearchModal({
   visible,

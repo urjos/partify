@@ -1,4 +1,4 @@
-import MapEventModal from "@/components/search/MapEventModal";
+import MapEventModal from "@/components/search/map/MapEventModal";
 import SearchFilterModal, {
   DEFAULT_FILTERS,
   SearchFilters,

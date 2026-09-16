@@ -5,7 +5,8 @@ import * as Location from "expo-location";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Animated, Easing, Image, View } from "react-native";
-import MapView, { Circle, Marker, Region } from "react-native-maps";
+import MapView, { Circle, Region } from "react-native-maps";
+import EventMarker from "./map/EventMarker";
 
 interface SearchMapProps {
   events: any[];
@@ -14,9 +15,6 @@ interface SearchMapProps {
   userLocation?: { latitude: number; longitude: number } | null;
   onLocationReady?: (coords: { latitude: number; longitude: number }) => void;
 }
-
-// Un delta pequeño significa que el mapa está "acercado" (zoomed in).
-const ZOOM_THRESHOLD = 0.05;
 
 interface PulsingRadiusCircleProps {
   center: { latitude: number; longitude: number };
@@ -31,7 +29,6 @@ const PulsingRadiusCircle = React.memo(function PulsingRadiusCircle({
   const totalSteps = 48;
 
   useEffect(() => {
-    // Ciclo continuo de ~2.4s (48 pasos de 50ms)
     const interval = setInterval(() => {
       setStep((prev) => (prev + 1) % totalSteps);
     }, 50);
@@ -41,19 +38,16 @@ const PulsingRadiusCircle = React.memo(function PulsingRadiusCircle({
 
   const maxRadiusMeters = radiusKm * 1000;
 
-  // Onda 1: Expansión de 0 a 100% con desvanecimiento de opacidad
   const progress1 = step / totalSteps;
   const radius1 = Math.max(30, maxRadiusMeters * progress1);
   const opacity1 = (1 - progress1) * 0.45;
 
-  // Onda 2: Desfasada medio ciclo para lograr efecto constante de radar
   const progress2 = ((step + totalSteps / 2) % totalSteps) / totalSteps;
   const radius2 = Math.max(30, maxRadiusMeters * progress2);
   const opacity2 = (1 - progress2) * 0.45;
 
   return (
     <>
-      {/* Perímetro base que define el límite del filtro */}
       <Circle
         center={center}
         radius={maxRadiusMeters}
@@ -61,8 +55,6 @@ const PulsingRadiusCircle = React.memo(function PulsingRadiusCircle({
         strokeColor="rgba(234, 75, 200, 0.45)"
         fillColor="rgba(234, 75, 200, 0.05)"
       />
-
-      {/* Onda expansiva primaria */}
       <Circle
         center={center}
         radius={radius1}
@@ -70,8 +62,6 @@ const PulsingRadiusCircle = React.memo(function PulsingRadiusCircle({
         strokeColor={`rgba(234, 75, 200, ${opacity1.toFixed(3)})`}
         fillColor={`rgba(234, 75, 200, ${(opacity1 * 0.25).toFixed(3)})`}
       />
-
-      {/* Onda expansiva secundaria */}
       <Circle
         center={center}
         radius={radius2}
@@ -91,7 +81,6 @@ export default function SearchMap({
   onLocationReady,
 }: SearchMapProps) {
   const [location, setLocation] = useState<Region | null>(null);
-  const [isZoomedIn, setIsZoomedIn] = useState(false);
   const spinValue = React.useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -153,10 +142,6 @@ export default function SearchMap({
     outputRange: ["0deg", "360deg"],
   });
 
-  const handleRegionChangeComplete = (region: Region) => {
-    setIsZoomedIn(region.latitudeDelta < ZOOM_THRESHOLD);
-  };
-
   if (!location) {
     return (
       <View key="map-loading" className="search-map-container-loading">
@@ -183,50 +168,25 @@ export default function SearchMap({
         style={{ flex: 1 }}
         initialRegion={location}
         showsUserLocation={true}
-        onRegionChangeComplete={handleRegionChangeComplete}
         userInterfaceStyle="dark"
         customMapStyle={darkMapStyle}
         mapPadding={{ top: 145, right: 8, left: 0, bottom: 100 }}
       >
         {centerCoords && !!radiusKm && (
-          <PulsingRadiusCircle
-            center={centerCoords}
-            radiusKm={radiusKm}
-          />
+          <PulsingRadiusCircle center={centerCoords} radiusKm={radiusKm} />
         )}
         {events.map((event) => {
           if (!event.latitude || !event.longitude) return null;
 
-          const timeString = event.startAt
-            ? new Date(event.startAt).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : "";
-
           return (
-            <Marker
+            <EventMarker
               key={event.id}
-              coordinate={{
-                latitude: event.latitude,
-                longitude: event.longitude,
-              }}
+              event={event}
               onPress={() => {
                 if (onEventPress) onEventPress(event);
                 else router.push(`/(events)/${event.id}`);
               }}
-            >
-              <View className="search-map-marker">
-                <View className="search-map-marker-icon-wrap">
-                  <Image
-                    source={icons.flame}
-                    className="size-4"
-                    tintColor={colors.accentPink}
-                    resizeMode="contain"
-                  />
-                </View>
-              </View>
-            </Marker>
+            />
           );
         })}
       </MapView>
