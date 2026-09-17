@@ -1,27 +1,9 @@
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
+import { ProfileEventItem } from "@/lib/store/userStore";
 import { locationFormattedDistrictAndAddress } from "@/lib/utils";
 import React from "react";
-import {
-  Image,
-  ImageSourcePropType,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
-
-export interface ProfileEventItem {
-  id: string;
-  title: string;
-  location: string;
-  dateBadge: string;
-  image: ImageSourcePropType | { uri: string };
-  status: "approved" | "confirmed" | "favorited";
-  statusLabel: string;
-  contactPhone?: string;
-  externalTicketUrl?: string;
-  contactMethod?: "chat" | "external";
-}
+import { Image, Pressable, Text, View } from "react-native";
 
 interface ProfileEventCardProps {
   item: ProfileEventItem;

@@ -1,7 +1,5 @@
 import Header from "@/components/home/Header";
-import ProfileEventCard, {
-  ProfileEventItem,
-} from "@/components/profile/ProfileEventCard";
+import ProfileEventCard from "@/components/profile/ProfileEventCard";
 import ProfileHeroCard from "@/components/profile/ProfileHeroCard";
 import ProfilePreferences from "@/components/profile/ProfilePreferences";
 import ProfileSegmentedTabs, {
@@ -12,7 +10,7 @@ import ProfileStats from "@/components/profile/ProfileStats";
 import images from "@/constants/images";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
-import { useUserStore } from "@/lib/store/userStore";
+import { ProfileEventItem, useUserStore } from "@/lib/store/userStore";
 import { formatDateProfile } from "@/lib/utils";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { useClerk, useUser } from "@clerk/expo";
@@ -52,6 +50,7 @@ const Profile = () => {
 
   const [activeTab, setActiveTab] = useState<ProfileTab>("favorites");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [contactEnabled, setContactEnabled] = useState(true);
 
   const displayName =
     userProfile.name ||
@@ -133,6 +132,18 @@ const Profile = () => {
     }
   };
 
+  const hasPhone = Boolean(
+    userProfile.phone && userProfile.phone.trim().length > 0,
+  );
+
+  const handleContactToggle = (enabled: boolean) => {
+    if (!hasPhone) {
+      setContactEnabled(false);
+      return;
+    }
+    setContactEnabled(enabled);
+  };
+
   const renderListHeader = () => (
     <View className="gap-5">
       {/* Título de la pantalla */}
@@ -179,6 +190,9 @@ const Profile = () => {
   const renderListFooter = () => (
     <ProfilePreferences
       notificationsEnabled={notificationsEnabled}
+      contactEnabled={hasPhone && contactEnabled}
+      contactDisabled={!hasPhone}
+      onToggleContact={handleContactToggle}
       onToggleNotifications={setNotificationsEnabled}
       onSignOut={handleSignOut}
     />

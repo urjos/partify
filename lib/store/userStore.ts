@@ -1,4 +1,5 @@
 import { ApiClient } from "@/lib/api/client";
+import { ImageSourcePropType } from "react-native";
 import { create } from "zustand";
 
 export interface UserSocials {
@@ -17,6 +18,19 @@ export interface UserProfile {
   socials: UserSocials;
   phone: string;
   visibleInRadar: boolean;
+}
+
+export interface ProfileEventItem {
+  id: string;
+  title: string;
+  location: string;
+  dateBadge: string;
+  image: ImageSourcePropType | { uri: string };
+  status: "approved" | "confirmed" | "favorited";
+  statusLabel: string;
+  contactPhone?: string;
+  externalTicketUrl?: string;
+  contactMethod?: "chat" | "external";
 }
 
 interface UserStore {

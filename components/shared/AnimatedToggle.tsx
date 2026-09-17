@@ -5,6 +5,7 @@ import { Animated, Pressable } from "react-native";
 type AnimatedToggleProps = {
   value: boolean;
   onValueChange: (value: boolean) => void;
+  disabled?: boolean;
 };
 
 const TRACK_WIDTH = 52;
@@ -12,17 +13,22 @@ const TRACK_HEIGHT = 30;
 const KNOB_SIZE = 24;
 const KNOB_MARGIN = 2;
 
-const AnimatedToggle = ({ value, onValueChange }: AnimatedToggleProps) => {
-  const progress = useRef(new Animated.Value(value ? 1 : 0)).current;
+const AnimatedToggle = ({
+  value,
+  onValueChange,
+  disabled = false,
+}: AnimatedToggleProps) => {
+  const isChecked = value && !disabled;
+  const progress = useRef(new Animated.Value(isChecked ? 1 : 0)).current;
 
   useEffect(() => {
     Animated.spring(progress, {
-      toValue: value ? 1 : 0,
+      toValue: isChecked ? 1 : 0,
       useNativeDriver: false,
       bounciness: 6,
       speed: 18,
     }).start();
-  }, [value, progress]);
+  }, [isChecked, progress]);
 
   const knobTranslateX = progress.interpolate({
     inputRange: [0, 1],
@@ -41,10 +47,16 @@ const AnimatedToggle = ({ value, onValueChange }: AnimatedToggleProps) => {
 
   return (
     <Pressable
-      onPress={() => onValueChange(!value)}
+      onPress={() => {
+        if (!disabled) {
+          onValueChange(!value);
+        }
+      }}
+      disabled={disabled}
       hitSlop={8}
       accessibilityRole="switch"
-      accessibilityState={{ checked: value }}
+      accessibilityState={{ checked: isChecked, disabled }}
+      style={{ opacity: disabled ? 0.4 : 1 }}
     >
       <Animated.View
         style={{

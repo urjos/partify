@@ -4,14 +4,20 @@ import { Pressable, Text, View } from "react-native";
 
 interface ProfilePreferencesProps {
   notificationsEnabled: boolean;
+  contactEnabled: boolean;
+  contactDisabled?: boolean;
   onToggleNotifications: (enabled: boolean) => void;
+  onToggleContact: (enabled: boolean) => void;
   appVersion?: string;
   onSignOut: () => void;
 }
 
 export default function ProfilePreferences({
   notificationsEnabled,
+  contactEnabled,
+  contactDisabled = false,
   onToggleNotifications,
+  onToggleContact,
   appVersion = "Partify v1.1.0",
   onSignOut,
 }: ProfilePreferencesProps) {
@@ -31,6 +37,30 @@ export default function ProfilePreferences({
         <AnimatedToggle
           value={notificationsEnabled}
           onValueChange={onToggleNotifications}
+        />
+      </View>
+
+      {/* Card de Contacto */}
+      <View
+        className={`rounded-2xl border border-border/30 flex-row items-center justify-between gap-4 ${
+          contactDisabled ? "opacity-60" : ""
+        }`}
+      >
+        <View className="flex-1 pr-2">
+          <Text className="text-sm font-semibold text-primary">
+            Permitir contacto directo
+          </Text>
+          <Text className="text-xs font-medium text-muted-foreground mt-0.5 leading-snug">
+            {contactDisabled
+              ? "Debes registrar un número de celular en tu perfil para habilitar el contacto directo."
+              : "Se habilitará un botón dentro de tu perfil para que las personas puedan contactarse contigo."}
+          </Text>
+        </View>
+
+        <AnimatedToggle
+          value={contactDisabled ? false : contactEnabled}
+          disabled={contactDisabled}
+          onValueChange={onToggleContact}
         />
       </View>
 
