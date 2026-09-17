@@ -11,28 +11,43 @@ import {
   View,
 } from "react-native";
 
-interface ProfileHeroCardProps {
+export interface ProfileHeroCardProps {
   name: string;
+  username?: string;
+  badgeText?: string;
+  location?: string;
   avatarSource?: ImageSourcePropType | { uri: string };
   bio?: string | null;
   isVerified?: boolean;
+  isOnline?: boolean;
   socials?: {
     instagram?: string;
     facebook?: string;
     tiktok?: string;
   };
   onEditPress?: () => void;
+  showEditButton?: boolean;
+  showContactButton?: boolean;
+  onContactPress?: () => void;
 }
 
 export default function ProfileHeroCard({
   name,
+  username,
+  badgeText,
+  location,
   avatarSource,
   bio,
   isVerified = true,
+  isOnline = true,
   socials,
   onEditPress,
+  showEditButton,
+  showContactButton = false,
+  onContactPress,
 }: ProfileHeroCardProps) {
   const resolvedAvatar = avatarSource || images.avatar;
+  const displayEdit = showEditButton ?? Boolean(onEditPress);
 
   const openSocialLink = async (
     network: "instagram" | "tiktok",
@@ -57,22 +72,25 @@ export default function ProfileHeroCard({
 
   const hasSocials = Boolean(
     socials?.instagram?.trim() ||
-    socials?.facebook?.trim() ||
     socials?.tiktok?.trim(),
   );
 
   return (
     <View className="bg-modal-background rounded-3xl p-6 items-center border-none relative overflow-hidden">
-      <Pressable
-        onPress={onEditPress}
-        className=" rounded-full p-3 absolute right-4 top-4 gap-2 active:opacity-75"
-      >
-        <Image
-          source={icons.pencil}
-          className="size-4"
-          tintColor={colors.mutedForeground}
-        />
-      </Pressable>
+      {/* Botón de editar (si aplica) */}
+      {displayEdit && onEditPress && (
+        <Pressable
+          onPress={onEditPress}
+          className="rounded-full p-3 absolute right-4 top-4 gap-2 active:opacity-75 z-10"
+          hitSlop={8}
+        >
+          <Image
+            source={icons.pencil}
+            className="size-4"
+            tintColor={colors.mutedForeground}
+          />
+        </Pressable>
+      )}
 
       {/* Resplandor decorativo superior estilo neón */}
       <View
@@ -80,20 +98,25 @@ export default function ProfileHeroCard({
         className="absolute -top-10 w-44 h-44 rounded-full bg-accent-pink/15 blur-3xl"
       />
 
-      {/* Avatar circular con anillo neón */}
-      <View className="p-1 rounded-full border-2 border-accent-pink shadow-lg shadow-accent-pink/40 items-center justify-center">
-        <Image
-          source={resolvedAvatar}
-          className="size-24 rounded-full"
-          resizeMode="cover"
-        />
+      {/* Avatar circular con anillo neón y dot de estado */}
+      <View className="relative">
+        <View className="p-1 rounded-full border-2 border-accent-pink shadow-lg shadow-accent-pink/40 items-center justify-center">
+          <Image
+            source={resolvedAvatar}
+            className="size-24 rounded-full"
+            resizeMode="cover"
+          />
+        </View>
+        {isOnline && (
+          <View className="absolute bottom-1 right-1 size-4 rounded-full bg-[#22c55e] border-2 border-modal-background" />
+        )}
       </View>
 
       {/* Nombre y badge verificado */}
       <View className="flex-row items-center justify-center gap-1.5 mt-4">
         <Text
           numberOfLines={1}
-          className="text-xl font-bold text-primary text-center"
+          className="text-2xl font-extrabold text-primary text-center"
         >
           {name}
         </Text>
@@ -101,29 +124,66 @@ export default function ProfileHeroCard({
           <Image
             source={icons.verified}
             tintColor={colors.accentPink}
-            className="size-4"
+            className="size-5"
           />
         )}
       </View>
 
+      {/* Badges / Username */}
+      <View className="flex-row items-center justify-center flex-wrap gap-2 mt-2">
+        {badgeText ? (
+          <View className="bg-chip-background px-3 py-1 rounded-full">
+            <Text className="text-xs font-bold text-accent-pink">
+              {badgeText}
+            </Text>
+          </View>
+        ) : null}
+
+        {username?.trim() ? (
+          <View className="flex-row items-center gap-1">
+            {badgeText ? (
+              <Text className="text-xs text-muted-foreground">•</Text>
+            ) : null}
+            <Text className="text-xs font-semibold text-muted-foreground">
+              @{username.replace(/^@/, "")}
+            </Text>
+          </View>
+        ) : null}
+      </View>
+
+      {/* Ubicación */}
+      {location?.trim() ? (
+        <View className="flex-row items-center justify-center gap-1.5 mt-2">
+          <Image
+            source={icons.mapPin}
+            className="size-3.5"
+            tintColor={colors.mutedForeground}
+          />
+          <Text className="text-xs font-medium text-muted-foreground">
+            {location}
+          </Text>
+        </View>
+      ) : null}
+
       {/* Biografía */}
       {bio?.trim() ? (
-        <Text className="text-xs font-medium text-muted-foreground text-center mt-2 px-3 leading-relaxed">
+        <Text className="text-xs font-medium text-muted-foreground text-center mt-3 px-2 leading-relaxed">
           {bio}
         </Text>
       ) : (
-        <Text className="text-xs font-medium text-muted-foreground text-center mt-2 px-3 leading-relaxed">
-          No hay biografía, aún.
+        <Text className="text-xs font-medium text-muted-foreground text-center mt-3 px-2 leading-relaxed">
+          Sin biografía aún.
         </Text>
       )}
 
       {/* Iconos de Redes Sociales Vinculadas */}
       {hasSocials && (
-        <View className="flex-row items-center justify-center gap-2 mt-4">
+        <View className="flex-row items-center justify-center gap-4 mt-3.5">
           {socials?.instagram?.trim() ? (
             <Pressable
               onPress={() => openSocialLink("instagram", socials.instagram!)}
-              className=" items-center justify-center active:opacity-75"
+              className="size-9 rounded-full items-center justify-center active:opacity-75"
+              hitSlop={8}
             >
               <Image
                 source={icons.instagram}
@@ -137,11 +197,12 @@ export default function ProfileHeroCard({
           {socials?.tiktok?.trim() ? (
             <Pressable
               onPress={() => openSocialLink("tiktok", socials.tiktok!)}
-              className="items-center justify-center active:opacity-75"
+              className="size-9 rounded-full items-center justify-center active:opacity-75"
+              hitSlop={8}
             >
               <Image
                 source={icons.tiktok}
-                className="size-7"
+                className="size-6"
                 resizeMode="contain"
                 tintColor={colors.mutedForeground}
               />
@@ -149,6 +210,22 @@ export default function ProfileHeroCard({
           ) : null}
         </View>
       )}
+
+      {/* Botón de Contacto */}
+      {(showContactButton || onContactPress) && (
+        <Pressable
+          onPress={onContactPress}
+          className="w-full bg-[#241c2c] border border-border/40 rounded-full py-3 px-4 flex-row items-center justify-center gap-2 mt-4 active:opacity-80"
+        >
+          <Image
+            source={icons.user}
+            className="size-4"
+            tintColor={colors.primary}
+          />
+          <Text className="text-sm font-bold text-primary">Contactar</Text>
+        </Pressable>
+      )}
     </View>
   );
 }
+

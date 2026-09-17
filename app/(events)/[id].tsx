@@ -13,7 +13,7 @@ import { useEventStore } from "@/lib/store/eventStore";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, type Href } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
@@ -269,10 +269,8 @@ export default function EventDetail() {
             authorAvatar={event.authorAvatar}
             rating={event.rating}
             onViewProfile={() => {
-              Alert.alert(
-                event.author,
-                "Perfil de organizador en construcción.",
-              );
+              const targetId = event.authorId || event.id;
+              router.push(`/(user)/${targetId}` as Href);
             }}
           />
 
