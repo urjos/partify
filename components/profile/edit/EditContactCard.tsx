@@ -1,5 +1,7 @@
+import FormErrorMessage from "@/components/shared/FormErrorMessage";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
+import { formatPeruPhone, getPeruPhoneValidationMessage } from "@/lib/utils";
 import { BlurView } from "expo-blur";
 import React, { useState } from "react";
 import {
@@ -24,12 +26,28 @@ export default function EditContactCard({
   const [editingPhone, setEditingPhone] = useState(false);
   const [tempPhone, setTempPhone] = useState("");
 
+  const phoneError = getPeruPhoneValidationMessage(tempPhone);
+  const isPhoneValid =
+    tempPhone.replace(/\D/g, "").length === 9 && !phoneError;
+
+  const phoneBorderClass = phoneError
+    ? "border-delete"
+    : isPhoneValid
+      ? "border-success"
+      : "border-border/40";
+
   const openPhoneModal = () => {
     setEditingPhone(true);
-    setTempPhone(phone || "");
+    setTempPhone(phone ? formatPeruPhone(phone) : "");
+  };
+
+  const handlePhoneInputChange = (text: string) => {
+    const formatted = formatPeruPhone(text);
+    setTempPhone(formatted);
   };
 
   const handleSavePhone = () => {
+    if (tempPhone.trim() && phoneError) return;
     onPhoneChange(tempPhone.trim());
     setEditingPhone(false);
   };
@@ -56,7 +74,7 @@ export default function EditContactCard({
                 Teléfono de contacto (WhatsApp)
               </Text>
               <Text className="text-sm font-medium text-primary mt-0.5">
-                {phone || "No configurado"}
+                {phone ? formatPeruPhone(phone) : "No configurado"}
               </Text>
             </View>
           </View>
@@ -117,20 +135,29 @@ export default function EditContactCard({
             </View>
 
             <Text className="text-xs text-muted-foreground">
-              Ingresa tu número de contacto para coordinar con otros usuarios o
-              asistentes de tus eventos.
+              Ingresa tu número de WhatsApp para coordinar transferencias o
+              entradas directas.
             </Text>
 
-            <View className="flex-row items-center bg-card rounded-2xl px-3.5 py-2.5 border border-border/40">
-              <TextInput
-                className="flex-1 text-sm font-semibold text-primary"
-                value={tempPhone}
-                onChangeText={setTempPhone}
-                placeholder="+51 987 654 321"
-                placeholderTextColor={colors.mutedForeground}
-                keyboardType="phone-pad"
-                autoFocus
-              />
+            <View className="gap-1.5">
+              <View
+                className={`flex-row items-center bg-card rounded-2xl px-3.5 py-2.5 border ${phoneBorderClass}`}
+              >
+                <Text className="text-sm font-semibold text-muted-foreground mr-2">
+                  🇵🇪 +51
+                </Text>
+                <TextInput
+                  className="flex-1 text-sm font-semibold text-primary"
+                  value={tempPhone}
+                  onChangeText={handlePhoneInputChange}
+                  placeholder="987 654 321"
+                  placeholderTextColor={colors.mutedForeground}
+                  keyboardType="phone-pad"
+                  maxLength={11}
+                  autoFocus
+                />
+              </View>
+              <FormErrorMessage message={phoneError} />
             </View>
 
             <View className="flex-row gap-3 mt-2">
@@ -145,7 +172,12 @@ export default function EditContactCard({
 
               <Pressable
                 onPress={handleSavePhone}
-                className="flex-1 items-center justify-center py-3 rounded-2xl bg-accent-pink active:opacity-85"
+                disabled={Boolean(tempPhone.trim() && phoneError)}
+                className={`flex-1 items-center justify-center py-3 rounded-2xl ${
+                  tempPhone.trim() && phoneError
+                    ? "bg-accent-pink/40"
+                    : "bg-accent-pink active:opacity-85"
+                }`}
               >
                 <Text className="text-sm font-bold text-primary">Guardar</Text>
               </Pressable>

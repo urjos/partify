@@ -1,5 +1,6 @@
 import FormErrorMessage from "@/components/shared/FormErrorMessage";
 import { colors } from "@/constants/theme";
+import { formatPeruPhone, getPeruPhoneValidationMessage } from "@/lib/utils";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
@@ -12,33 +13,6 @@ export interface ContactMethodCardProps {
   contactPhone: string;
   onContactPhoneChange: (phone: string) => void;
 }
-
-const formatPeruPhone = (text: string): string => {
-  const digits = text.replace(/\D/g, "");
-  const clean =
-    digits.startsWith("51") && digits.length > 9 ? digits.slice(2) : digits;
-  const max = clean.slice(0, 9);
-
-  if (max.length <= 3) return max;
-  if (max.length <= 6) return `${max.slice(0, 3)} ${max.slice(3)}`;
-  return `${max.slice(0, 3)} ${max.slice(3, 6)} ${max.slice(6)}`;
-};
-
-const getPeruPhoneValidationMessage = (rawText: string): string | null => {
-  if (!rawText || rawText.trim() === "") return null;
-  const digits = rawText.replace(/\D/g, "");
-  const clean =
-    digits.startsWith("51") && digits.length > 9 ? digits.slice(2) : digits;
-
-  if (clean.length === 0) return null;
-  if (!clean.startsWith("9")) {
-    return "El número debe comenzar con 9 (ej. 987 654 321).";
-  }
-  if (clean.length < 9) {
-    return `Debe tener 9 dígitos (ingresaste ${clean.length}).`;
-  }
-  return null;
-};
 
 const getLinkValidationMessage = (rawUrl: string): string | null => {
   if (!rawUrl || rawUrl.trim() === "") return null;
@@ -81,14 +55,14 @@ export default function ContactMethodCard({
   const phoneBorderClass = phoneError
     ? "border-delete"
     : isPhoneValid
-    ? "border-success"
-    : "border-border/40";
+      ? "border-success"
+      : "border-border/40";
 
   const urlBorderClass = urlError
     ? "border-delete"
     : isUrlValid
-    ? "border-success"
-    : "border-border/40";
+      ? "border-success"
+      : "border-border/40";
 
   return (
     <View className="gap-5">
@@ -194,8 +168,8 @@ export default function ContactMethodCard({
                     urlError
                       ? colors.delete
                       : isUrlValid
-                      ? colors.success
-                      : colors.mutedForeground
+                        ? colors.success
+                        : colors.mutedForeground
                   }
                 />
                 <TextInput

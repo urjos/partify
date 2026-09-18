@@ -40,6 +40,7 @@ interface UserDetailData {
   attendedCount: number;
   organizedCount: number;
   spotifyPlaylist: string;
+  userRating?: number | null;
 }
 
 export default function UserProfileScreen() {
@@ -53,6 +54,7 @@ export default function UserProfileScreen() {
   const [userData, setUserData] = useState<UserDetailData | null>(null);
   const [userEvents, setUserEvents] = useState<EventItem[]>([]);
   const [userRating, setUserRating] = useState<number | null>(null);
+  const [isRatingSubmitting, setIsRatingSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -96,6 +98,10 @@ export default function UserProfileScreen() {
                     e.authorId === id || (raw._id && e.authorId === raw._id),
                 );
 
+          const currentRating =
+            typeof raw.userRating === "number" ? raw.userRating : null;
+          setUserRating(currentRating);
+
           setUserData({
             id: raw._id || raw.id || id,
             name: raw.name || "Usuario",
@@ -112,6 +118,7 @@ export default function UserProfileScreen() {
             attendedCount: raw.attendedCount ?? 0,
             organizedCount: raw.organizedCount ?? cleanEvents.length,
             spotifyPlaylist: raw.spotifyPlaylist || "",
+            userRating: currentRating,
           });
           setUserEvents(cleanEvents);
           setLoading(false);
@@ -167,12 +174,42 @@ export default function UserProfileScreen() {
     }
   };
 
-  const handleRateUser = (score: number) => {
+  const handleRateUser = async (score: number) => {
+    if (userRating !== null || isRatingSubmitting || !userData) return;
+
+    // Actualización optimista en UI
     setUserRating(score);
+    setIsRatingSubmitting(true);
+
     posthog.capture("user_rated", {
       targetUserId: id,
       score,
     });
+
+    try {
+      const res = await api.post<{ success: boolean; data: any }>(
+        `/users/${id}/rate`,
+        { score },
+      );
+
+      if (res?.success && res.data) {
+        if (typeof res.data.rating === "number") {
+          setUserData((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  rating: res.data.rating,
+                  userRating: score,
+                }
+              : null,
+          );
+        }
+      }
+    } catch (error) {
+      console.warn("Error enviando calificación de usuario:", error);
+    } finally {
+      setIsRatingSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -249,7 +286,11 @@ export default function UserProfileScreen() {
         />
 
         {/* Tarjeta de Calificación Interactiva */}
-        <UserRatingCard userRating={userRating} onRate={handleRateUser} />
+        <UserRatingCard
+          userRating={userRating}
+          onRate={handleRateUser}
+          disabled={isRatingSubmitting || userRating !== null}
+        />
 
         {/* Tarjeta de Playlist de Spotify */}
         {userData.spotifyPlaylist ? (
