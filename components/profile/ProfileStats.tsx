@@ -11,9 +11,9 @@ interface ProfileStatsProps {
 }
 
 export default function ProfileStats({
-  rating = 4.9,
-  attendedCount = 14,
-  organizedCount = 3,
+  rating = 5.0,
+  attendedCount = 0,
+  organizedCount = 0,
   onEditPress,
 }: ProfileStatsProps) {
   return (

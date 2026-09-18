@@ -71,8 +71,7 @@ export default function ProfileHeroCard({
   };
 
   const hasSocials = Boolean(
-    socials?.instagram?.trim() ||
-    socials?.tiktok?.trim(),
+    socials?.instagram?.trim() || socials?.tiktok?.trim(),
   );
 
   return (
@@ -107,16 +106,13 @@ export default function ProfileHeroCard({
             resizeMode="cover"
           />
         </View>
-        {isOnline && (
-          <View className="absolute bottom-1 right-1 size-4 rounded-full bg-[#22c55e] border-2 border-modal-background" />
-        )}
       </View>
 
       {/* Nombre y badge verificado */}
       <View className="flex-row items-center justify-center gap-1.5 mt-4">
         <Text
           numberOfLines={1}
-          className="text-2xl font-extrabold text-primary text-center"
+          className="text-xl font-extrabold text-primary text-center"
         >
           {name}
         </Text>
@@ -124,46 +120,26 @@ export default function ProfileHeroCard({
           <Image
             source={icons.verified}
             tintColor={colors.accentPink}
-            className="size-5"
+            className="size-4"
           />
         )}
       </View>
 
-      {/* Badges / Username */}
-      <View className="flex-row items-center justify-center flex-wrap gap-2 mt-2">
-        {badgeText ? (
-          <View className="bg-chip-background px-3 py-1 rounded-full">
-            <Text className="text-xs font-bold text-accent-pink">
-              {badgeText}
-            </Text>
-          </View>
-        ) : null}
-
+      <View className="flex justify-center items-center gap-4 w-full">
+        {/* Badges / Username */}
         {username?.trim() ? (
-          <View className="flex-row items-center gap-1">
-            {badgeText ? (
-              <Text className="text-xs text-muted-foreground">•</Text>
-            ) : null}
-            <Text className="text-xs font-semibold text-muted-foreground">
-              @{username.replace(/^@/, "")}
-            </Text>
-          </View>
+          <Text className="text-xs font-semibold text-muted-foreground">
+            @{username.replace(/^@/, "")}
+          </Text>
         ) : null}
-      </View>
 
-      {/* Ubicación */}
-      {location?.trim() ? (
-        <View className="flex-row items-center justify-center gap-1.5 mt-2">
-          <Image
-            source={icons.mapPin}
-            className="size-3.5"
-            tintColor={colors.mutedForeground}
-          />
+        {/* Ubicación */}
+        {location?.trim() ? (
           <Text className="text-xs font-medium text-muted-foreground">
             {location}
           </Text>
-        </View>
-      ) : null}
+        ) : null}
+      </View>
 
       {/* Biografía */}
       {bio?.trim() ? (
@@ -178,7 +154,7 @@ export default function ProfileHeroCard({
 
       {/* Iconos de Redes Sociales Vinculadas */}
       {hasSocials && (
-        <View className="flex-row items-center justify-center gap-4 mt-3.5">
+        <View className="flex-row items-center justify-center gap-1 mt-3.5">
           {socials?.instagram?.trim() ? (
             <Pressable
               onPress={() => openSocialLink("instagram", socials.instagram!)}
@@ -187,7 +163,7 @@ export default function ProfileHeroCard({
             >
               <Image
                 source={icons.instagram}
-                className="size-6"
+                className="size-5"
                 resizeMode="contain"
                 tintColor={colors.mutedForeground}
               />
@@ -215,17 +191,16 @@ export default function ProfileHeroCard({
       {(showContactButton || onContactPress) && (
         <Pressable
           onPress={onContactPress}
-          className="w-full bg-[#241c2c] border border-border/40 rounded-full py-3 px-4 flex-row items-center justify-center gap-2 mt-4 active:opacity-80"
+          className="w-full bg-submodal-background border border-card rounded-full py-3 px-4 flex-row items-center justify-center gap-2 mt-4 active:opacity-80"
         >
           <Image
-            source={icons.user}
+            source={icons.messageSquareText}
             className="size-4"
-            tintColor={colors.primary}
+            tintColor={colors.mutedForeground}
           />
-          <Text className="text-sm font-bold text-primary">Contactar</Text>
+          <Text className="text-sm font-medium text-primary">Contactar</Text>
         </Pressable>
       )}
     </View>
   );
 }
-

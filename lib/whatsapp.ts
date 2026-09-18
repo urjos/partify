@@ -5,11 +5,33 @@ import { Alert, Linking } from "react-native";
  * Si el número no tiene prefijo internacional y tiene 9 dígitos (estándar Perú),
  * se le añade automáticamente el código '51'.
  */
-export const openWhatsApp = (phone?: string, eventTitle?: string) => {
+export interface WhatsAppContactOptions {
+  eventTitle?: string;
+  userName?: string;
+  customMessage?: string;
+}
+
+/**
+ * Abre WhatsApp con el número especificado y un mensaje contextualizado:
+ * - Si es para un evento (eventTitle): solicita más información sobre ese evento con su nombre.
+ * - Si es desde el perfil del usuario (sin evento o con userName): solicita información sobre las fiestas que organiza.
+ * - Si se especifica un customMessage, se envía directamente.
+ */
+export const openWhatsApp = (
+  phone?: string,
+  optionsOrTitle?: string | WhatsAppContactOptions,
+) => {
+  const options: WhatsAppContactOptions =
+    typeof optionsOrTitle === "string"
+      ? { eventTitle: optionsOrTitle }
+      : optionsOrTitle || {};
+
   if (!phone || !phone.trim()) {
     Alert.alert(
       "Contacto no configurado",
-      "El anfitrión de este evento no ha proporcionado un número de WhatsApp para contacto directo.",
+      options.eventTitle
+        ? "El anfitrión de este evento no ha proporcionado un número de WhatsApp para contacto directo."
+        : "Este anfitrión no ha proporcionado un número de WhatsApp para contacto directo.",
     );
     return;
   }
@@ -23,9 +45,17 @@ export const openWhatsApp = (phone?: string, eventTitle?: string) => {
     cleaned = `51${cleaned}`;
   }
 
-  const message = eventTitle
-    ? `¡Hola! Te escribo desde Partify por tu evento "${eventTitle}". ¿Sigue disponible?`
-    : "¡Hola! Te escribo desde Partify por tu evento. ¿Sigue disponible?";
+  let message = "";
+  if (options.customMessage) {
+    message = options.customMessage;
+  } else if (options.eventTitle && options.eventTitle.trim()) {
+    message = `¡Hola! Te escribo desde Partify. Quisiera más información sobre el evento "${options.eventTitle.trim()}". ¿Sigue disponible?`;
+  } else if (options.userName && options.userName.trim()) {
+    message = `¡Hola ${options.userName.trim()}! Vi tu perfil en Partify y quisiera más información sobre las próximas fiestas y eventos que organizas.`;
+  } else {
+    message =
+      "¡Hola! Vi tu perfil en Partify y quisiera más información sobre las próximas fiestas y eventos que organizas.";
+  }
 
   const url = `https://wa.me/${cleaned}?text=${encodeURIComponent(message)}`;
 

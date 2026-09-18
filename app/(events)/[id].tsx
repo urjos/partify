@@ -5,22 +5,19 @@ import EventMeetingPointCard from "@/components/event/detail/EventMeetingPointCa
 import EventNightDetailsCard from "@/components/event/detail/EventNightDetailsCard";
 import EventOrganizerCard from "@/components/event/detail/EventOrganizerCard";
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
-import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { Ionicons } from "@expo/vector-icons";
-import { BlurView } from "expo-blur";
 import { router, useLocalSearchParams, type Href } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
-  Image,
+  Linking,
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -129,6 +126,62 @@ export default function EventDetail() {
     }
   };
 
+  const handleContact = async () => {
+    // 1. Si el método de contacto es externo y tiene enlace de ticket
+    if (event.contactMethod === "external" && event.externalTicketUrl?.trim()) {
+      let url = event.externalTicketUrl.trim();
+      if (!/^https?:\/\//i.test(url)) {
+        url = `https://${url}`;
+      }
+      try {
+        await Linking.openURL(url);
+        return;
+      } catch {
+        Alert.alert(
+          "Error al abrir enlace",
+          "No se pudo abrir el enlace de compra externo.",
+        );
+        return;
+      }
+    }
+
+    // 2. Si el evento tiene número de WhatsApp configurado
+    if (event.contactPhone?.trim()) {
+      openWhatsApp(event.contactPhone.trim(), { eventTitle: event.title });
+      return;
+    }
+
+    // 3. Si el evento no tiene número directo pero tiene ID del anfitrión, consultar su teléfono
+    if (event.authorId) {
+      try {
+        const res = await api.get<{ success: boolean; data: any }>(
+          `/users/${event.authorId}`,
+        );
+        if (res?.success && res.data?.phone?.trim()) {
+          openWhatsApp(res.data.phone.trim(), { eventTitle: event.title });
+          return;
+        }
+      } catch (err) {
+        console.warn("Error fetching host phone for event:", err);
+      }
+    }
+
+    // 4. Si el método era externo pero no hay URL configurada
+    if (event.contactMethod === "external") {
+      Alert.alert(
+        "Enlace no configurado",
+        "El anfitrión de este evento no ha proporcionado el enlace de compra de entradas.",
+      );
+      return;
+    }
+
+    // 5. Alerta cuando no hay ningún método de contacto configurado
+    Alert.alert(
+      "Contacto no disponible",
+      "El anfitrión de este evento no ha configurado un número de WhatsApp para contacto directo.",
+    );
+  };
+
   const confirmCancel = () => {
     Alert.alert(
       "¿Cancelar este evento?",
@@ -168,33 +221,49 @@ export default function EventDetail() {
         >
           {/* Botón Atrás */}
           <Pressable
+            className="size-11 rounded-full items-center justify-center bg-modal-background/70 border border-border/40 backdrop-blur-md active:opacity-75 pointer-events-auto"
             onPress={() => router.back()}
-            className="size-10 rounded-full items-center justify-center overflow-hidden active:opacity-75 bg-black/50"
-            hitSlop={10}
+            hitSlop={8}
           >
-            <BlurView
-              intensity={50}
-              tint="dark"
-              style={StyleSheet.absoluteFill}
+            <Ionicons name="arrow-back" size={20} color={colors.primary} />
+          </Pressable>
+
+          {/* Botón Favorito */}
+          <Pressable
+            className="size-11 rounded-full items-center justify-center bg-modal-background/70 border border-border/40 backdrop-blur-md active:opacity-75 pointer-events-auto"
+            onPress={handleToggleFavorite}
+            hitSlop={8}
+          >
+            <Ionicons
+              name={isFavorite ? "heart" : "heart-outline"}
+              size={20}
+              color={isFavorite ? colors.accentPink : colors.primary}
             />
-            <Ionicons name="chevron-back" size={22} color="#ffffff" />
           </Pressable>
         </View>
       </SafeAreaView>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-5"
+        contentContainerStyle={{ paddingBottom: 110 }}
+        className="flex-1"
       >
-        {/* ================= 1. HEADER MULTIMEDIA ================= */}
-        <View className="relative w-full aspect-4/5 min-h-[400px] max-h-[560px] overflow-hidden bg-modal-background">
+        {/* ================= 1. MEDIA CAROUSEL (HEADER) ================= */}
+        <View className="relative w-full aspect-4/5 min-h-[400px] max-h-[560px] overflow-hidden bg-submodal-background">
+          <EventMediaCarousel
+            media={event.media}
+            className="w-full h-full"
+            onIndexChange={setActiveMediaIndex}
+          />
+
+          {/* Badge de Categoría (Superior Izquierda) */}
           <View
             className="absolute top-4 left-4 right-4 flex-row items-center justify-between  z-50"
             pointerEvents="box-none"
           >
             {/* Tag de Categoría */}
             <View className="bg-chip-background px-3 py-1 rounded-full">
-              <Text className="text-xs font-bold text-primary uppercase tra king-normal">
+              <Text className="text-xs font-bold text-primary uppercase traking-normal">
                 {event.category}
               </Text>
             </View>
@@ -208,39 +277,26 @@ export default function EventDetail() {
               </View>
             ) : null}
           </View>
-          <EventMediaCarousel
-            media={event.media}
-            className="w-full h-full"
-            resizeMode="cover"
-            onIndexChange={setActiveMediaIndex}
-            hideDots={true}
-          />
 
-          {/* Botón Flotante de Favoritos (Corazón) */}
-          <Pressable
-            onPress={handleToggleFavorite}
-            className={`absolute bottom-4 right-4 size-11 rounded-full items-center justify-center overflow-hidden active:opacity-75 z-20 border-none ${
-              isFavorite ? "bg-transparent" : "bg-modal-background"
-            }`}
-            hitSlop={8}
-          >
-            <Image
-              source={isFavorite ? icons.heartSolid : icons.heart}
-              className="size-6"
-              tintColor={colors.accentPink}
-            />
-          </Pressable>
+          {/* Indicador de Medios (Inferior Derecha) */}
+          {event.media.length > 1 && (
+            <View className="absolute bottom-4 right-4 bg-modal-background/80 border border-border/40 px-3 py-1 rounded-full backdrop-blur-md">
+              <Text className="text-xs font-semibold text-primary">
+                {activeMediaIndex + 1} / {event.media.length}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* ================= 2. CONTENIDO PRINCIPAL ================= */}
-        <View className="page-all gap-4 mt-5">
-          {/* Card 1: Tarjeta Principal del Evento */}
+        <View className="px-4 gap-4 mt-5 z-20">
+          {/* Card 1: Información Básica (Título, Precio, Fecha, Ubicación, Rating) */}
           <EventMainCard
             title={event.title}
             price={event.price}
             priceWomen={event.priceWomen}
-            isFreeEvent={event.isFreeEvent}
             isMultiplePrices={event.isMultiplePrices}
+            isFreeEvent={event.isFreeEvent}
             typeMusic={event.typeMusic}
             startAt={event.startAt}
             closingAt={event.closingAt}
@@ -254,7 +310,6 @@ export default function EventDetail() {
             userRating={userRating}
             hideExactAddress={event.hideExactAddress}
             onRate={handleRateEvent}
-            onLocationPress={() => {}}
           />
 
           {/* Card 2: Asistentes y Amigos */}
@@ -283,8 +338,6 @@ export default function EventDetail() {
             dressCodeDetails={event.dressCodeDetails}
             isAdultsOnly={event.isAdultsOnly}
             requirePhysicalId={event.requirePhysicalId}
-            contactMethod={event.contactMethod}
-            externalTicketUrl={event.externalTicketUrl}
           />
 
           {/* Card 5: Punto de Encuentro (Mapa, Uber y Waze o Privacidad) */}
@@ -297,6 +350,7 @@ export default function EventDetail() {
             contactPhone={event.contactPhone}
             externalTicketUrl={event.externalTicketUrl}
             eventTitle={event.title}
+            onContactPress={handleContact}
           />
         </View>
       </ScrollView>
@@ -310,7 +364,7 @@ export default function EventDetail() {
         contactPhone={event.contactPhone}
         eventTitle={event.title}
         onToggleStatus={handleToggleStatus}
-        onContactWhatsApp={() => openWhatsApp(event.contactPhone, event.title)}
+        onContact={handleContact}
         onEditPress={() => router.push(`/edit/${event.id}`)}
         onCancelPress={confirmCancel}
       />

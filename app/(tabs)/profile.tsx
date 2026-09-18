@@ -57,7 +57,7 @@ const Profile = () => {
     user?.fullName ||
     user?.firstName ||
     user?.emailAddresses[0]?.emailAddress?.split("@")[0] ||
-    "Mateo Silva";
+    "Usuario";
 
   const userAvatar = userProfile.avatarUri
     ? { uri: userProfile.avatarUri }

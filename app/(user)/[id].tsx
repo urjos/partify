@@ -7,13 +7,14 @@ import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
 import { useApi } from "@/hooks/use-api";
+import { mapApiEventToEventItem } from "@/lib/api/mappers";
 import { useEventStore } from "@/lib/store/eventStore";
 import { formatDateProfile } from "@/lib/utils";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { router, useLocalSearchParams, type Href } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -55,68 +56,84 @@ export default function UserProfileScreen() {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [userData, setUserData] = useState<UserDetailData | null>(null);
+  const [userEvents, setUserEvents] = useState<EventItem[]>([]);
   const [userRating, setUserRating] = useState<number | null>(null);
 
-  // Cargar información del usuario desde la API con fallback
   useEffect(() => {
     let isMounted = true;
 
     async function loadUserData() {
-      setLoading(true);
-      try {
-        if (id && id !== "me") {
-          const res = await api.get<{ success: boolean; data: any }>(
-            `/users/${id}`,
-          );
-          if (res?.success && res.data && isMounted) {
-            const raw = res.data;
-            setUserData({
-              id: raw._id || raw.id || id,
-              name: raw.name || "Usuario Partify",
-              username: raw.username || "usuario",
-              bio:
-                raw.bio ||
-                "Amante de rooftops íntimos, house melódico y buen rollo. Organizo y asisto a sesiones exclusivas en Miraflores y Barranco.",
-              avatarUrl: raw.avatarUrl || null,
-              location: raw.location || "Miraflores, Lima",
-              phone: raw.phone || "",
-              rating: raw.rating ?? 4.9,
-              attendedCount: raw.attendedCount ?? 14,
-              organizedCount: raw.organizedCount ?? 3,
-              spotifyPlaylist: raw.spotifyPlaylist || "",
-              socials: {
-                instagram: raw.socials?.instagram || "mateosilva",
-                tiktok: raw.socials?.tiktok || "",
-                facebook: raw.socials?.facebook || "",
-              },
-            });
-            setLoading(false);
-            return;
-          }
-        }
-      } catch (error) {
-        console.warn("Error fetching user profile from API, using fallback:", error);
+      if (!id) {
+        setLoading(false);
+        return;
       }
 
-      // Fallback predeterminado según el diseño de referencia
+      setLoading(true);
+      try {
+        const userRes = await api.get<{ success: boolean; data: any }>(
+          `/users/${id}`,
+        );
+
+        let fetchedEvents: EventItem[] = [];
+        try {
+          const eventsRes = await api.get<{ success: boolean; data: any[] }>(
+            `/events/user/${id}`,
+          );
+          if (eventsRes?.success && Array.isArray(eventsRes.data)) {
+            fetchedEvents = eventsRes.data.map(mapApiEventToEventItem);
+          }
+        } catch {
+          // Si falla la ruta de eventos por usuario, filtrar desde el store local
+          fetchedEvents = allEvents.filter(
+            (e) =>
+              e.authorId === id ||
+              (userRes?.data?._id && e.authorId === userRes.data._id),
+          );
+        }
+
+        if (userRes?.success && userRes.data && isMounted) {
+          const raw = userRes.data;
+          const cleanEvents =
+            fetchedEvents.length > 0
+              ? fetchedEvents
+              : allEvents.filter(
+                  (e) =>
+                    e.authorId === id || (raw._id && e.authorId === raw._id),
+                );
+
+          setUserData({
+            id: raw._id || raw.id || id,
+            name: raw.name || "Usuario",
+            username:
+              raw.username ||
+              (raw.name
+                ? raw.name.toLowerCase().replace(/\s+/g, "")
+                : "usuario"),
+            bio: raw.bio || "",
+            avatarUrl: raw.avatarUrl || null,
+            location: raw.location || "",
+            phone: raw.phone || "",
+            rating: typeof raw.rating === "number" ? raw.rating : 5.0,
+            attendedCount: raw.attendedCount ?? 0,
+            organizedCount: raw.organizedCount ?? cleanEvents.length,
+            spotifyPlaylist: raw.spotifyPlaylist || "",
+            socials: {
+              instagram: raw.socials?.instagram || "",
+              tiktok: raw.socials?.tiktok || "",
+              facebook: raw.socials?.facebook || "",
+            },
+          });
+          setUserEvents(cleanEvents);
+          setLoading(false);
+          return;
+        }
+      } catch (error) {
+        console.warn("Error fetching user profile from API:", error);
+      }
+
       if (isMounted) {
-        setUserData({
-          id: id || "mock-user",
-          name: "Mateo Silva",
-          username: "mateosilva",
-          bio: "Amante de rooftops íntimos, house melódico y buen rollo. Organizo y asisto a sesiones exclusivas en Miraflores y Barranco.",
-          avatarUrl: null,
-          location: "Miraflores, Lima",
-          phone: "+51987654321",
-          rating: 4.9,
-          attendedCount: 14,
-          organizedCount: 3,
-          spotifyPlaylist: "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M",
-          socials: {
-            instagram: "mateosilva",
-            tiktok: "",
-          },
-        });
+        setUserData(null);
+        setUserEvents([]);
         setLoading(false);
       }
     }
@@ -126,31 +143,38 @@ export default function UserProfileScreen() {
     return () => {
       isMounted = false;
     };
-  }, [id, api]);
+  }, [id, api, allEvents]);
 
-  // Eventos organizados por este anfitrión
-  const organizedEvents = useMemo(() => {
-    const matched = allEvents.filter(
-      (e) => e.authorId === id || e.isOwner,
-    );
-
-    if (matched.length > 0) return matched;
-
-    // Si no hay eventos en memoria, mostrar los del mockup de la pantalla
-    return allEvents.slice(0, 2);
-  }, [allEvents, id]);
-
-  const handleContact = () => {
+  const handleContactHost = () => {
     posthog.capture("user_contacted", { targetUserId: id });
     if (userData?.phone) {
-      openWhatsApp(
-        userData.phone,
-        `Hola ${userData.name}, vi tu perfil en Partify y quisiera más información.`,
-      );
+      openWhatsApp(userData.phone, {
+        userName: userData.name,
+      });
     } else {
       Alert.alert(
         "Contactar Anfitrión",
-        `Puedes comunicarte con ${userData?.name || "este anfitrión"} a través de sus redes sociales vinculadas.`,
+        userData?.socials?.instagram || userData?.socials?.tiktok
+          ? `Puedes comunicarte con ${userData?.name || "este anfitrión"} a través de sus redes sociales vinculadas.`
+          : `Este anfitrión aún no ha configurado un teléfono o redes de contacto.`,
+      );
+    }
+  };
+
+  const handleContactEvent = (event: EventItem) => {
+    posthog.capture("user_contacted_event", {
+      targetUserId: id,
+      eventId: event.id,
+    });
+    const phone = event.contactPhone || userData?.phone;
+    if (phone) {
+      openWhatsApp(phone, {
+        eventTitle: event.title,
+      });
+    } else {
+      Alert.alert(
+        "Contactar Anfitrión",
+        `Este anfitrión aún no ha configurado un teléfono de contacto para este evento.`,
       );
     }
   };
@@ -171,9 +195,29 @@ export default function UserProfileScreen() {
     );
   }
 
-  const renderHeader = () => {
-    if (!userData) return null;
+  if (!userData) {
+    return (
+      <SafeAreaView className="flex-1 bg-background items-center justify-center p-6">
+        <Text className="text-xl font-bold text-primary mb-2">
+          Usuario no encontrado
+        </Text>
+        <Text className="text-sm text-muted-foreground text-center mb-6">
+          No se pudo encontrar el perfil de este usuario o no existe.
+        </Text>
+        <Pressable
+          onPress={() => router.back()}
+          className="bg-chip-background px-6 py-3 rounded-full active:opacity-80"
+        >
+          <Text className="text-sm font-bold text-accent-pink">Volver</Text>
+        </Pressable>
+      </SafeAreaView>
+    );
+  }
 
+  const badgeText =
+    userData.organizedCount > 0 ? "Host Verificado" : "Asistente Verificado";
+
+  const renderHeader = () => {
     return (
       <View className="gap-5 mb-4">
         {/* Barra de Navegación Superior */}
@@ -190,10 +234,6 @@ export default function UserProfileScreen() {
             />
           </Pressable>
 
-          <Text className="text-lg font-bold text-primary">
-            Perfil De Usuario
-          </Text>
-
           <View className="size-10" />
         </View>
 
@@ -201,17 +241,17 @@ export default function UserProfileScreen() {
         <ProfileHeroCard
           name={userData.name}
           username={userData.username}
-          badgeText="Host & Asistente Verificado"
+          badgeText={badgeText}
           location={userData.location}
           avatarSource={
-            userData.avatarUrl ? { uri: userData.avatarUrl } : images.noriel
+            userData.avatarUrl ? { uri: userData.avatarUrl } : images.avatar
           }
           bio={userData.bio}
           isVerified={true}
           isOnline={true}
           socials={userData.socials}
           showContactButton={true}
-          onContactPress={handleContact}
+          onContactPress={handleContactHost}
         />
 
         {/* Tarjeta de Estadísticas (Karma, Fiestas vividas, Organizadas) */}
@@ -222,23 +262,20 @@ export default function UserProfileScreen() {
         />
 
         {/* Tarjeta de Calificación Interactiva */}
-        <UserRatingCard
-          userRating={userRating}
-          onRate={handleRateUser}
-        />
+        <UserRatingCard userRating={userRating} onRate={handleRateUser} />
 
         {/* Tarjeta de Playlist de Spotify */}
         {userData.spotifyPlaylist ? (
           <ProfileSpotifyCard
             playlistUrl={userData.spotifyPlaylist}
-            onEditPress={handleContact}
+            onEditPress={handleContactHost}
           />
         ) : null}
 
         {/* Título de la Sección de Eventos */}
         <View className="flex-row items-center justify-between mt-2">
           <Text className="text-base font-bold text-primary">
-            Eventos Organizados ({organizedEvents.length})
+            Eventos organizados ({userEvents.length})
           </Text>
         </View>
       </View>
@@ -251,9 +288,10 @@ export default function UserProfileScreen() {
       className="flex-1 bg-background page-all"
     >
       <FlatList
-        data={organizedEvents}
+        data={userEvents}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={renderHeader}
+        ItemSeparatorComponent={() => <View className="h-6" />}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 40 }}
         renderItem={({ item }) => {
@@ -266,25 +304,21 @@ export default function UserProfileScreen() {
                 : images.noriel
             : images.noriel;
 
-          const priceLabel = item.isFreeEvent
-            ? "Gratis"
-            : item.price
-              ? `S/ ${item.price}`
-              : "S/ 45";
+          const priceLabel = item.isFreeEvent ? "Gratis" : "";
 
           return (
             <UserOrganizedEventCard
               id={item.id}
               title={item.title}
               location={item.location}
-              dateBadge={formatDateProfile(item.startAt) || "HOY · 20:00"}
+              dateBadge={
+                formatDateProfile(item.startAt) || item.dateLabel || ""
+              }
               priceLabel={priceLabel}
               image={imageSource}
               isOwner={true}
-              onPressDetails={() =>
-                router.push(`/(events)/${item.id}` as Href)
-              }
-              onPressContact={handleContact}
+              onPressDetails={() => router.push(`/(events)/${item.id}` as Href)}
+              onPressContact={() => handleContactEvent(item)}
             />
           );
         }}

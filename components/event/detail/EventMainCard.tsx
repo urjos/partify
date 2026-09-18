@@ -178,7 +178,10 @@ export default function EventMainCard({
               />
             </View>
             <View className="flex-1 gap-1">
-              <Text className="text-sm font-bold text-primary" numberOfLines={1}>
+              <Text
+                className="text-sm font-bold text-primary"
+                numberOfLines={1}
+              >
                 {location}
               </Text>
               <Text className="text-xs font-medium text-muted-foreground">

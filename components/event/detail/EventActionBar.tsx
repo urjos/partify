@@ -11,7 +11,7 @@ interface EventActionBarProps {
   contactPhone?: string;
   eventTitle: string;
   onToggleStatus: (next: Exclude<AttendanceStatus, null>) => void;
-  onContactWhatsApp: () => void;
+  onContact: () => void;
   onEditPress: () => void;
   onCancelPress: () => void;
 }
@@ -24,18 +24,15 @@ export default function EventActionBar({
   contactPhone,
   eventTitle,
   onToggleStatus,
-  onContactWhatsApp,
+  onContact,
   onEditPress,
   onCancelPress,
 }: EventActionBarProps) {
-  const isExternal = contactMethod === "external" && Boolean(externalTicketUrl);
+  const isExternal =
+    contactMethod === "external" && Boolean(externalTicketUrl?.trim());
 
   const handleContactPress = () => {
-    if (isExternal) {
-      Linking.openURL(externalTicketUrl!).catch(() => {});
-    } else {
-      onContactWhatsApp();
-    }
+    onContact();
   };
 
   return (

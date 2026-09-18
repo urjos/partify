@@ -44,13 +44,11 @@ export default function UserProfileForm({
     initialProfile.name ||
       user?.fullName ||
       [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
-      "Mateo Silva",
+      "",
   );
   const [username, setUsername] = useState(initialProfile.username || "");
   const [bio, setBio] = useState(initialProfile.bio || "");
-  const [location, setLocation] = useState(
-    initialProfile.location || "Miraflores, Lima",
-  );
+  const [location, setLocation] = useState(initialProfile.location || "");
   const [genres, setGenres] = useState<string[]>(initialProfile.genres || []);
   const [spotifyPlaylist, setSpotifyPlaylist] = useState(
     initialProfile.spotifyPlaylist || "",
