@@ -1,7 +1,6 @@
 import { MUSIC_TYPES } from "@/constants/categories";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
-import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Image, Modal, Pressable, ScrollView, Text, View } from "react-native";
 
@@ -88,22 +87,26 @@ export default function MusicTypeSelector({
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
-            className="w-full max-w-sm bg-modal-background border border-border rounded-2xl p-5 max-h-[80%]"
+            className="w-full max-w-sm bg-background rounded-2xl p-5 max-h-[80%]"
           >
-            <View className="flex-row items-center justify-between pb-3 border-b border-border">
+            <View className="flex-row items-center justify-between pb-3 ">
               <View>
-                <Text className="text-primary font-semibold text-lg">
-                  Géneros Musicales
+                <Text className="text-primary font-bold text-lg">
+                  Géneros musicales
                 </Text>
-                <Text className="text-muted-foreground text-xs">
+                <Text className="text-muted-foreground text-xs font-medium">
                   Selecciona uno o más géneros
                 </Text>
               </View>
               <Pressable
                 onPress={() => setModalVisible(false)}
-                className="p-1.5 rounded-full bg-card"
+                className="size-8 rounded-full items-center justify-center"
               >
-                <Ionicons name="close" size={16} color={colors.primary} />
+                <Image
+                  source={icons.x}
+                  className="size-6"
+                  tintColor={colors.primary}
+                />
               </Pressable>
             </View>
 
@@ -120,22 +123,22 @@ export default function MusicTypeSelector({
                     onPress={() => toggleGenre(genre)}
                     className={
                       isSelected
-                        ? "flex-row items-center px-3.5 py-2 rounded-full bg-accent-pink/20 border border-accent-pink"
-                        : "flex-row items-center px-3.5 py-2 rounded-full bg-card border border-border"
+                        ? "flex-row items-center px-3.5 py-2 rounded-full bg-chip-background"
+                        : "flex-row items-center px-3.5 py-2 rounded-full bg-submodal-background"
                     }
                   >
                     {isSelected && (
-                      <Ionicons
-                        name="checkmark"
-                        size={14}
-                        color={colors.accentPink}
+                      <Image
+                        source={icons.audioLines}
+                        className="size-4"
+                        tintColor={colors.accentPink}
                         style={{ marginRight: 4 }}
                       />
                     )}
                     <Text
                       className={
                         isSelected
-                          ? "text-xs font-semibold text-accent-pink"
+                          ? "text-xs font-bold text-accent-pink"
                           : "text-xs font-medium text-primary"
                       }
                     >

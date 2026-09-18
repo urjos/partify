@@ -1,10 +1,10 @@
 import AnimatedToggle from "@/components/shared/AnimatedToggle";
+import { icons } from "@/constants/icons";
 import { darkMapStyle } from "@/constants/mapStyle";
 import { colors } from "@/constants/theme";
-import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import MapView from "react-native-maps";
 
 interface LocationPrivacyCardProps {
@@ -58,10 +58,11 @@ export default function LocationPrivacyCard({
                 pointerEvents="none"
               >
                 <View className="size-8 rounded-full bg-card items-center justify-center shadow-lg border border-border/40">
-                  <Ionicons
-                    name="location"
-                    size={16}
-                    color={colors.destructive}
+                  <Image
+                    source={icons.mapPin}
+                    className="size-4"
+                    tintColor={colors.destructive}
+                    resizeMode="contain"
                   />
                 </View>
               </View>

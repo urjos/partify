@@ -5,6 +5,7 @@ import EventMeetingPointCard from "@/components/event/detail/EventMeetingPointCa
 import EventNightDetailsCard from "@/components/event/detail/EventNightDetailsCard";
 import EventOrganizerCard from "@/components/event/detail/EventOrganizerCard";
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
+import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
@@ -15,6 +16,7 @@ import { router, useLocalSearchParams, type Href } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
+  Image,
   Linking,
   Pressable,
   ScrollView,
@@ -227,28 +229,19 @@ export default function EventDetail() {
         pointerEvents="box-none"
       >
         <View
-          className="flex-row items-center justify-between px-4 pt-1"
+          className="flex-row items-center justify-between px-4 py-2"
           pointerEvents="box-none"
         >
           {/* Botón Atrás */}
           <Pressable
-            className="size-11 rounded-full items-center justify-center bg-modal-background/70 border border-border/40 backdrop-blur-md active:opacity-75 pointer-events-auto"
+            className="size-11 rounded-full items-center justify-center  backdrop-blur-md active:opacity-75 pointer-events-auto"
             onPress={() => router.back()}
             hitSlop={8}
           >
-            <Ionicons name="arrow-back" size={20} color={colors.primary} />
-          </Pressable>
-
-          {/* Botón Favorito */}
-          <Pressable
-            className="size-11 rounded-full items-center justify-center bg-modal-background/70 border border-border/40 backdrop-blur-md active:opacity-75 pointer-events-auto"
-            onPress={handleToggleFavorite}
-            hitSlop={8}
-          >
-            <Ionicons
-              name={isFavorite ? "heart" : "heart-outline"}
-              size={20}
-              color={isFavorite ? colors.accentPink : colors.primary}
+            <Image
+              source={icons.back}
+              className="w-5 h-5"
+              tintColor={colors.primary}
             />
           </Pressable>
         </View>
@@ -256,7 +249,7 @@ export default function EventDetail() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 110 }}
+        contentContainerStyle={{ paddingBottom: 10 }}
         className="flex-1"
       >
         {/* ================= 1. MEDIA CAROUSEL (HEADER) ================= */}
@@ -289,14 +282,18 @@ export default function EventDetail() {
             ) : null}
           </View>
 
-          {/* Indicador de Medios (Inferior Derecha) */}
-          {event.media.length > 1 && (
-            <View className="absolute bottom-4 right-4 bg-modal-background/80 border border-border/40 px-3 py-1 rounded-full backdrop-blur-md">
-              <Text className="text-xs font-semibold text-primary">
-                {activeMediaIndex + 1} / {event.media.length}
-              </Text>
-            </View>
-          )}
+          {/* Botón Favorito */}
+          <Pressable
+            className={`size-11 rounded-full items-center justify-center absolute bottom-4 right-4 backdrop-blur-md active:opacity-75 pointer-events-auto ${!isFavorite && "bg-chip-background"}`}
+            onPress={handleToggleFavorite}
+            hitSlop={8}
+          >
+            <Image
+              source={isFavorite ? icons.heartSolid : icons.heart}
+              className="size-7"
+              tintColor={isFavorite ? colors.accentPink : colors.primary}
+            />
+          </Pressable>
         </View>
 
         {/* ================= 2. CONTENIDO PRINCIPAL ================= */}

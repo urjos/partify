@@ -1,9 +1,10 @@
+import LocationButton from "./map/LocationButton";
 import { icons } from "@/constants/icons";
 import { darkMapStyle } from "@/constants/mapStyle";
 import { colors } from "@/constants/theme";
 import * as Location from "expo-location";
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, Easing, Image, View } from "react-native";
 import MapView, { Circle, Region } from "react-native-maps";
 import EventMarker from "./map/EventMarker";
@@ -80,6 +81,7 @@ export default function SearchMap({
   userLocation,
   onLocationReady,
 }: SearchMapProps) {
+  const mapRef = useRef<MapView>(null);
   const [location, setLocation] = useState<Region | null>(null);
   const spinValue = React.useRef(new Animated.Value(0)).current;
 
@@ -137,6 +139,25 @@ export default function SearchMap({
     ).start();
   }, [spinValue, onLocationReady]);
 
+  const handleCenterUserLocation = async () => {
+    try {
+      const current = await Location.getCurrentPositionAsync({});
+      const targetRegion = {
+        latitude: current.coords.latitude,
+        longitude: current.coords.longitude,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
+      };
+      mapRef.current?.animateToRegion(targetRegion, 500);
+      onLocationReady?.({
+        latitude: current.coords.latitude,
+        longitude: current.coords.longitude,
+      });
+    } catch {
+      // Ignorar si no se pudo obtener
+    }
+  };
+
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
@@ -163,11 +184,15 @@ export default function SearchMap({
       : null);
 
   return (
-    <View key="map-ready" className="search-map-container">
+    <View key="map-ready" className="search-map-container relative">
       <MapView
+        ref={mapRef}
         style={{ flex: 1 }}
         initialRegion={location}
         showsUserLocation={true}
+        showsMyLocationButton={false}
+        showsCompass={false}
+        toolbarEnabled={false}
         userInterfaceStyle="dark"
         customMapStyle={darkMapStyle}
         mapPadding={{ top: 145, right: 8, left: 0, bottom: 100 }}
@@ -190,6 +215,11 @@ export default function SearchMap({
           );
         })}
       </MapView>
+
+      <LocationButton
+        onPress={handleCenterUserLocation}
+        className="absolute right-4 bottom-28 z-10"
+      />
     </View>
   );
 }

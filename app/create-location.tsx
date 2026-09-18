@@ -1,10 +1,14 @@
+import LocationButton from "@/components/search/map/LocationButton";
+import PinMap from "@/components/search/map/PinMap";
+import { icons } from "@/constants/icons";
+import { darkMapStyle } from "@/constants/mapStyle";
+import { colors } from "@/constants/theme";
 import { useLocationPickerStore } from "@/lib/store/locationPickerStore";
-import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { router } from "expo-router";
 import { styled } from "nativewind";
-import { useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Image, Pressable, Text, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Region } from "react-native-maps";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
@@ -18,12 +22,20 @@ const DEFAULT_REGION: Region = {
 };
 
 export default function LocationPickerScreen() {
+  const mapRef = useRef<MapView>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentCoordsRef = useRef<{ latitude: number; longitude: number }>({
+    latitude: DEFAULT_REGION.latitude,
+    longitude: DEFAULT_REGION.longitude,
+  });
+
   const setPickedLocation = useLocationPickerStore(
     (state) => state.setPickedLocation,
   );
 
-  const [region, setRegion] = useState<Region>(DEFAULT_REGION);
-  const [address, setAddress] = useState<string>("Move the map to set the pin");
+  const [address, setAddress] = useState<string>(
+    "Mueve el mapa para fijar el punto",
+  );
   const [resolving, setResolving] = useState(false);
 
   useEffect(() => {
@@ -31,13 +43,30 @@ export default function LocationPickerScreen() {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") return;
 
-      const current = await Location.getCurrentPositionAsync({});
-      setRegion((prev) => ({
-        ...prev,
-        latitude: current.coords.latitude,
-        longitude: current.coords.longitude,
-      }));
+      try {
+        const current = await Location.getCurrentPositionAsync({});
+        const targetRegion = {
+          latitude: current.coords.latitude,
+          longitude: current.coords.longitude,
+          latitudeDelta: 0.015,
+          longitudeDelta: 0.015,
+        };
+        currentCoordsRef.current = {
+          latitude: current.coords.latitude,
+          longitude: current.coords.longitude,
+        };
+        mapRef.current?.animateToRegion(targetRegion, 500);
+        resolveAddress(current.coords.latitude, current.coords.longitude);
+      } catch {
+        // Ignorar y usar fallback region
+      }
     })();
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
   }, []);
 
   const resolveAddress = async (lat: number, lng: number) => {
@@ -52,71 +81,139 @@ export default function LocationPickerScreen() {
         const parts = [first.name, first.street, first.city, first.region]
           .filter(Boolean)
           .filter((part, index, arr) => arr.indexOf(part) === index);
-        setAddress(parts.join(", ") || "Unnamed location");
+        setAddress(parts.join(", ") || "Ubicación sin nombre");
       } else {
-        setAddress("Unnamed location");
+        setAddress("Ubicación sin nombre");
       }
     } catch {
-      setAddress("Couldn't resolve an address for this spot");
+      setAddress("No se pudo obtener la dirección para este punto");
     } finally {
       setResolving(false);
     }
   };
 
   const handleRegionChangeComplete = (nextRegion: Region) => {
-    setRegion(nextRegion);
-    resolveAddress(nextRegion.latitude, nextRegion.longitude);
+    currentCoordsRef.current = {
+      latitude: nextRegion.latitude,
+      longitude: nextRegion.longitude,
+    };
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      resolveAddress(nextRegion.latitude, nextRegion.longitude);
+    }, 400);
+  };
+
+  const handleCenterUserLocation = async () => {
+    try {
+      const current = await Location.getCurrentPositionAsync({});
+      const targetRegion = {
+        latitude: current.coords.latitude,
+        longitude: current.coords.longitude,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.015,
+      };
+      currentCoordsRef.current = {
+        latitude: current.coords.latitude,
+        longitude: current.coords.longitude,
+      };
+      mapRef.current?.animateToRegion(targetRegion, 500);
+      resolveAddress(current.coords.latitude, current.coords.longitude);
+    } catch {
+      // Ignorar si no se pudo obtener
+    }
   };
 
   const handleConfirm = () => {
     setPickedLocation({
       address,
-      latitude: region.latitude,
-      longitude: region.longitude,
+      latitude: currentCoordsRef.current.latitude,
+      longitude: currentCoordsRef.current.longitude,
     });
     router.back();
   };
 
   return (
-    <View className="location-picker-container">
+    <View className="flex-1 bg-background relative">
       <MapView
+        ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{ flex: 1 }}
         initialRegion={DEFAULT_REGION}
-        region={region}
+        showsUserLocation={true}
+        showsMyLocationButton={false}
+        showsCompass={false}
+        toolbarEnabled={false}
+        userInterfaceStyle="dark"
+        customMapStyle={darkMapStyle}
         onRegionChangeComplete={handleRegionChangeComplete}
       />
 
-      {/* Pin fijo en el centro — el mapa se mueve debajo, el pin no */}
-      <View className="location-picker-pin-wrap" pointerEvents="none">
-        <Ionicons name="location" size={40} color="#b24bfb" />
-      </View>
+      {/* Pin fijo en el centro con PinMap */}
+      <PinMap />
 
-      <SafeAreaView edges={["top"]} className="location-picker-top">
+      {/* Botón de retroceso */}
+      <SafeAreaView
+        edges={["top"]}
+        className="absolute top-0 left-5 right-0 z-10 px-4 pt-2"
+      >
         <Pressable
           onPress={() => router.back()}
-          className="location-picker-back-btn"
+          className="size-12 items-center justify-center rounded-full bg-modal-background/90  active:opacity-75"
         >
-          <Ionicons name="chevron-back" size={22} color="#f5f4f2" />
+          <Image
+            source={icons.back}
+            className="size-5"
+            tintColor={colors.primary}
+            resizeMode="contain"
+          />
         </Pressable>
       </SafeAreaView>
 
-      <SafeAreaView edges={["bottom"]} className="location-picker-bottom">
-        <View className="location-picker-address-bar">
-          <Ionicons name="location-outline" size={18} color="#b24bfb" />
-          <Text className="location-picker-address-text" numberOfLines={2}>
-            {resolving ? "Finding address..." : address}
-          </Text>
+      {/* Tarjeta flotante de confirmación de dirección */}
+      <SafeAreaView
+        edges={["bottom"]}
+        className="absolute inset-x-4 bottom-4 gap-3 z-10"
+      >
+        {/* Botón flotante para centrar en mi ubicación GPS */}
+        <LocationButton onPress={handleCenterUserLocation} />
+
+        <View className="bg-modal-background border border-border rounded-3xl p-4 gap-4 shadow-2xl">
+          <View className="flex-row items-center gap-3">
+            <View className="size-10 rounded-full items-center justify-center">
+              <Image
+                source={icons.mapPin}
+                className="size-5"
+                tintColor={colors.destructive}
+                resizeMode="contain"
+              />
+            </View>
+            <View className="flex-1">
+              <Text className="text-sm font-semibold text-muted-foreground">
+                Ubicación seleccionada
+              </Text>
+              <Text
+                className="text-sm font-bold text-primary mt-0.5"
+                numberOfLines={2}
+              >
+                {address}
+              </Text>
+            </View>
+          </View>
+
+          <Pressable
+            className="items-center justify-center rounded-2xl bg-submodal-background py-4 active:opacity-90 disabled:opacity-50"
+            onPress={handleConfirm}
+            disabled={resolving}
+          >
+            <Text className="text-base font-bold text-primary">
+              {resolving ? "Buscando dirección..." : "Confirmar ubicación"}
+            </Text>
+          </Pressable>
         </View>
-        <Pressable
-          className="location-picker-confirm-btn"
-          onPress={handleConfirm}
-          disabled={resolving}
-        >
-          <Text className="location-picker-confirm-text">
-            Confirm this location
-          </Text>
-        </Pressable>
       </SafeAreaView>
     </View>
   );
