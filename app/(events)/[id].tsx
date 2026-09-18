@@ -36,7 +36,7 @@ export default function EventDetail() {
 
   // Estados locales para interactividad fluida
   const [status, setStatus] = useState<AttendanceStatus>(
-    event?.isGoing ? "going" : null,
+    event?.attendanceStatus ?? (event?.isGoing ? "going" : null),
   );
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState<boolean>(
@@ -45,14 +45,20 @@ export default function EventDetail() {
   const [userRating, setUserRating] = useState<number | null>(
     event?.userRating ?? null,
   );
+  const [isAttendanceSubmitting, setIsAttendanceSubmitting] = useState(false);
 
   React.useEffect(() => {
     if (event) {
       setIsFavorite(Boolean(event.isFavorite));
       setUserRating(event.userRating ?? null);
-      setStatus(event.isGoing ? "going" : null);
+      setStatus(event.attendanceStatus ?? (event.isGoing ? "going" : null));
     }
-  }, [event?.isFavorite, event?.userRating, event?.isGoing]);
+  }, [
+    event?.isFavorite,
+    event?.userRating,
+    event?.attendanceStatus,
+    event?.isGoing,
+  ]);
 
   if (!event) {
     return (
@@ -111,9 +117,12 @@ export default function EventDetail() {
   };
 
   const handleToggleStatus = async (next: Exclude<AttendanceStatus, null>) => {
+    if (isAttendanceSubmitting) return;
+
     const previous = status;
     const nextStatus = previous === next ? null : next;
     setStatus(nextStatus);
+    setIsAttendanceSubmitting(true);
 
     try {
       await setAttendanceAction(api, event.id, nextStatus);
@@ -123,6 +132,8 @@ export default function EventDetail() {
         "Error",
         error instanceof Error ? error.message : "Inténtalo de nuevo.",
       );
+    } finally {
+      setIsAttendanceSubmitting(false);
     }
   };
 

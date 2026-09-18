@@ -61,14 +61,15 @@ export default function EventActionBar({
         ) : (
           <View className="flex-row items-center gap-3">
             {/* Segmented Control de RSVP */}
-            <View className="flex-1 flex-row bg-modal-background rounded-2xl p-1">
+            <View className="flex-1 flex-row bg-modal-background rounded-2xl p-1 gap-1">
               {/* Botón Asistiré (I'm going) */}
               <Pressable
                 onPress={() => onToggleStatus("going")}
-                className={`flex-1 py-3 rounded-xl items-center justify-center transition-all ${
+                hitSlop={4}
+                className={`flex-1 py-3 rounded-xl items-center justify-center ${
                   status === "going"
                     ? "bg-chip-background"
-                    : "active:bg-accent-icon/10"
+                    : "active:bg-muted/40"
                 }`}
               >
                 <Text
@@ -85,10 +86,11 @@ export default function EventActionBar({
               {/* Botón Me interesa (Interested) */}
               <Pressable
                 onPress={() => onToggleStatus("interested")}
-                className={`flex-1 py-3 rounded-xl items-center justify-center transition-all ${
+                hitSlop={4}
+                className={`flex-1 py-3 rounded-xl items-center justify-center ${
                   status === "interested"
                     ? "bg-chip-background"
-                    : "active:bg-accent-icon/10"
+                    : "active:bg-muted/40"
                 }`}
               >
                 <Text

@@ -59,52 +59,58 @@ export default function UserOrganizedEventCard({
           ) : null}
         </View>
       </View>
-
-      {/* Info: Título y Ubicación */}
-      <View className="p-4 gap-1">
-        <Text className="text-lg font-extrabold text-primary" numberOfLines={1}>
-          {title}
-        </Text>
-
-        <View className="flex-row items-center gap-1.5">
-          <Image
-            source={icons.mapPin}
-            className="size-3.5"
-            tintColor={colors.mutedForeground}
-          />
+      <View className="p-4 gap-4">
+        {/* Info: Título y Ubicación */}
+        <View className="gap-1">
           <Text
-            className="text-xs font-medium text-muted-foreground flex-1"
+            className="text-lg font-extrabold text-primary"
             numberOfLines={1}
           >
-            {location}
+            {title}
           </Text>
-        </View>
-      </View>
 
-      {/* Fila de Botones de Acción */}
-      <View className="flex-row items-center gap-2.5 px-3">
-        <Pressable
-          onPress={onPressDetails}
-          className="flex-1 bg-accent py-3 px-4 rounded-2xl flex-row items-center justify-center gap-1 active:opacity-75"
-        >
-          <Text className="text-sm font-bold text-primary">Ver Evento</Text>
-        </Pressable>
-
-        {onPressContact ? (
-          <Pressable
-            onPress={onPressContact}
-            className="bg-submodal-background py-3 px-4 rounded-2xl flex-row items-center justify-center gap-2 active:opacity-75"
-          >
+          <View className="flex-row items-center gap-1.5">
             <Image
-              source={icons.messageSquareText}
-              className="size-4"
-              tintColor={colors.primary}
+              source={icons.mapPin}
+              className="size-3.5"
+              tintColor={colors.mutedForeground}
             />
-            <Text className="text-sm font-semibold text-primary">
-              Contactar
+            <Text
+              className="text-xs font-medium text-muted-foreground flex-1"
+              numberOfLines={1}
+            >
+              {location}
+            </Text>
+          </View>
+        </View>
+
+        {/* Fila de Botones de Acción */}
+        <View className="flex-row items-center gap-2.5">
+          <Pressable
+            onPress={onPressDetails}
+            className="flex-1 bg-chip-background py-3 px-4 rounded-2xl flex-row items-center justify-center gap-1 active:opacity-75"
+          >
+            <Text className="text-sm font-bold text-accent-pink">
+              Ver Evento
             </Text>
           </Pressable>
-        ) : null}
+
+          {onPressContact ? (
+            <Pressable
+              onPress={onPressContact}
+              className="bg-submodal-background py-3 px-4 rounded-2xl flex-row items-center justify-center gap-2 active:opacity-75"
+            >
+              <Image
+                source={icons.messageSquareText}
+                className="size-4"
+                tintColor={colors.primary}
+              />
+              <Text className="text-sm font-semibold text-primary">
+                Contactar
+              </Text>
+            </Pressable>
+          ) : null}
+        </View>
       </View>
     </View>
   );

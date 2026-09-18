@@ -34,6 +34,7 @@ type ApiEvent = {
   attendeeAvatars: string[];
   attendeeCount: number;
   interestedCount: number;
+  attendanceStatus?: AttendanceStatus;
   isGoing?: boolean;
   isOwner?: boolean;
   authorId?: string;
@@ -103,6 +104,8 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   attendeeAvatars: apiEvent.attendeeAvatars.map((uri) => ({ uri })),
   attendeeCount: apiEvent.attendeeCount,
   interestedCount: apiEvent.interestedCount,
+  attendanceStatus:
+    apiEvent.attendanceStatus ?? (apiEvent.isGoing ? "going" : null),
   isGoing: apiEvent.isGoing,
   isOwner: apiEvent.isOwner,
   rating: apiEvent.rating,

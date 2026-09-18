@@ -52,6 +52,7 @@ declare global {
     closingAt?: string;
     isGoing?: boolean;
     isOwner?: boolean;
+    attendanceStatus?: AttendanceStatus;
     authorId?: string;
     ratingsCount?: number;
     userRating?: number | null;
