@@ -1,8 +1,7 @@
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Image,
   Modal,
@@ -28,46 +27,62 @@ interface PlacePrediction {
   fullText: string;
 }
 
-const POPULAR_DISTRICTS: PlacePrediction[] = [
-  {
-    placeId: "dist-1",
-    mainText: "Miraflores",
-    secondaryText: "Lima, Perú",
-    fullText: "Miraflores, Lima",
-  },
-  {
-    placeId: "dist-2",
-    mainText: "Barranco",
-    secondaryText: "Lima, Perú",
-    fullText: "Barranco, Lima",
-  },
-  {
-    placeId: "dist-3",
-    mainText: "San Isidro",
-    secondaryText: "Lima, Perú",
-    fullText: "San Isidro, Lima",
-  },
-  {
-    placeId: "dist-4",
-    mainText: "Santiago de Surco",
-    secondaryText: "Lima, Perú",
-    fullText: "Surco, Lima",
-  },
-  {
-    placeId: "dist-5",
-    mainText: "La Molina",
-    secondaryText: "Lima, Perú",
-    fullText: "La Molina, Lima",
-  },
-  {
-    placeId: "dist-6",
-    mainText: "San Miguel",
-    secondaryText: "Lima, Perú",
-    fullText: "San Miguel, Lima",
-  },
-];
+const LIMA_DISTRICTS: PlacePrediction[] = [
+  "Ancón",
+  "Ate",
+  "Barranco",
+  "Breña",
+  "Carabayllo",
+  "Chaclacayo",
+  "Chorrillos",
+  "Cieneguilla",
+  "Comas",
+  "El Agustino",
+  "Independencia",
+  "Jesús María",
+  "La Molina",
+  "La Victoria",
+  "Lima (Cercado)",
+  "Lince",
+  "Los Olivos",
+  "Lurigancho-Chosica",
+  "Lurín",
+  "Magdalena del Mar",
+  "Miraflores",
+  "Pachacámac",
+  "Pucusana",
+  "Pueblo Libre",
+  "Puente Piedra",
+  "Punta Hermosa",
+  "Punta Negra",
+  "Rímac",
+  "San Bartolo",
+  "San Borja",
+  "San Isidro",
+  "San Juan de Lurigancho",
+  "San Juan de Miraflores",
+  "San Luis",
+  "San Martín de Porres",
+  "San Miguel",
+  "Santa Anita",
+  "Santa María del Mar",
+  "Santa Rosa",
+  "Santiago de Surco",
+  "Surquillo",
+  "Villa El Salvador",
+  "Villa María del Triunfo",
+].map((district) => ({
+  placeId: `lima-${district.toLowerCase().replace(/[^a-z0-9]/g, "-")}`,
+  mainText: district,
+  secondaryText: "Lima, Perú",
+  fullText: `${district}, Lima`,
+}));
 
-const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
+const normalizeSearchText = (text: string) =>
+  text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase();
 
 export default function LocationSearchModal({
   visible,
@@ -76,112 +91,25 @@ export default function LocationSearchModal({
   onSelectLocation,
 }: LocationSearchModalProps) {
   const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
-  const [searchError, setSearchError] = useState<string | null>(null);
 
   useEffect(() => {
     if (visible) {
       setQuery("");
-      setPredictions([]);
-      setSearchError(null);
     }
   }, [visible]);
 
-  // Google Places Autocomplete API with debounce
-  useEffect(() => {
-    const trimmed = query.trim();
-    if (!trimmed || trimmed.length < 2) {
-      setPredictions([]);
-      setLoading(false);
-      setSearchError(null);
-      return;
-    }
+  const districts = useMemo(() => {
+    const searchTerm = normalizeSearchText(query.trim());
+    if (!searchTerm) return LIMA_DISTRICTS;
 
-    if (!GOOGLE_API_KEY) {
-      setPredictions([]);
-      setLoading(false);
-      setSearchError("La búsqueda de ubicaciones no está configurada.");
-      return;
-    }
-
-    setLoading(true);
-    setSearchError(null);
-    const timeoutId = setTimeout(async () => {
-      try {
-        const response = await fetch(
-          "https://places.googleapis.com/v1/places:autocomplete",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Goog-Api-Key": GOOGLE_API_KEY,
-            },
-            body: JSON.stringify({
-              input: trimmed,
-              includedRegionCodes: ["pe"],
-              languageCode: "es",
-            }),
-          },
-        );
-
-        const data = await response.json();
-
-        if (response.ok && Array.isArray(data.suggestions)) {
-          const mapped: PlacePrediction[] = data.suggestions
-            .filter((s: any) => s.placePrediction)
-            .map((s: any) => {
-              const pred = s.placePrediction;
-              return {
-                placeId: pred.placeId || pred.place || Math.random().toString(),
-                mainText:
-                  pred.structuredFormat?.mainText?.text ||
-                  pred.text?.text ||
-                  trimmed,
-                secondaryText: pred.structuredFormat?.secondaryText?.text || "",
-                fullText: pred.text?.text || trimmed,
-              };
-            });
-          setPredictions(mapped);
-        } else if (data.error) {
-          console.warn("Google Places API error:", data.error);
-          setPredictions([]);
-          const isBlocked =
-            data.error.code === 403 ||
-            data.error.status === "PERMISSION_DENIED" ||
-            data.error.message?.includes("blocked");
-          setSearchError(
-            isBlocked
-              ? "Debes habilitar 'Places API (New)' en Google Cloud Console para esta API Key."
-              : data.error.message ||
-                  "No se pudieron cargar las sugerencias de Google Maps.",
-          );
-        } else {
-          setPredictions([]);
-          setSearchError(null);
-        }
-      } catch (err) {
-        console.warn("Google Places autocomplete error:", err);
-        setPredictions([]);
-        setSearchError("No se pudo conectar con Google Maps.");
-      } finally {
-        setLoading(false);
-      }
-    }, 350);
-
-    return () => clearTimeout(timeoutId);
+    return LIMA_DISTRICTS.filter((district) =>
+      normalizeSearchText(district.mainText).includes(searchTerm),
+    );
   }, [query]);
 
   const handleSelect = (item: PlacePrediction) => {
     onSelectLocation(item.fullText);
     onClose();
-  };
-
-  const handleCustomConfirm = () => {
-    if (query.trim()) {
-      onSelectLocation(query.trim());
-      onClose();
-    }
   };
 
   return (
@@ -203,7 +131,7 @@ export default function LocationSearchModal({
             />
           </View>
 
-          {/* Campo de búsqueda estilo Google Maps */}
+          {/* Filtro local de distritos */}
           <View className="flex-row items-center bg-modal-background rounded-2xl px-3.5 py-2.5 gap-2.5 mb-4">
             <Image
               source={icons.mapPin}
@@ -215,17 +143,13 @@ export default function LocationSearchModal({
               className="flex-1 text-sm font-semibold text-primary"
               value={query}
               onChangeText={setQuery}
-              placeholder="Buscar distrito, zona o dirección..."
+              placeholder="Buscar distrito de Lima..."
               placeholderTextColor={colors.mutedForeground}
               autoFocus
               autoCorrect={false}
-              returnKeyType="search"
-              onSubmitEditing={handleCustomConfirm}
+              returnKeyType="done"
             />
-            {loading && (
-              <ActivityIndicator size="small" color={colors.accentPink} />
-            )}
-            {Boolean(query) && !loading && (
+            {Boolean(query) && (
               <Pressable onPress={() => setQuery("")} hitSlop={8}>
                 <Image
                   source={icons.x}
@@ -236,34 +160,23 @@ export default function LocationSearchModal({
             )}
           </View>
 
-          {/* Lista de Resultados / Sugerencias populares */}
+          {/* Lista de distritos */}
           <FlatList
-            data={query.trim().length >= 2 ? predictions : POPULAR_DISTRICTS}
+            data={districts}
             keyExtractor={(item) => item.placeId}
             keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={
               <Text className="text-xs font-medium text-muted-foreground mb-4">
-                {query.trim().length >= 2
-                  ? "Resultados de Google Maps"
-                  : "Ubicaciones sugeridas"}
+                {query.trim() ? "Resultados" : "Distritos de Lima"}
               </Text>
             }
             ListEmptyComponent={
-              !loading && query.trim().length >= 2 ? (
+              query.trim() ? (
                 <View className="items-center justify-center py-8 gap-3">
                   <Text className="text-sm font-medium text-muted-foreground text-center">
-                    {searchError ||
-                      `No se encontraron sugerencias para "${query}".`}
+                    {`No se encontraron distritos para "${query}".`}
                   </Text>
-                  <Pressable
-                    onPress={handleCustomConfirm}
-                    className="px-4 py-2.5 rounded-xl bg-accent-pink/20 active:opacity-75"
-                  >
-                    <Text className="text-xs font-bold text-accent-pink">
-                      Usar "{query}" como ubicación
-                    </Text>
-                  </Pressable>
                 </View>
               ) : null
             }
