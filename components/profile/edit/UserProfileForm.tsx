@@ -1,13 +1,13 @@
 import EditAvatarSection from "@/components/profile/edit/EditAvatarSection";
+import EditContactCard from "@/components/profile/edit/EditContactCard";
 import EditPrivacyCard from "@/components/profile/edit/EditPrivacyCard";
 import EditProfileHeader from "@/components/profile/edit/EditProfileHeader";
 import EditPublicDataCard from "@/components/profile/edit/EditPublicDataCard";
-import EditSocialConnectionsCard from "@/components/profile/edit/EditSocialConnectionsCard";
 import EditVibeMusicCard, {
   isValidSpotifyUrl,
 } from "@/components/profile/edit/EditVibeMusicCard";
 import images from "@/constants/images";
-import { UserProfile, UserSocials } from "@/lib/store/userStore";
+import { UserProfile } from "@/lib/store/userStore";
 import { useUser } from "@clerk/expo";
 import { styled } from "nativewind";
 import React, { useEffect, useState } from "react";
@@ -23,8 +23,6 @@ interface UserProfileFormProps {
   onCancel: () => void;
   onDeactivate: () => void;
   onAvatarChange: (uri: string) => void;
-  onLinkSocial: (network: keyof UserSocials, handle: string) => void;
-  onUnlinkSocial: (network: keyof UserSocials) => void;
 }
 
 export default function UserProfileForm({
@@ -34,8 +32,6 @@ export default function UserProfileForm({
   onCancel,
   onDeactivate,
   onAvatarChange,
-  onLinkSocial,
-  onUnlinkSocial,
 }: UserProfileFormProps) {
   const { user } = useUser();
 
@@ -109,7 +105,6 @@ export default function UserProfileForm({
       location: location.trim(),
       genres,
       spotifyPlaylist: spotifyPlaylist.trim(),
-      socials: initialProfile.socials,
       phone: phone.trim(),
       visibleInRadar,
       avatarUri,
@@ -165,11 +160,8 @@ export default function UserProfileForm({
           onSpotifyPlaylistChange={setSpotifyPlaylist}
         />
 
-        {/* Conexión & Pagos Directos */}
-        <EditSocialConnectionsCard
-          socials={initialProfile.socials}
-          onLinkSocial={onLinkSocial}
-          onUnlinkSocial={onUnlinkSocial}
+        {/* Contacto directo */}
+        <EditContactCard
           phone={phone}
           onPhoneChange={setPhone}
         />

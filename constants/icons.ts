@@ -1,10 +1,7 @@
 import audioLines from "@/assets/icons/audio-lines.png";
 import back from "@/assets/icons/back.png";
 import bookmark from "@/assets/icons/bookmark.png";
-import facebook from "@/assets/icons/brands/facebook.png";
-import instagram from "@/assets/icons/brands/instagram.png";
 import spotify from "@/assets/icons/brands/spotify.png";
-import tiktok from "@/assets/icons/brands/tiktok.png";
 import whatsapp from "@/assets/icons/brands/whatsapp.png";
 import calendar from "@/assets/icons/calendar.png";
 import cameraAdd from "@/assets/icons/camera-add.png";
@@ -86,9 +83,6 @@ export const icons = {
   paymentMethod,
   uber,
   carFront,
-  tiktok,
-  instagram,
-  facebook,
   spotify,
   phone,
   cameraAdd,

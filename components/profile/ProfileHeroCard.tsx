@@ -5,7 +5,6 @@ import React from "react";
 import {
   Image,
   ImageSourcePropType,
-  Linking,
   Pressable,
   Text,
   View,
@@ -20,11 +19,6 @@ export interface ProfileHeroCardProps {
   bio?: string | null;
   isVerified?: boolean;
   isOnline?: boolean;
-  socials?: {
-    instagram?: string;
-    facebook?: string;
-    tiktok?: string;
-  };
   onEditPress?: () => void;
   showEditButton?: boolean;
   showContactButton?: boolean;
@@ -40,7 +34,6 @@ export default function ProfileHeroCard({
   bio,
   isVerified = true,
   isOnline = true,
-  socials,
   onEditPress,
   showEditButton,
   showContactButton = false,
@@ -48,31 +41,6 @@ export default function ProfileHeroCard({
 }: ProfileHeroCardProps) {
   const resolvedAvatar = avatarSource || images.avatar;
   const displayEdit = showEditButton ?? Boolean(onEditPress);
-
-  const openSocialLink = async (
-    network: "instagram" | "tiktok",
-    handle: string,
-  ) => {
-    const clean = handle.replace(/^@/, "").trim();
-    if (!clean) return;
-
-    let url = "";
-    if (network === "instagram") {
-      url = `https://instagram.com/${clean}`;
-    } else if (network === "tiktok") {
-      url = `https://tiktok.com/@${clean}`;
-    }
-
-    try {
-      await Linking.openURL(url);
-    } catch (error) {
-      console.error(`Error al abrir ${network}:`, error);
-    }
-  };
-
-  const hasSocials = Boolean(
-    socials?.instagram?.trim() || socials?.tiktok?.trim(),
-  );
 
   return (
     <View className="bg-modal-background rounded-3xl p-6 items-center border-none relative overflow-hidden">
@@ -150,41 +118,6 @@ export default function ProfileHeroCard({
         <Text className="text-xs font-medium text-muted-foreground text-center mt-3 px-2 leading-relaxed">
           Sin biografía aún.
         </Text>
-      )}
-
-      {/* Iconos de Redes Sociales Vinculadas */}
-      {hasSocials && (
-        <View className="flex-row items-center justify-center gap-1 mt-3.5">
-          {socials?.instagram?.trim() ? (
-            <Pressable
-              onPress={() => openSocialLink("instagram", socials.instagram!)}
-              className="size-9 rounded-full items-center justify-center active:opacity-75"
-              hitSlop={8}
-            >
-              <Image
-                source={icons.instagram}
-                className="size-5"
-                resizeMode="contain"
-                tintColor={colors.mutedForeground}
-              />
-            </Pressable>
-          ) : null}
-
-          {socials?.tiktok?.trim() ? (
-            <Pressable
-              onPress={() => openSocialLink("tiktok", socials.tiktok!)}
-              className="size-9 rounded-full items-center justify-center active:opacity-75"
-              hitSlop={8}
-            >
-              <Image
-                source={icons.tiktok}
-                className="size-6"
-                resizeMode="contain"
-                tintColor={colors.mutedForeground}
-              />
-            </Pressable>
-          ) : null}
-        </View>
       )}
 
       {/* Botón de Contacto */}

@@ -2,11 +2,6 @@ import { ApiClient } from "@/lib/api/client";
 import { ImageSourcePropType } from "react-native";
 import { create } from "zustand";
 
-export interface UserSocials {
-  instagram: string;
-  tiktok: string;
-}
-
 export interface UserProfile {
   name: string;
   username: string;
@@ -15,7 +10,6 @@ export interface UserProfile {
   location: string;
   genres: string[];
   spotifyPlaylist: string;
-  socials: UserSocials;
   phone: string;
   visibleInRadar: boolean;
 }
@@ -39,8 +33,6 @@ interface UserStore {
   fetchProfile: (api: ApiClient) => Promise<void>;
   saveProfile: (api: ApiClient, updates: Partial<UserProfile>) => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => void;
-  linkSocial: (network: keyof UserSocials, handle: string) => void;
-  unlinkSocial: (network: keyof UserSocials) => void;
   setAvatarUri: (uri: string | null) => void;
 }
 
@@ -59,10 +51,6 @@ const mapMongoUserToProfile = (
         ? data.genres
         : current.genres,
     spotifyPlaylist: data.spotifyPlaylist ?? current.spotifyPlaylist,
-    socials: {
-      instagram: data.socials?.instagram ?? current.socials.instagram,
-      tiktok: data.socials?.tiktok ?? current.socials.tiktok,
-    },
     phone: data.phone ?? current.phone,
     visibleInRadar: data.visibleInRadar ?? current.visibleInRadar,
   };
@@ -77,10 +65,6 @@ export const useUserStore = create<UserStore>((set) => ({
     location: "",
     genres: [],
     spotifyPlaylist: "",
-    socials: {
-      instagram: "",
-      tiktok: "",
-    },
     phone: "",
     visibleInRadar: false,
   },
@@ -110,10 +94,6 @@ export const useUserStore = create<UserStore>((set) => ({
       profile: {
         ...state.profile,
         ...updates,
-        socials: {
-          ...state.profile.socials,
-          ...(updates.socials || {}),
-        },
       },
     }));
 
@@ -127,7 +107,6 @@ export const useUserStore = create<UserStore>((set) => ({
         genres: updates.genres ?? currentProfile.genres,
         spotifyPlaylist:
           updates.spotifyPlaylist ?? currentProfile.spotifyPlaylist,
-        socials: updates.socials ?? currentProfile.socials,
         phone: updates.phone ?? currentProfile.phone,
         visibleInRadar:
           updates.visibleInRadar !== undefined
@@ -160,32 +139,6 @@ export const useUserStore = create<UserStore>((set) => ({
       profile: {
         ...state.profile,
         ...updates,
-        socials: {
-          ...state.profile.socials,
-          ...(updates.socials || {}),
-        },
-      },
-    })),
-
-  linkSocial: (network, handle) =>
-    set((state) => ({
-      profile: {
-        ...state.profile,
-        socials: {
-          ...state.profile.socials,
-          [network]: handle.replace(/^@/, "").trim(),
-        },
-      },
-    })),
-
-  unlinkSocial: (network) =>
-    set((state) => ({
-      profile: {
-        ...state.profile,
-        socials: {
-          ...state.profile.socials,
-          [network]: "",
-        },
       },
     })),
 

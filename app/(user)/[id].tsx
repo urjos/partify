@@ -40,11 +40,6 @@ interface UserDetailData {
   attendedCount: number;
   organizedCount: number;
   spotifyPlaylist: string;
-  socials: {
-    instagram?: string;
-    tiktok?: string;
-    facebook?: string;
-  };
 }
 
 export default function UserProfileScreen() {
@@ -117,11 +112,6 @@ export default function UserProfileScreen() {
             attendedCount: raw.attendedCount ?? 0,
             organizedCount: raw.organizedCount ?? cleanEvents.length,
             spotifyPlaylist: raw.spotifyPlaylist || "",
-            socials: {
-              instagram: raw.socials?.instagram || "",
-              tiktok: raw.socials?.tiktok || "",
-              facebook: raw.socials?.facebook || "",
-            },
           });
           setUserEvents(cleanEvents);
           setLoading(false);
@@ -154,9 +144,7 @@ export default function UserProfileScreen() {
     } else {
       Alert.alert(
         "Contactar Anfitrión",
-        userData?.socials?.instagram || userData?.socials?.tiktok
-          ? `Puedes comunicarte con ${userData?.name || "este anfitrión"} a través de sus redes sociales vinculadas.`
-          : `Este anfitrión aún no ha configurado un teléfono o redes de contacto.`,
+        `Este anfitrión aún no ha configurado un teléfono de contacto.`,
       );
     }
   };
@@ -249,7 +237,6 @@ export default function UserProfileScreen() {
           bio={userData.bio}
           isVerified={true}
           isOnline={true}
-          socials={userData.socials}
           showContactButton={true}
           onContactPress={handleContactHost}
         />

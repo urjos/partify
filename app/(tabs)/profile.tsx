@@ -155,7 +155,6 @@ const Profile = () => {
         avatarSource={userAvatar}
         bio={userProfile.bio}
         isVerified={true}
-        socials={userProfile.socials}
         onEditPress={handleEditProfile}
       />
 

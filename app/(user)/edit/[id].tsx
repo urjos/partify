@@ -15,8 +15,6 @@ export default function EditProfileScreen() {
     fetchProfile,
     saveProfile,
     setAvatarUri,
-    linkSocial,
-    unlinkSocial,
   } = useUserStore();
   const [isSaving, setIsSaving] = useState(false);
 
@@ -72,8 +70,6 @@ export default function EditProfileScreen() {
       onCancel={() => router.back()}
       onDeactivate={handleDeactivate}
       onAvatarChange={(uri) => setAvatarUri(uri)}
-      onLinkSocial={linkSocial}
-      onUnlinkSocial={unlinkSocial}
     />
   );
 }
