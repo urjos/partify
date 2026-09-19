@@ -120,17 +120,6 @@ const EventCard = ({
                 className="event-title"
                 containerClassName="max-w-80"
               />
-              {rating && rating > 0 ? (
-                <View className="event-rating-row shrink-0">
-                  <Text className="event-rating-text">{rating.toFixed(1)}</Text>
-                  <Image
-                    source={icons.star}
-                    className="event-meta-icon"
-                    tintColor={colors.accentPink}
-                    resizeMode="contain"
-                  />
-                </View>
-              ) : null}
             </View>
 
             <View className="flex-row items-center gap-1">
