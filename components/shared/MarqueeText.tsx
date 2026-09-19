@@ -142,7 +142,6 @@ export default function MarqueeText({
         </Text>
       </View>
 
-      {/* Texto visible: ancho suficiente en el contenedor animado para que NUNCA active los tres puntos (...) */}
       <Animated.View
         style={{
           transform: [{ translateX }],
@@ -169,7 +168,25 @@ export default function MarqueeText({
         </Text>
       </Animated.View>
 
-      {/* Gradiente de desvanecimiento visual en el borde derecho estilo Spotify */}
+      {/* Gradiente de desvanecimiento visual en el inicio (borde izquierdo) */}
+      {isOverflowing && (
+        <LinearGradient
+          colors={[fadeColor, "transparent"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: fadeWidth,
+            zIndex: 10,
+          }}
+          pointerEvents="none"
+        />
+      )}
+
+      {/* Gradiente de desvanecimiento visual en el final (borde derecho) */}
       {isOverflowing && (
         <LinearGradient
           colors={["transparent", fadeColor]}
@@ -181,6 +198,7 @@ export default function MarqueeText({
             top: 0,
             bottom: 0,
             width: fadeWidth,
+            zIndex: 10,
           }}
           pointerEvents="none"
         />

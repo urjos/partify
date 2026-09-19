@@ -22,11 +22,17 @@ dayjs.extend(isSameOrBefore);
 
 const SafeAreaView = styled(RNSafeAreaView);
 
+const SHOW_SKELETON_MANUAL = false;
+
 export default function App() {
   const api = useApi();
   const { isLoaded, isSignedIn } = useAuth();
   const { events, loading, error, fetchEvents, activeFilter } = useEventStore();
   const [locationError, setLocationError] = useState<string | null>(null);
+
+  const isSkeletonActive =
+    SHOW_SKELETON_MANUAL ||
+    ((loading || !isLoaded || !isSignedIn) && events.length === 0);
 
   useEffect(() => {
     if (!isLoaded || !isSignedIn) return;
@@ -100,7 +106,7 @@ export default function App() {
       />
       <FlatList
         ListHeaderComponent={<CategoryFilters className="px-3" />}
-        data={filteredEvents}
+        data={isSkeletonActive ? [] : filteredEvents}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <EventCard
@@ -113,7 +119,7 @@ export default function App() {
         onRefresh={() => fetchEvents(api)}
         refreshing={loading}
         ListEmptyComponent={
-          loading || !isLoaded || !isSignedIn ? (
+          isSkeletonActive ? (
             <EventFeedSkeleton />
           ) : error || locationError ? (
             <Text className="home-empty-state">{error || locationError}</Text>
@@ -125,11 +131,11 @@ export default function App() {
         }
         contentContainerClassName="pb-6"
         ListFooterComponent={
-          <>
+          !isSkeletonActive ? (
             <View className="mt-6 page-all">
               <HostBanner />
             </View>
-          </>
+          ) : null
         }
       />
     </SafeAreaView>

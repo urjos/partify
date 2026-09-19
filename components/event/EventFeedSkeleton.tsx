@@ -6,7 +6,7 @@ type EventFeedSkeletonProps = {
 };
 
 const EventFeedSkeleton = ({ count = 4 }: EventFeedSkeletonProps) => (
-  <View className="gap-4">
+  <View className="gap-10">
     {Array.from({ length: count }).map((_, index) => (
       <EventCardSkeleton key={index} />
     ))}
