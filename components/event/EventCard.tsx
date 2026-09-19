@@ -115,7 +115,7 @@ const EventCard = ({
           <View className="gap-1">
             <View className="flex-row items-center gap-2">
               {/* Maximo de 30 caracteres para titulo*/}
-              <Text numberOfLines={1} className="event-title max-w-60">
+              <Text numberOfLines={1} className="event-title max-w-80">
                 {title}
               </Text>
               {rating && rating > 0 ? (
@@ -130,6 +130,7 @@ const EventCard = ({
                 </View>
               ) : null}
             </View>
+
             <View className="flex-row items-center gap-1">
               <Image
                 source={authorAvatar ? { uri: authorAvatar } : images.avatar}

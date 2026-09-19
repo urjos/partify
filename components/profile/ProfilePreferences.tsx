@@ -24,7 +24,7 @@ export default function ProfilePreferences({
   return (
     <View className="gap-4 mt-8">
       {/* Card de Notificaciones */}
-      <View className="rounded-2xl border border-border/30 flex-row items-center justify-between gap-4">
+      {/* <View className="rounded-2xl border border-border/30 flex-row items-center justify-between gap-4">
         <View className="flex-1 pr-2">
           <Text className="text-sm font-semibold text-primary">
             Recibir notificaciones
@@ -38,7 +38,7 @@ export default function ProfilePreferences({
           value={notificationsEnabled}
           onValueChange={onToggleNotifications}
         />
-      </View>
+      </View> */}
 
       {/* Card de Contacto */}
       <View

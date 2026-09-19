@@ -21,6 +21,7 @@ import {
 } from "react-native";
 
 export interface SearchFilters {
+  enableDistance: boolean;
   distance: number;
   category: string | null;
   date: Date;
@@ -38,7 +39,6 @@ export const getDefaultFilters = (): SearchFilters => {
   const start = new Date(now);
 
   if (now.getHours() >= 20) {
-    // Si ya son pasadas las 8:00 PM, ajustar al siguiente bloque de 30 min
     const minutes = now.getMinutes();
     if (minutes < 30) {
       start.setMinutes(30, 0, 0);
@@ -46,11 +46,9 @@ export const getDefaultFilters = (): SearchFilters => {
       start.setHours(start.getHours() + 1, 0, 0, 0);
     }
   } else {
-    // Si aún no son las 8:00 PM, iniciar a las 8:00 PM
     start.setHours(20, 0, 0, 0);
   }
 
-  // End time: por defecto 2:30 AM del día siguiente (o 5h después si es de madrugada)
   const end = new Date(start);
   if (now.getHours() >= 22) {
     end.setHours(start.getHours() + 5, 0, 0, 0);
@@ -60,6 +58,7 @@ export const getDefaultFilters = (): SearchFilters => {
   }
 
   return {
+    enableDistance: false,
     distance: 1,
     category: null,
     date: now,
@@ -125,7 +124,7 @@ export default function SearchFilterModal({
     filters.endTime !== DEFAULT_FILTERS.endTime;
 
   const hasActiveFilters =
-    filters.distance !== DEFAULT_FILTERS.distance ||
+    filters.enableDistance ||
     filters.category !== null ||
     isDateChanged ||
     (filters.priceMin !== "" && filters.priceMin !== "0") ||
@@ -186,42 +185,63 @@ export default function SearchFilterModal({
           >
             {/* Radio de distancia */}
             <View className="sf-modal-section">
-              <View className="flex-row items-center justify-between mb-1">
-                <Text className="sf-modal-section-title">
-                  Radio de Distancia
-                </Text>
-                <View className="px-3 py-1.5 rounded-full border-none bg-modal-background">
-                  <Text className="text-sm font-bold text-primary">
-                    {filters.distance} km
+              <View className="flex-row items-center justify-between py-3.5">
+                <View className="flex-1 pr-4">
+                  <Text className="text-sm font-semibold text-primary">
+                    Radio de distancia
+                  </Text>
+                  <Text className="text-xs font-medium text-muted-foreground mt-0.5">
+                    Ajusta la distancia maxima que estas dispuesto a viajar
                   </Text>
                 </View>
-              </View>
-
-              <View className="px-1">
-                <Slider
-                  style={{ width: "100%", height: 40 }}
-                  minimumValue={1}
-                  maximumValue={50}
-                  step={1}
-                  value={filters.distance}
-                  onValueChange={(v) => set("distance", v)}
-                  minimumTrackTintColor={colors.accentPink}
-                  maximumTrackTintColor={colors.card}
-                  thumbTintColor={colors.accentPink}
+                <AnimatedToggle
+                  value={filters.enableDistance}
+                  onValueChange={(v) => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      enableDistance: v,
+                      distance: v ? (prev.distance || 1) : prev.distance,
+                    }));
+                  }}
                 />
-
-                <View className="flex-row items-center justify-between px-2 mt-1">
-                  <Text className="text-xs font-medium text-muted-foreground">
-                    1 km
-                  </Text>
-                  <Text className="text-xs font-medium text-muted-foreground">
-                    25 km
-                  </Text>
-                  <Text className="text-xs font-medium text-muted-foreground">
-                    50 km
-                  </Text>
-                </View>
               </View>
+
+              {filters.enableDistance && (
+                <>
+                  <View className="flex-row items-center justify-end mb-2">
+                    <View className="px-3 py-1.5 rounded-full border-none bg-modal-background">
+                      <Text className="text-sm font-bold text-primary">
+                        {filters.distance} km
+                      </Text>
+                    </View>
+                  </View>
+                  <View className="px-1">
+                    <Slider
+                      style={{ width: "100%", height: 40 }}
+                      minimumValue={1}
+                      maximumValue={50}
+                      step={1}
+                      value={filters.distance}
+                      onValueChange={(v) => set("distance", v)}
+                      minimumTrackTintColor={colors.accentPink}
+                      maximumTrackTintColor={colors.card}
+                      thumbTintColor={colors.accentPink}
+                    />
+
+                    <View className="flex-row items-center justify-between px-2 mt-1">
+                      <Text className="text-xs font-medium text-muted-foreground">
+                        1 km
+                      </Text>
+                      <Text className="text-xs font-medium text-muted-foreground">
+                        25 km
+                      </Text>
+                      <Text className="text-xs font-medium text-muted-foreground">
+                        50 km
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              )}
             </View>
 
             {/* Tipo de Fiesta */}

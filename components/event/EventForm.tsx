@@ -14,6 +14,7 @@ import { supabase } from "@/lib/supabase";
 import { useUser } from "@clerk/expo";
 import { Ionicons } from "@expo/vector-icons";
 import { decode } from "base64-arraybuffer";
+import { File } from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { styled } from "nativewind";
@@ -223,39 +224,39 @@ export default function EventForm({
     isVideo: boolean,
     base64?: string,
   ) => {
-    try {
-      if (uri.startsWith("http")) return uri;
+    if (uri.startsWith("http://") || uri.startsWith("https://")) return uri;
 
-      const ext = uri.split(".").pop() || (isVideo ? "mp4" : "jpg");
-      const filename = `${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
+    const ext =
+      uri.split(".").pop()?.split("?")[0] || (isVideo ? "mp4" : "jpg");
+    const filename = `${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
+    const contentType = isVideo ? "video/mp4" : "image/jpeg";
 
-      let blobOrArrayBuffer: any;
-      let contentType = isVideo ? "video/mp4" : "image/jpeg";
+    let arrayBuffer: ArrayBuffer;
 
-      if (base64) {
-        blobOrArrayBuffer = decode(base64);
-      } else {
-        const response = await fetch(uri);
-        blobOrArrayBuffer = await response.blob();
-      }
-
-      const { error } = await supabase.storage
-        .from("events-media")
-        .upload(filename, blobOrArrayBuffer, {
-          contentType,
-        });
-
-      if (error) throw error;
-
-      const { data } = supabase.storage
-        .from("events-media")
-        .getPublicUrl(filename);
-
-      return data.publicUrl;
-    } catch (e) {
-      console.error("Error al subir multimedia a Supabase:", e);
-      return uri;
+    if (base64) {
+      arrayBuffer = decode(base64);
+    } else {
+      const file = new File(uri);
+      arrayBuffer = await file.arrayBuffer();
     }
+
+    const { error } = await supabase.storage
+      .from("events-media")
+      .upload(filename, arrayBuffer, {
+        contentType,
+        upsert: true,
+      });
+
+    if (error) {
+      console.error("Error al subir multimedia a Supabase:", error);
+      throw error;
+    }
+
+    const { data } = supabase.storage
+      .from("events-media")
+      .getPublicUrl(filename);
+
+    return data.publicUrl;
   };
 
   // Fecha y hora combinada
@@ -370,6 +371,13 @@ export default function EventForm({
       };
 
       await onSubmit(draft);
+    } catch (error: any) {
+      console.error("Error al guardar evento:", error);
+      Alert.alert(
+        "Error al publicar",
+        error?.message ||
+          "Ocurrió un error al subir los archivos multimedia o guardar el evento.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -418,14 +426,18 @@ export default function EventForm({
             {mediaItems.map((item, index) => (
               <View
                 key={index}
-                className="w-32 h-24 rounded-2xl overflow-hidden bg-modal-background relative"
+                className="w-32 h-43 rounded-2xl overflow-hidden bg-modal-background relative"
               >
-                <EventMediaCarousel media={[item]} className="w-full h-full" />
+                <EventMediaCarousel
+                  media={[item]}
+                  className="w-full h-full"
+                  resizeMode="cover"
+                />
 
                 {/* Badge Portada en la primera imagen */}
                 {index === 0 && (
                   <View className="absolute top-2 left-2 bg-chip-background px-2 py-0.5 rounded-full z-10 shadow-sm">
-                    <Text className="text-xs font-bold text-accent-pink">
+                    <Text className="text-xs font-bold text-primary">
                       Portada
                     </Text>
                   </View>
@@ -446,7 +458,7 @@ export default function EventForm({
             {mediaItems.length < MAX_MEDIA_ITEMS && (
               <Pressable
                 onPress={pickCoverMedia}
-                className="w-32 h-28 rounded-2xl bg-modal-background border-none items-center justify-center active:opacity-75"
+                className="w-32 h-43 rounded-2xl bg-modal-background border-none items-center justify-center active:opacity-75"
               >
                 <View className="size-9 items-center justify-center">
                   <Image

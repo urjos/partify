@@ -72,6 +72,10 @@ export default function MapEventModal({
       ? event.media[0].source
       : undefined;
 
+  const isExternal =
+    event.contactMethod === "external" &&
+    Boolean(event.externalTicketUrl?.trim());
+
   return (
     <Modal
       visible={visible}
@@ -180,13 +184,13 @@ export default function MapEventModal({
                       }}
                     >
                       <Image
-                        source={icons.messageSquareText}
+                        source={isExternal ? icons.ticket : icons.whatsapp}
                         className="size-4"
                         tintColor={colors.primary}
                         resizeMode="contain"
                       />
                       <Text className="map-modal-btn-contact-text">
-                        Contactar
+                        {isExternal ? "Entradas" : "Contactar"}
                       </Text>
                     </Pressable>
 

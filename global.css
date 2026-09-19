@@ -368,7 +368,7 @@
   }
 
   .event-title {
-    @apply text-2xl font-extrabold text-primary;
+    @apply text-xl font-extrabold text-primary;
   }
 
   .event-footer-row {

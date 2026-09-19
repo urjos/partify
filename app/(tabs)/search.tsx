@@ -7,12 +7,21 @@ import SearchMap from "@/components/search/SearchMap";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import "@/global.css";
+import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
+import { openWhatsApp } from "@/lib/whatsapp";
 import dayjs from "dayjs";
 import { router } from "expo-router";
 import { styled } from "nativewind";
 import { useState } from "react";
-import { Image, Pressable, TextInput, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Linking,
+  Pressable,
+  TextInput,
+  View,
+} from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
@@ -37,6 +46,7 @@ function getDistanceInKm(
 }
 
 export default function Search() {
+  const api = useApi();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [filterVisible, setFilterVisible] = useState(false);
@@ -54,7 +64,7 @@ export default function Search() {
     activeFilters.endTime !== DEFAULT_FILTERS.endTime;
 
   const hasActiveFilters =
-    activeFilters.distance !== DEFAULT_FILTERS.distance ||
+    activeFilters.enableDistance ||
     activeFilters.category !== null ||
     isDateChanged ||
     (activeFilters.priceMin !== "" && activeFilters.priceMin !== "0") ||
@@ -62,6 +72,54 @@ export default function Search() {
     activeFilters.instantConfirm ||
     activeFilters.openBar ||
     activeFilters.corkageFree;
+
+  const handleContact = async (event: any) => {
+    if (!event) return;
+
+    // 1. Si el método de contacto es externo y tiene enlace de ticket
+    if (event.contactMethod === "external" && event.externalTicketUrl?.trim()) {
+      let url = event.externalTicketUrl.trim();
+      if (!/^https?:\/\//i.test(url)) {
+        url = `https://${url}`;
+      }
+      try {
+        await Linking.openURL(url);
+        return;
+      } catch {
+        Alert.alert(
+          "Error al abrir enlace",
+          "No se pudo abrir el enlace de compra externo.",
+        );
+        return;
+      }
+    }
+
+    // 2. Si el evento tiene número de WhatsApp configurado
+    if (event.contactPhone?.trim()) {
+      openWhatsApp(event.contactPhone.trim(), { eventTitle: event.title });
+      return;
+    }
+
+    // 3. Si el evento no tiene número directo pero tiene ID del anfitrión, consultar su teléfono
+    if (event.authorId) {
+      try {
+        const res = await api.get<{ success: boolean; data: any }>(
+          `/users/${event.authorId}`,
+        );
+        if (res?.success && res.data?.phone?.trim()) {
+          openWhatsApp(res.data.phone.trim(), { eventTitle: event.title });
+          return;
+        }
+      } catch (err) {
+        console.warn("Error fetching host phone for event:", err);
+      }
+    }
+
+    Alert.alert(
+      "Contacto no disponible",
+      "El anfitrión no ha configurado un medio de contacto para este evento.",
+    );
+  };
 
   const filteredEvents = events.filter((event) => {
     // Búsqueda por texto
@@ -93,9 +151,10 @@ export default function Search() {
     const matchesMinPrice = minPrice === null || eventPrice >= minPrice;
     const matchesMaxPrice = maxPrice === null || eventPrice <= maxPrice;
 
-    // Filtro de radio de distancia
+    // Filtro de radio de distancia: solo si está activado
     let matchesDistance = true;
     if (
+      activeFilters.enableDistance &&
       userLocation &&
       typeof event.latitude === "number" &&
       typeof event.longitude === "number"
@@ -181,7 +240,9 @@ export default function Search() {
         key="search-map-component"
         events={filteredEvents}
         userLocation={userLocation}
-        radiusKm={activeFilters.distance}
+        radiusKm={
+          activeFilters.enableDistance ? activeFilters.distance : undefined
+        }
         onLocationReady={setUserLocation}
         onEventPress={setSelectedEvent}
       />
@@ -195,7 +256,7 @@ export default function Search() {
           router.push(`/(events)/${id}`);
         }}
         onContactPress={() => {
-          // Acción del contacto
+          handleContact(selectedEvent);
         }}
       />
       <SearchFilterModal

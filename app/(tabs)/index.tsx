@@ -99,7 +99,7 @@ export default function App() {
         className="page-all"
       />
       <FlatList
-        ListHeaderComponent={<CategoryFilters />}
+        ListHeaderComponent={<CategoryFilters className="px-3" />}
         data={filteredEvents}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
