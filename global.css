@@ -356,7 +356,7 @@
   }
 
   .event-category-chip {
-    @apply bg-chip-background px-3 py-1 rounded-xl;
+    @apply bg-chip-background px-3 py-1 rounded-lg;
   }
 
   .event-category-text {
@@ -364,7 +364,7 @@
   }
 
   .event-location-text {
-    @apply text-base font-medium text-muted-foreground;
+    @apply text-sm font-medium text-muted-foreground;
   }
 
   .event-title {
@@ -380,7 +380,7 @@
   }
 
   .event-meta-row {
-    @apply flex-row items-center gap-2 bg-card p-1.5 rounded-lg;
+    @apply flex-row items-center gap-2 bg-modal-background p-1.5 rounded-lg;
   }
 
   .event-meta-text {

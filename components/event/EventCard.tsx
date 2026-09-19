@@ -1,10 +1,11 @@
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
+import MarqueeText from "@/components/shared/MarqueeText";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
 import { useApi } from "@/hooks/use-api";
 import { useEventStore } from "@/lib/store/eventStore";
-import { locationFormattedDistrict } from "@/lib/utils";
+import { formatDateProfile, locationFormattedDistrict } from "@/lib/utils";
 import { openWhatsApp } from "@/lib/whatsapp";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
@@ -107,19 +108,20 @@ const EventCard = ({
           </View>
           <View className="event-meta-row">
             <Text className="event-time-text">
-              {`${dayjs(startAt).format("D/M")} - ${dayjs(startAt).format("h:mm a")}`}
+              {formatDateProfile(startAt)}
             </Text>
           </View>
         </View>
         <View className="flex-row justify-between items-center">
           <View className="gap-1">
             <View className="flex-row items-center gap-2">
-              {/* Maximo de 30 caracteres para titulo*/}
-              <Text numberOfLines={1} className="event-title max-w-80">
-                {title}
-              </Text>
+              <MarqueeText
+                text={title}
+                className="event-title"
+                containerClassName="max-w-80"
+              />
               {rating && rating > 0 ? (
-                <View className="event-rating-row">
+                <View className="event-rating-row shrink-0">
                   <Text className="event-rating-text">{rating.toFixed(1)}</Text>
                   <Image
                     source={icons.star}
