@@ -1,6 +1,7 @@
 import UserProfileForm from "@/components/profile/edit/UserProfileForm";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
+import { deleteUserAvatar, uploadUserAvatar } from "@/lib/storage";
 import { UserProfile, useUserStore } from "@/lib/store/userStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -14,7 +15,6 @@ export default function EditProfileScreen() {
     profile,
     fetchProfile,
     saveProfile,
-    setAvatarUri,
   } = useUserStore();
   const [isSaving, setIsSaving] = useState(false);
 
@@ -22,10 +22,36 @@ export default function EditProfileScreen() {
     fetchProfile(api);
   }, [api, fetchProfile]);
 
-  const handleSubmit = async (draft: Partial<UserProfile>) => {
+  const handleSubmit = async (
+    draft: Partial<UserProfile>,
+    options?: { avatarBase64?: string },
+  ) => {
     setIsSaving(true);
     try {
-      await saveProfile(api, draft);
+      let finalAvatarUrl = draft.avatarUri;
+
+      // Si se seleccionó una nueva foto local, subirla a users-media y eliminar la anterior
+      if (
+        draft.avatarUri &&
+        !draft.avatarUri.startsWith("http://") &&
+        !draft.avatarUri.startsWith("https://")
+      ) {
+        finalAvatarUrl = await uploadUserAvatar(draft.avatarUri, {
+          base64: options?.avatarBase64,
+          previousUrl: profile.avatarUri,
+          userId: profile.username || id,
+        });
+      } else if (draft.avatarUri === null && profile.avatarUri) {
+        // Si el usuario eliminó la foto y tenía una previa
+        await deleteUserAvatar(profile.avatarUri);
+        finalAvatarUrl = null;
+      }
+
+      await saveProfile(api, {
+        ...draft,
+        avatarUri: finalAvatarUrl,
+      });
+
       router.back();
     } catch (error) {
       console.error("Save profile error:", error);
@@ -69,7 +95,7 @@ export default function EditProfileScreen() {
       onSubmit={handleSubmit}
       onCancel={() => router.back()}
       onDeactivate={handleDeactivate}
-      onAvatarChange={(uri) => setAvatarUri(uri)}
+      onAvatarChange={() => {}}
     />
   );
 }

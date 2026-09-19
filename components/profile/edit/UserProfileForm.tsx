@@ -19,10 +19,13 @@ const SafeAreaView = styled(RNSafeAreaView);
 interface UserProfileFormProps {
   initialProfile: UserProfile;
   isSaving: boolean;
-  onSubmit: (draft: Partial<UserProfile>) => Promise<void>;
+  onSubmit: (
+    draft: Partial<UserProfile>,
+    options?: { avatarBase64?: string },
+  ) => Promise<void>;
   onCancel: () => void;
   onDeactivate: () => void;
-  onAvatarChange: (uri: string) => void;
+  onAvatarChange: (uri: string, base64?: string) => void;
 }
 
 export default function UserProfileForm({
@@ -56,6 +59,7 @@ export default function UserProfileForm({
   const [avatarUri, setLocalAvatarUri] = useState<string | null>(
     initialProfile.avatarUri || null,
   );
+  const [avatarBase64, setAvatarBase64] = useState<string | undefined>();
 
   // Sync if initialProfile changes from API load
   useEffect(() => {
@@ -98,17 +102,20 @@ export default function UserProfileForm({
       return;
     }
 
-    await onSubmit({
-      name: name.trim(),
-      username: username.trim(),
-      bio: bio.trim(),
-      location: location.trim(),
-      genres,
-      spotifyPlaylist: spotifyPlaylist.trim(),
-      phone: phone.trim(),
-      visibleInRadar,
-      avatarUri,
-    });
+    await onSubmit(
+      {
+        name: name.trim(),
+        username: username.trim(),
+        bio: bio.trim(),
+        location: location.trim(),
+        genres,
+        spotifyPlaylist: spotifyPlaylist.trim(),
+        phone: phone.trim(),
+        visibleInRadar,
+        avatarUri,
+      },
+      { avatarBase64 },
+    );
   };
 
   const avatarSource = avatarUri
@@ -134,9 +141,10 @@ export default function UserProfileForm({
         {/* Avatar Section */}
         <EditAvatarSection
           avatarSource={avatarSource}
-          onAvatarChange={(uri) => {
+          onAvatarChange={(uri, base64) => {
             setLocalAvatarUri(uri);
-            onAvatarChange(uri);
+            setAvatarBase64(base64);
+            onAvatarChange(uri, base64);
           }}
         />
 

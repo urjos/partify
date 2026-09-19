@@ -9,12 +9,10 @@ import HorizontalChips from "@/components/shared/HorizontalChips";
 import { DRESS_CATEGORIES, EVENT_CATEGORIES } from "@/constants/categories";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
+import { uploadMediaToSupabase } from "@/lib/storage";
 import { useLocationPickerStore } from "@/lib/store/locationPickerStore";
-import { supabase } from "@/lib/supabase";
 import { useUser } from "@clerk/expo";
 import { Ionicons } from "@expo/vector-icons";
-import { decode } from "base64-arraybuffer";
-import { File } from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { styled } from "nativewind";
@@ -217,46 +215,6 @@ export default function EventForm({
 
   const removeMediaItem = (index: number) => {
     setMediaItems((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const uploadMediaToSupabase = async (
-    uri: string,
-    isVideo: boolean,
-    base64?: string,
-  ) => {
-    if (uri.startsWith("http://") || uri.startsWith("https://")) return uri;
-
-    const ext =
-      uri.split(".").pop()?.split("?")[0] || (isVideo ? "mp4" : "jpg");
-    const filename = `${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
-    const contentType = isVideo ? "video/mp4" : "image/jpeg";
-
-    let arrayBuffer: ArrayBuffer;
-
-    if (base64) {
-      arrayBuffer = decode(base64);
-    } else {
-      const file = new File(uri);
-      arrayBuffer = await file.arrayBuffer();
-    }
-
-    const { error } = await supabase.storage
-      .from("events-media")
-      .upload(filename, arrayBuffer, {
-        contentType,
-        upsert: true,
-      });
-
-    if (error) {
-      console.error("Error al subir multimedia a Supabase:", error);
-      throw error;
-    }
-
-    const { data } = supabase.storage
-      .from("events-media")
-      .getPublicUrl(filename);
-
-    return data.publicUrl;
   };
 
   // Fecha y hora combinada

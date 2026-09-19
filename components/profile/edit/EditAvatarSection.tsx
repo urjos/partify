@@ -15,7 +15,7 @@ import {
 
 interface EditAvatarSectionProps {
   avatarSource?: ImageSourcePropType | { uri: string };
-  onAvatarChange: (uri: string) => void;
+  onAvatarChange: (uri: string, base64?: string) => void;
 }
 
 export default function EditAvatarSection({
@@ -52,10 +52,14 @@ export default function EditAvatarSection({
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.8,
+        base64: true,
       });
 
       if (!result.canceled && result.assets?.[0]?.uri) {
-        onAvatarChange(result.assets[0].uri);
+        onAvatarChange(
+          result.assets[0].uri,
+          result.assets[0].base64 ?? undefined,
+        );
       }
     } catch (error) {
       console.error("Error al seleccionar foto:", error);
