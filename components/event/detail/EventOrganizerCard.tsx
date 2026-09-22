@@ -1,3 +1,4 @@
+import VerifiedBadge from "@/components/VerifiedBadge";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
@@ -7,6 +8,7 @@ import { Image, Pressable, Text, View } from "react-native";
 interface EventOrganizerCardProps {
   author: string;
   authorAvatar?: string;
+  authorIsVerified?: boolean;
   rating?: number;
   onViewProfile?: () => void;
 }
@@ -14,6 +16,7 @@ interface EventOrganizerCardProps {
 export default function EventOrganizerCard({
   author,
   authorAvatar,
+  authorIsVerified = false,
   rating,
   onViewProfile,
 }: EventOrganizerCardProps) {
@@ -34,12 +37,19 @@ export default function EventOrganizerCard({
 
           {/* Info del anfitrión */}
           <View className="flex-1">
-            <Text
-              className="text-base font-bold text-primary"
-              numberOfLines={1}
-            >
-              {author}
-            </Text>
+            <View className="flex-row items-center gap-1.5">
+              <Text
+                className="text-base font-bold text-primary"
+                numberOfLines={1}
+              >
+                {author}
+              </Text>
+              <VerifiedBadge
+                isVerified={authorIsVerified}
+                size={14}
+                tintColor={colors.accentPink}
+              />
+            </View>
             <View className="flex-row items-center gap-1">
               <Text className="text-xs font-semibold text-accent-pink">
                 {rating && rating > 0 ? rating.toFixed(1) : "5.0"}

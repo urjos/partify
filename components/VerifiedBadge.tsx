@@ -1,5 +1,4 @@
 import { icons } from "@/constants/icons";
-import { useBilling } from "@/hooks/use-billing";
 import clsx from "clsx";
 import React from "react";
 import { Image, ImageStyle, StyleProp } from "react-native";
@@ -13,17 +12,13 @@ export interface VerifiedBadgeProps {
 }
 
 export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
-  isVerified: isVerifiedProp,
+  isVerified = false,
   size = 16,
   className = "",
   style,
   tintColor,
 }) => {
-  const { hasVerifiedBadge } = useBilling();
-  const showBadge =
-    isVerifiedProp !== undefined ? isVerifiedProp : hasVerifiedBadge;
-
-  if (!showBadge) {
+  if (!isVerified) {
     return null;
   }
 

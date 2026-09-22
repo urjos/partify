@@ -356,7 +356,7 @@
   }
 
   .event-category-chip {
-    @apply bg-chip-background px-3 py-1 rounded-lg;
+    @apply bg-chip-background px-1.5 py-1 rounded-lg;
   }
 
   .event-category-text {

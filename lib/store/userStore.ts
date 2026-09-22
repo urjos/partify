@@ -12,6 +12,7 @@ export interface UserProfile {
   spotifyPlaylist: string;
   phone: string;
   visibleInRadar: boolean;
+  isVerified?: boolean;
 }
 
 export interface ProfileEventItem {
@@ -34,6 +35,7 @@ interface UserStore {
   saveProfile: (api: ApiClient, updates: Partial<UserProfile>) => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => void;
   setAvatarUri: (uri: string | null) => void;
+  syncVerifiedStatus: (api: ApiClient, isVerified: boolean) => Promise<void>;
 }
 
 const mapMongoUserToProfile = (
@@ -53,6 +55,7 @@ const mapMongoUserToProfile = (
     spotifyPlaylist: data.spotifyPlaylist ?? current.spotifyPlaylist,
     phone: data.phone ?? current.phone,
     visibleInRadar: data.visibleInRadar ?? current.visibleInRadar,
+    isVerified: Boolean(data.isVerified),
   };
 };
 
@@ -67,6 +70,7 @@ export const useUserStore = create<UserStore>((set) => ({
     spotifyPlaylist: "",
     phone: "",
     visibleInRadar: false,
+    isVerified: false,
   },
   loading: false,
 
@@ -149,4 +153,21 @@ export const useUserStore = create<UserStore>((set) => ({
         avatarUri: uri,
       },
     })),
+
+  syncVerifiedStatus: async (api, isVerified) => {
+    const current = useUserStore.getState().profile.isVerified;
+    if (current === isVerified) return;
+    try {
+      const res = await api.put<{ success: boolean; data: any }>("/users/me", {
+        isVerified,
+      });
+      if (res?.success && res.data) {
+        set((state) => ({
+          profile: mapMongoUserToProfile(res.data, state.profile),
+        }));
+      }
+    } catch (error) {
+      console.warn("syncVerifiedStatus error:", error);
+    }
+  },
 }));

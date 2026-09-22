@@ -33,7 +33,7 @@ export default function ProfileHeroCard({
   location,
   avatarSource,
   bio,
-  isVerified = true,
+  isVerified = false,
   isOnline = true,
   onEditPress,
   showEditButton,

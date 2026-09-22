@@ -7,7 +7,6 @@ import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
 import { useApi } from "@/hooks/use-api";
-import { useBilling } from "@/hooks/use-billing";
 import { mapApiEventToEventItem } from "@/lib/api/mappers";
 import { useEventStore } from "@/lib/store/eventStore";
 import { formatDateProfile } from "@/lib/utils";
@@ -42,13 +41,13 @@ interface UserDetailData {
   organizedCount: number;
   spotifyPlaylist: string;
   userRating?: number | null;
+  isVerified?: boolean;
 }
 
 export default function UserProfileScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const api = useApi();
   const posthog = usePostHog();
-  const { hasVerifiedBadge } = useBilling();
 
   const allEvents = useEventStore((state) => state.events);
 
@@ -121,6 +120,7 @@ export default function UserProfileScreen() {
             organizedCount: raw.organizedCount ?? cleanEvents.length,
             spotifyPlaylist: raw.spotifyPlaylist || "",
             userRating: currentRating,
+            isVerified: Boolean(raw.isVerified),
           });
           setUserEvents(cleanEvents);
           setLoading(false);
@@ -274,7 +274,7 @@ export default function UserProfileScreen() {
             userData.avatarUrl ? { uri: userData.avatarUrl } : images.avatar
           }
           bio={userData.bio}
-          isVerified={hasVerifiedBadge}
+          isVerified={Boolean(userData.isVerified)}
           isOnline={true}
           showContactButton={true}
           onContactPress={handleContactHost}

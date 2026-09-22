@@ -29,6 +29,7 @@ declare global {
     startAt?: string;
     author: string;
     authorAvatar?: string;
+    authorIsVerified?: boolean;
     distanceLabel?: string;
     location: string;
     latitude?: number;

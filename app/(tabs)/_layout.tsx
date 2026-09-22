@@ -1,13 +1,26 @@
 import { tabs } from "@/constants/data";
+import { useApi } from "@/hooks/use-api";
+import { useBilling } from "@/hooks/use-billing";
+import { useUserStore } from "@/lib/store/userStore";
 import { useAuth } from "@clerk/expo";
 import clsx from "clsx";
 import { Redirect, Tabs } from "expo-router";
+import React, { useEffect } from "react";
 import { Image, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TabLayout = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const insets = useSafeAreaInsets();
+  const api = useApi();
+  const { hasVerifiedBadge, isLoaded: billingLoaded } = useBilling();
+  const syncVerifiedStatus = useUserStore((state) => state.syncVerifiedStatus);
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn && billingLoaded) {
+      syncVerifiedStatus(api, hasVerifiedBadge);
+    }
+  }, [isLoaded, isSignedIn, billingLoaded, hasVerifiedBadge, api, syncVerifiedStatus]);
 
   // Wait for auth to load before rendering anything
   if (!isLoaded) {

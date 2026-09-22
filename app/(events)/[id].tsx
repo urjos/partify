@@ -336,6 +336,7 @@ export default function EventDetail() {
           <EventOrganizerCard
             author={event.author}
             authorAvatar={event.authorAvatar}
+            authorIsVerified={event.authorIsVerified}
             rating={event.rating}
             onViewProfile={() => {
               const targetId = event.authorId || event.id;

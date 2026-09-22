@@ -4,7 +4,6 @@ import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
 import { useApi } from "@/hooks/use-api";
-import { useBilling } from "@/hooks/use-billing";
 import { useEventStore } from "@/lib/store/eventStore";
 import { formatDateProfile, locationFormattedDistrict } from "@/lib/utils";
 import { openWhatsApp } from "@/lib/whatsapp";
@@ -34,6 +33,7 @@ const EventCard = ({
   startAt,
   author,
   authorAvatar,
+  authorIsVerified,
   rating,
   isFavorite: initialIsFavorite,
   contactMethod,
@@ -48,7 +48,6 @@ const EventCard = ({
   const [isFavorite, setIsFavorite] = useState<boolean>(
     Boolean(initialIsFavorite),
   );
-  const { hasVerifiedBadge } = useBilling();
 
   useEffect(() => {
     setIsFavorite(Boolean(initialIsFavorite));
@@ -132,7 +131,7 @@ const EventCard = ({
               />
               <Text className="event-meta-text">{author}</Text>
               <VerifiedBadge
-                isVerified={hasVerifiedBadge}
+                isVerified={authorIsVerified}
                 size={14}
                 tintColor={colors.accentPink}
               />

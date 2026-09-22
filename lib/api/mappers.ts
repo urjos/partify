@@ -31,6 +31,7 @@ type ApiEvent = {
   hideExactAddress?: boolean;
   author: string;
   authorAvatar?: string;
+  authorIsVerified?: boolean;
   attendeeAvatars: string[];
   attendeeCount: number;
   interestedCount: number;
@@ -101,6 +102,7 @@ export const mapApiEventToEventItem = (apiEvent: ApiEvent): EventItem => ({
   author: apiEvent.author,
   authorId: apiEvent.authorId,
   authorAvatar: apiEvent.authorAvatar,
+  authorIsVerified: Boolean(apiEvent.authorIsVerified),
   attendeeAvatars: apiEvent.attendeeAvatars.map((uri) => ({ uri })),
   attendeeCount: apiEvent.attendeeCount,
   interestedCount: apiEvent.interestedCount,
