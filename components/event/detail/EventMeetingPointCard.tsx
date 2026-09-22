@@ -65,7 +65,7 @@ export default function EventMeetingPointCard({
 
           <Pressable
             onPress={handleContact}
-            className="w-full bg-modal-background border border-border py-3 rounded-xl flex-row items-center justify-center gap-2 active:opacity-75 mt-1"
+            className="w-full bg-submodal-background py-3 rounded-xl flex-row items-center justify-center gap-2 active:opacity-75 mt-1"
           >
             <Image
               source={isExternal ? icons.ticket : icons.whatsapp}

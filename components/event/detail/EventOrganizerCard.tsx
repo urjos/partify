@@ -42,6 +42,7 @@ export default function EventOrganizerCard({
                 text={author}
                 className="text-sm font-bold text-primary"
                 containerClassName="max-w-43"
+                fadeColor={colors.modalBackground}
               />
               <VerifiedBadge
                 isVerified={authorIsVerified}

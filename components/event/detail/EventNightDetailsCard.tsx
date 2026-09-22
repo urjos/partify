@@ -1,3 +1,4 @@
+import MarqueeText from "@/components/shared/MarqueeText";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import React from "react";
@@ -58,110 +59,118 @@ export default function EventNightDetailsCard({
   }
 
   // 4. Métodos de Pago
-  let paymentDesc = "Coordinación directa vía WhatsApp (Yape/Plin).";
+  let paymentDesc = "Coordinación directa vía WhatsApp.";
   if (contactMethod === "external" && externalTicketUrl) {
-    paymentDesc = "Venta oficial mediante plataforma de tickets (Passline).";
+    paymentDesc = "Venta oficial mediante plataforma de tickets.";
   }
 
   return (
-    <View className="bg-modal-background rounded-3xl p-5 gap-4">
-      <Text className="text-lg font-bold text-primary">Detalles</Text>
+    <>
+      <View className="bg-modal-background rounded-3xl p-5 gap-4">
+        <Text className="text-lg font-bold text-primary">Descripción</Text>
 
-      {/* Descripción principal */}
-      {description ? (
-        <Text className="text-sm text-muted-foreground font-regular">
-          {description}
-        </Text>
-      ) : null}
+        {/* Descripción principal */}
+        {description ? (
+          <Text className="text-sm text-muted-foreground font-regular">
+            {description}
+          </Text>
+        ) : null}
+      </View>
 
-      {/* Grid 2x2 de Reglas y Beneficios */}
-      <View className="gap-3 mt-1">
-        {/* Fila 1 */}
-        <View className="flex-row gap-3">
-          {/* Card Bebidas / Corcho libre */}
-          <View className="flex-1 border border-border rounded-2xl p-3.5 gap-2">
-            <View className="flex-row items-center gap-2">
-              <Image
-                source={icons.martini}
-                className="size-5"
-                tintColor={colors.accent}
-              />
-              <Text
-                className="text-sm font-bold text-primary flex-1"
-                numberOfLines={2}
-              >
-                {drinkTitle}
+      <View className="bg-modal-background rounded-3xl p-5 gap-4">
+        <Text className="text-lg font-bold text-primary">Detalles</Text>
+
+        {/* Grid 2x2 de Reglas y Beneficios */}
+        <View className="gap-3 mt-1">
+          {/* Fila 1 */}
+          <View className="flex-row gap-3">
+            {/* Card Bebidas / Corcho libre */}
+            <View className="flex-1 border border-border rounded-2xl p-3.5 gap-2">
+              <View className="flex-row items-center gap-2">
+                <Image
+                  source={icons.martini}
+                  className="size-5"
+                  tintColor={colors.accent}
+                />
+                <Text
+                  className="text-sm font-bold text-primary flex-1"
+                  numberOfLines={2}
+                >
+                  {drinkTitle}
+                </Text>
+              </View>
+              <Text className="text-xs font-regular text-muted-foreground leading-relaxed">
+                {drinkDesc}
               </Text>
             </View>
-            <Text className="text-xs font-regular text-muted-foreground leading-relaxed">
-              {drinkDesc}
-            </Text>
+
+            {/* Card Dress Code */}
+            <View className="flex-1 border border-border rounded-2xl p-3.5 gap-2">
+              <View className="flex-row items-center gap-2">
+                <Image
+                  source={icons.clothes}
+                  className="size-5"
+                  tintColor={colors.accent}
+                />
+
+                <MarqueeText
+                  text={dressTitle}
+                  className="text-sm font-bold text-primary"
+                  initial={false}
+                  containerClassName="max-w-27"
+                  fadeColor={colors.modalBackground}
+                />
+              </View>
+              <Text className="text-xs font-regular text-muted-foreground leading-relaxed">
+                {dressDesc}
+              </Text>
+            </View>
           </View>
 
-          {/* Card Dress Code */}
-          <View className="flex-1 border border-border rounded-2xl p-3.5 gap-2">
-            <View className="flex-row items-center gap-2">
-              <Image
-                source={icons.clothes}
-                className="size-5"
-                tintColor={colors.accent}
-              />
-              <Text
-                className="text-sm font-bold text-primary flex-1"
-                numberOfLines={2}
-              >
-                {dressTitle}
+          {/* Fila 2 */}
+          <View className="flex-row gap-3">
+            {/* Card Seguridad & Filtro */}
+            <View className="flex-1 border border-border rounded-2xl p-3.5 gap-2">
+              <View className="flex-row items-center gap-2">
+                <Image
+                  source={icons.shield}
+                  className="size-5"
+                  tintColor={colors.accent}
+                />
+                <Text
+                  className="text-sm font-bold text-primary flex-1"
+                  numberOfLines={1}
+                >
+                  Seguridad
+                </Text>
+              </View>
+              <Text className="text-xs font-regular text-muted-foreground leading-relaxed">
+                {securityDesc}
               </Text>
             </View>
-            <Text className="text-xs font-regular text-muted-foreground leading-relaxed">
-              {dressDesc}
-            </Text>
-          </View>
-        </View>
 
-        {/* Fila 2 */}
-        <View className="flex-row gap-3">
-          {/* Card Seguridad & Filtro */}
-          <View className="flex-1 border border-border rounded-2xl p-3.5 gap-2">
-            <View className="flex-row items-center gap-2">
-              <Image
-                source={icons.shield}
-                className="size-5"
-                tintColor={colors.accent}
-              />
-              <Text
-                className="text-sm font-bold text-primary flex-1"
-                numberOfLines={1}
-              >
-                Seguridad
+            {/* Card Métodos de Pago */}
+            <View className="flex-1 border border-border rounded-2xl p-3.5 gap-2">
+              <View className="flex-row items-center gap-2">
+                <Image
+                  source={icons.paymentMethod}
+                  className="size-5"
+                  tintColor={colors.accent}
+                />
+                <Text
+                  className="text-sm font-bold text-primary flex-1"
+                  numberOfLines={1}
+                >
+                  Medio de Pago
+                </Text>
+              </View>
+              <Text className="text-xs font-regular text-muted-foreground leading-relaxed">
+                {paymentDesc}
               </Text>
             </View>
-            <Text className="text-xs font-regular text-muted-foreground leading-relaxed">
-              {securityDesc}
-            </Text>
-          </View>
-
-          {/* Card Métodos de Pago */}
-          <View className="flex-1 border border-border rounded-2xl p-3.5 gap-2">
-            <View className="flex-row items-center gap-2">
-              <Image
-                source={icons.paymentMethod}
-                className="size-5"
-                tintColor={colors.accent}
-              />
-              <Text
-                className="text-sm font-bold text-primary flex-1"
-                numberOfLines={1}
-              >
-                Medio de Pago
-              </Text>
-            </View>
-            <Text className="text-xs font-regular text-muted-foreground leading-relaxed">
-              {paymentDesc}
-            </Text>
           </View>
         </View>
       </View>
-    </View>
+    </>
   );
 }
