@@ -1,6 +1,8 @@
+import VerifiedBadge from "@/components/VerifiedBadge";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
+import { useBilling } from "@/hooks/use-billing";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { LinearGradient } from "expo-linear-gradient";
@@ -33,6 +35,7 @@ export default function MapEventModal({
 }: MapEventModalProps) {
   const { height } = Dimensions.get("window");
   const slideAnim = useRef(new Animated.Value(height)).current;
+  const { hasVerifiedBadge } = useBilling();
 
   useEffect(() => {
     if (visible) {
@@ -148,11 +151,10 @@ export default function MapEventModal({
                         <Text className="map-modal-host-name">
                           {event.author || "Usuario"}
                         </Text>
-                        <Image
-                          source={icons.verified}
-                          className="map-modal-verified-icon"
+                        <VerifiedBadge
+                          isVerified={hasVerifiedBadge}
+                          size={12}
                           tintColor={colors.accentPink}
-                          resizeMode="contain"
                         />
                       </View>
                     </View>

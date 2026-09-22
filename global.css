@@ -941,7 +941,7 @@
     @apply size-5 rounded-full;
   }
   .map-modal-host-info {
-    @apply flex-row items-center;
+    @apply flex-row items-center gap-1;
   }
   .map-modal-host-name {
     @apply text-sm font-bold text-muted-foreground;
