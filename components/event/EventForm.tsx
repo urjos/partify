@@ -36,7 +36,7 @@ const EVENT_CATEGORY_ITEMS = EVENT_CATEGORIES.map((item) => ({
 
 const SafeAreaView = styled(RNSafeAreaView);
 
-const MAX_MEDIA_ITEMS = 3;
+const MAX_MEDIA_ITEMS = 5;
 
 type EventFormProps = {
   screenTitle?: string;
@@ -430,8 +430,8 @@ export default function EventForm({
           </ScrollView>
 
           <Text className="text-xs font-regular text-muted-foreground leading-relaxed">
-            Sube hasta {MAX_MEDIA_ITEMS} fotos/videos con el plan Free. La
-            primera será la portada principal de tu evento.
+            Sube hasta {MAX_MEDIA_ITEMS} fotos/videos. La primera será la
+            portada principal de tu evento.
           </Text>
         </View>
 

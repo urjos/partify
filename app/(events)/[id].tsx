@@ -65,7 +65,7 @@ export default function EventDetail() {
   ]);
 
   if (!event && loading) {
-    return <LoadingScreen message="Cargando detalles de la fiesta..." />;
+    return <LoadingScreen />;
   }
 
   if (!event) {

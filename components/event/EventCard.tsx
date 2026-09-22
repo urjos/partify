@@ -115,12 +115,12 @@ const EventCard = ({
           </View>
         </View>
         <View className="flex-row justify-between items-center">
-          <View className="gap-1">
+          <View className="gap-1 flex-1 pr-2">
             <View className="flex-row items-center gap-2">
               <MarqueeText
                 text={title}
                 className="event-title"
-                containerClassName="max-w-80"
+                containerClassName="w-full"
               />
             </View>
 

@@ -4,6 +4,7 @@ import { ProfileEventItem } from "@/lib/store/userStore";
 import { locationFormattedDistrictAndAddress } from "@/lib/utils";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
+import MarqueeText from "../shared/MarqueeText";
 
 interface ProfileEventCardProps {
   item: ProfileEventItem;
@@ -39,9 +40,12 @@ export default function ProfileEventCard({
           </View>
 
           {/* Título */}
-          <Text numberOfLines={1} className="text-sm font-bold text-primary">
-            {item.title}
-          </Text>
+          <MarqueeText
+            text={item.title}
+            className="text-sm font-bold text-primary"
+            containerClassName="max-w-50"
+            fadeColor={colors.modalBackground}
+          />
 
           {/* Dirección */}
           <Text

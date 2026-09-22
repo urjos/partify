@@ -8,20 +8,20 @@ import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 const SafeAreaView = styled(RNSafeAreaView);
 
 export interface LoadingScreenProps {
-  message?: string;
   size?: "small" | "large";
   color?: string;
   fullScreen?: boolean;
   overlay?: boolean;
+  message?: string;
   className?: string;
 }
 
 export default function LoadingScreen({
-  message,
   size = "large",
   color = colors.accentPink,
   fullScreen = true,
   overlay = false,
+  message,
   className = "",
 }: LoadingScreenProps) {
   if (overlay) {
@@ -32,7 +32,7 @@ export default function LoadingScreen({
           className,
         )}
       >
-        <View className="bg-card/95 rounded-3xl p-6 items-center justify-center gap-3 shadow-2xl min-w-[160px]">
+        <View className="rounded-3xl p-6 items-center justify-center gap-3 shadow-2xl min-w-[160px]">
           <ActivityIndicator size={size} color={color} />
           {message ? (
             <Text className="text-sm font-semibold text-primary text-center">
@@ -48,13 +48,13 @@ export default function LoadingScreen({
     return (
       <SafeAreaView
         className={clsx(
-          "flex-1 bg-background items-center justify-center px-6",
+          "flex-1 bg-background items-center justify-center px-6 gap-3",
           className,
         )}
       >
         <ActivityIndicator size={size} color={color} />
         {message ? (
-          <Text className="text-sm font-medium text-muted-foreground mt-4 text-center">
+          <Text className="text-sm font-semibold text-primary text-center">
             {message}
           </Text>
         ) : null}
@@ -63,10 +63,10 @@ export default function LoadingScreen({
   }
 
   return (
-    <View className={clsx("items-center justify-center py-6 px-4", className)}>
+    <View className={clsx("items-center justify-center py-6 px-4 gap-2", className)}>
       <ActivityIndicator size={size} color={color} />
       {message ? (
-        <Text className="text-sm font-medium text-muted-foreground mt-3 text-center">
+        <Text className="text-sm font-semibold text-primary text-center">
           {message}
         </Text>
       ) : null}

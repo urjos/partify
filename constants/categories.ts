@@ -8,6 +8,8 @@ export const EVENT_CATEGORIES = [
   "Cumpleaños",
   "After office",
   "Fiesta electrónica",
+  "Festival",
+  "Otro",
 ] as const;
 
 export const MUSIC_TYPES = [

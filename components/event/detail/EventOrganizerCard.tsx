@@ -1,5 +1,4 @@
 import MarqueeText from "@/components/shared/MarqueeText";
-import VerifiedBadge from "@/components/VerifiedBadge";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
 import React from "react";
@@ -43,11 +42,7 @@ export default function EventOrganizerCard({
                 className="text-sm font-bold text-primary"
                 containerClassName="max-w-43"
                 fadeColor={colors.modalBackground}
-              />
-              <VerifiedBadge
-                isVerified={authorIsVerified}
-                size={14}
-                tintColor={colors.accentPink}
+                authorIsVerified={authorIsVerified}
               />
             </View>
             <View className="flex-row items-center gap-1">

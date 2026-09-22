@@ -124,9 +124,7 @@ export default function App() {
           ) : error || locationError ? (
             <Text className="home-empty-state">{error || locationError}</Text>
           ) : (
-            <Text className="home-empty-state">
-              No events found for this filter.
-            </Text>
+            <Text className="home-empty-state">No se encontraron eventos.</Text>
           )
         }
         contentContainerClassName="pb-6"

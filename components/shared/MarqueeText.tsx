@@ -10,6 +10,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import VerifiedBadge from "../VerifiedBadge";
 
 export interface MarqueeTextProps {
   text: string;
@@ -23,6 +24,9 @@ export interface MarqueeTextProps {
   speed?: number; // ms per pixel (default: 35)
   delay?: number; // pause in ms before moving and at the end (default: 1500)
   initial?: boolean;
+  verifiedIcon?: boolean;
+  authorIsVerified?: boolean;
+  badgeSize?: number;
 }
 
 export default function MarqueeText({
@@ -33,6 +37,9 @@ export default function MarqueeText({
   containerStyle,
   initial,
   maxWidth,
+  verifiedIcon,
+  authorIsVerified,
+  badgeSize = 14,
   fadeColor = colors.background,
   fadeWidth = 28,
   speed = 35,
@@ -42,11 +49,14 @@ export default function MarqueeText({
   const [textWidth, setTextWidth] = useState(0);
   const translateX = useRef(new Animated.Value(0)).current;
 
-  // Reset textWidth when text changes
+  const shouldShowBadge = Boolean(authorIsVerified ?? verifiedIcon);
+  const cleanText = (text || "").replace(/[\r\n\t]+/g, " ").trim();
+
+  // Reset textWidth when text or badge changes
   useEffect(() => {
     setTextWidth(0);
     translateX.setValue(0);
-  }, [text, translateX]);
+  }, [cleanText, shouldShowBadge, translateX]);
 
   // Ancho efectivo del contenedor
   const effectiveWidth = maxWidth
@@ -96,7 +106,7 @@ export default function MarqueeText({
 
   return (
     <View
-      className={containerClassName ?? "max-w-80 overflow-hidden relative"}
+      className={containerClassName ?? "w-full overflow-hidden relative"}
       style={[
         maxWidth ? { maxWidth } : null,
         containerStyle,
@@ -109,7 +119,7 @@ export default function MarqueeText({
         }
       }}
     >
-      {/* Medidor invisible de texto en un contenedor amplio para que Android no lo colapse ni lo trunque */}
+      {/* Medidor invisible de texto + badge en un contenedor amplio para que Android no lo colapse ni lo trunque */}
       <View
         style={{
           position: "absolute",
@@ -122,26 +132,36 @@ export default function MarqueeText({
         pointerEvents="none"
         collapsable={false}
       >
-        <Text
-          numberOfLines={1}
-          className={className}
-          style={[style, { alignSelf: "flex-start" }]}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            alignSelf: "flex-start",
+          }}
           onLayout={(e) => {
             const w = Math.ceil(e.nativeEvent.layout.width);
             if (w > 0) {
               setTextWidth((prev) => (Math.abs(prev - w) > 1 ? w : prev));
             }
           }}
-          onTextLayout={(e) => {
-            const line = e.nativeEvent.lines[0];
-            if (line && line.width > 0) {
-              const w = Math.ceil(line.width);
-              setTextWidth((prev) => (Math.abs(prev - w) > 1 ? w : prev));
-            }
-          }}
         >
-          {text}
-        </Text>
+          <Text
+            className={className}
+            style={[style, { alignSelf: "flex-start", flexShrink: 0 }]}
+            ellipsizeMode="clip"
+          >
+            {cleanText}
+          </Text>
+          {shouldShowBadge && (
+            <View style={{ marginLeft: 4 }}>
+              <VerifiedBadge
+                isVerified={true}
+                size={badgeSize}
+                tintColor={colors.accentPink}
+              />
+            </View>
+          )}
+        </View>
       </View>
 
       <Animated.View
@@ -156,18 +176,21 @@ export default function MarqueeText({
         }}
       >
         <Text
-          numberOfLines={1}
           className={className}
-          style={style}
-          onLayout={(e) => {
-            const w = Math.ceil(e.nativeEvent.layout.width);
-            if (w > 0) {
-              setTextWidth((prev) => (Math.abs(prev - w) > 1 ? w : prev));
-            }
-          }}
+          style={[style, { flexShrink: 0 }]}
+          ellipsizeMode="clip"
         >
-          {text}
+          {cleanText}
         </Text>
+        {shouldShowBadge && (
+          <View style={{ marginLeft: 4 }}>
+            <VerifiedBadge
+              isVerified={true}
+              size={badgeSize}
+              tintColor={colors.accentPink}
+            />
+          </View>
+        )}
       </Animated.View>
 
       {/* Gradiente de desvanecimiento visual en el inicio (borde izquierdo) */}
