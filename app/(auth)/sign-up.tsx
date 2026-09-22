@@ -1,8 +1,10 @@
 import GoogleIcon from "@/components/auth/GoogleIcon";
 import LoadingScreen from "@/components/shared/LoadingScreen";
 import { icons } from "@/constants/icons";
+import { useWarmUpBrowser } from "@/hooks/use-warm-up-browser";
 import { useAuth, useSignUp } from "@clerk/expo";
 import { useSSO } from "@clerk/expo/experimental";
+import * as WebBrowser from "expo-web-browser";
 import { Link, useRouter, type Href } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
@@ -19,9 +21,13 @@ import {
 } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
+WebBrowser.maybeCompleteAuthSession();
+
 const SafeAreaView = styled(RNSafeAreaView);
 
 const SignUp = () => {
+  useWarmUpBrowser();
+
   const { signUp, errors, fetchStatus } = useSignUp();
   const { isSignedIn } = useAuth();
   const { startSSOFlow } = useSSO();
@@ -35,6 +41,9 @@ const SignUp = () => {
     try {
       const { createdSessionId } = await startSSOFlow({
         strategy: "oauth_google",
+        authSessionOptions: {
+          showInRecents: true,
+        },
       });
 
       if (createdSessionId) {

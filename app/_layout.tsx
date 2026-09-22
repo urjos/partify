@@ -10,7 +10,10 @@ import {
   usePathname,
 } from "expo-router";
 import { PostHogErrorBoundary, PostHogProvider } from "posthog-react-native";
+import * as WebBrowser from "expo-web-browser";
 import { useEffect, useRef } from "react";
+
+WebBrowser.maybeCompleteAuthSession();
 
 SplashScreen.preventAutoHideAsync();
 
