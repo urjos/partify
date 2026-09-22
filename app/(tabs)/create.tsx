@@ -7,16 +7,10 @@ import { FREE_ACTIVE_EVENTS_LIMIT } from "@/lib/billing/plans";
 import { useEventStore } from "@/lib/store/eventStore";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useFocusEffect } from "expo-router";
-import { AlertCircle, ArrowLeft, Sparkles } from "lucide-react-native";
+import { AlertCircle, Sparkles } from "lucide-react-native";
 import { styled } from "nativewind";
 import React, { useCallback, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
@@ -127,23 +121,9 @@ const CreateEvent = () => {
     );
   }
 
-  // Vista de bloqueo cuando se alcanzó el límite del Plan Free
   if (isBlocked) {
     return (
-      <SafeAreaView className="flex-1 bg-black justify-between px-6 py-6">
-        <View className="flex-row items-center">
-          <Pressable
-            onPress={() => router.back()}
-            hitSlop={12}
-            className="size-10 rounded-full bg-white/10 items-center justify-center active:opacity-70"
-          >
-            <ArrowLeft size={20} color="#ffffff" />
-          </Pressable>
-          <Text className="text-white font-bold text-lg ml-4">
-            Crear Evento
-          </Text>
-        </View>
-
+      <SafeAreaView className="flex-1 bg-black justify-center page-all">
         <View className="items-center py-8">
           <View className="size-20 rounded-full bg-[#241320] border border-[#ea4bc8]/40 items-center justify-center mb-6">
             <Sparkles size={36} color="#ea4bc8" />
@@ -170,7 +150,7 @@ const CreateEvent = () => {
               className="py-4 items-center justify-center"
             >
               <Text className="text-white font-extrabold text-base tracking-wide">
-                Upgrade to Partify Pro - $5.99/mo
+                Mejora a Partify Pro - $5.99/mes
               </Text>
             </LinearGradient>
           </Pressable>
@@ -179,7 +159,7 @@ const CreateEvent = () => {
             onPress={() => router.back()}
             className="py-3 items-center justify-center active:opacity-60"
           >
-            <Text className="text-white/60 font-semibold text-sm">
+            <Text className="text-muted-foreground font-medium text-xs">
               Volver al inicio
             </Text>
           </Pressable>

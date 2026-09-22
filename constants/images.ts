@@ -1,3 +1,4 @@
+import logoPartify from "@/assets/icons/partify-logo-2.png";
 import avatar1 from "@/assets/images/avatar-1.jpg";
 import avatar2 from "@/assets/images/avatar-2.jpg";
 import avatar3 from "@/assets/images/avatar-3.jpg";
@@ -17,4 +18,5 @@ export default {
   kevvo,
   colors,
   avatars,
+  logoPartify,
 };

@@ -41,7 +41,7 @@ const PRO_BENEFITS: ProBenefitItem[] = [
     id: "unlimited_events",
     title: "Eventos Ilimitados",
     description:
-      "Publica y gestiona simultáneamente todas las fiestas que quieras sin el tope de 2 eventos activos.",
+      "Publica y gestiona simultáneamente todas las fiestas que quieras sin limite.",
     iconType: "lucide",
     lucideIcon: InfinityIcon,
   },
@@ -49,7 +49,7 @@ const PRO_BENEFITS: ProBenefitItem[] = [
     id: "event_boost",
     title: "Impulso Semanal",
     description:
-      "Destaca 1 evento por semana en la parte superior del feed 'Cerca de ti' por 24 horas para maximizar asistentes.",
+      "Destaca 1 evento por semana en la parte superior del feed 'Cerca de ti' por 24 horas.",
     iconType: "lucide",
     lucideIcon: Zap,
   },
@@ -57,14 +57,14 @@ const PRO_BENEFITS: ProBenefitItem[] = [
     id: "verified_badge",
     title: "Insignia de Verificación Pro",
     description:
-      "Muestra el sello oficial de anfitrión verificado en tus eventos y perfil para construir credibilidad.",
+      "Muestra el sello oficial de anfitrión verificado en tus eventos y perfil.",
     iconType: "verified_image",
   },
   {
     id: "priority_support",
     title: "Soporte Prioritario",
     description:
-      "Atención preferencial y asistencia técnica rápida para coordinar tus listas y accesos sin demoras.",
+      "Atención preferencial y asistencia técnica rápida sin demoras.",
     iconType: "lucide",
     lucideIcon: Headphones,
   },
@@ -109,22 +109,9 @@ export const UpgradeToProModal: React.FC<UpgradeToProModalProps> = ({
           accessibilityLabel="Cerrar modal"
         />
 
-        <View className="w-full max-h-[88%] bg-[#0c0c0c] border border-white/10 rounded-3xl p-5 shadow-2xl">
+        <View className="w-full max-h-[80%] bg-modal-background rounded-3xl p-5 shadow-2xl">
           {/* Header Bar */}
-          <View className="flex-row items-center justify-between pb-3">
-            <View className="flex-row items-center gap-2">
-              <LinearGradient
-                colors={["#ea4bc8", "#b24bfb"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                className="px-3 py-1 rounded-full"
-              >
-                <Text className="text-white text-xs font-extrabold tracking-wider">
-                  PARTIFY PRO
-                </Text>
-              </LinearGradient>
-            </View>
-
+          <View className="flex-row self-end">
             <Pressable
               onPress={onClose}
               hitSlop={12}
@@ -134,19 +121,16 @@ export const UpgradeToProModal: React.FC<UpgradeToProModalProps> = ({
             </Pressable>
           </View>
 
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            className="flex-grow-0"
-          >
+          <ScrollView showsVerticalScrollIndicator={false} className="grow-0">
             {/* Banner si alcanzó el límite */}
             {reason === "limit_reached" && (
-              <View className="flex-row items-start gap-2.5 p-3.5 mb-4 rounded-2xl bg-amber-500/10 border border-amber-500/30">
-                <AlertCircle size={20} color="#f59e0b" />
+              <View className="flex-row items-center gap-2.5 p-3.5 mb-4 rounded-2xl ">
+                <AlertCircle size={20} color={colors.delete} />
                 <View className="flex-1">
-                  <Text className="text-amber-400 font-bold text-sm">
+                  <Text className="text-delete font-bold text-sm">
                     Límite del Plan Free alcanzado
                   </Text>
-                  <Text className="text-amber-200/80 text-xs mt-0.5">
+                  <Text className="text-muted-foreground text-xs font-medium">
                     {currentActiveEvents !== undefined
                       ? `Tienes ${currentActiveEvents} de 2 eventos activos simultáneos.`
                       : "Solo puedes tener hasta 2 eventos activos simultáneamente en el Plan Free."}{" "}
@@ -158,12 +142,12 @@ export const UpgradeToProModal: React.FC<UpgradeToProModalProps> = ({
 
             {/* Title & Subtitle */}
             <View className="items-center text-center my-2">
-              <Text className="text-2xl font-black text-white text-center">
+              <Text className="text-2xl font-extrabold text-white text-center">
                 Lleva tus fiestas al siguiente nivel
               </Text>
-              <Text className="text-sm text-white/60 text-center mt-2 px-2">
-                Herramientas exclusivas para anfitriones y promotores.
-                Cero comisiones en venta de entradas.
+              <Text className="text-sm font-regular text-white/60 text-center mt-2 px-2">
+                Herramientas exclusivas para anfitriones y promotores. Cero
+                comisiones en venta de entradas.
               </Text>
             </View>
 
@@ -174,14 +158,15 @@ export const UpgradeToProModal: React.FC<UpgradeToProModalProps> = ({
                 return (
                   <View
                     key={benefit.id}
-                    className="flex-row items-start gap-3 p-3.5 rounded-2xl bg-[#1b1b1f] border border-white/5"
+                    className="flex-row items-center gap-3 p-3 rounded-2xl"
                   >
-                    <View className="size-10 rounded-xl bg-[#241320] border border-[#ea4bc8]/30 items-center justify-center mt-0.5">
+                    <View className="size-10 rounded-xl bg-white/5 items-center justify-center mt-0.5">
                       {benefit.iconType === "verified_image" ? (
                         <Image
                           source={icons.verified}
                           className="size-5"
                           resizeMode="contain"
+                          tintColor={colors.accentPink}
                         />
                       ) : IconComponent ? (
                         <IconComponent size={20} color={colors.accentPink} />
@@ -199,13 +184,6 @@ export const UpgradeToProModal: React.FC<UpgradeToProModalProps> = ({
                   </View>
                 );
               })}
-            </View>
-
-            {/* Price Tag & Guarantees */}
-            <View className="items-center py-2">
-              <Text className="text-white/50 text-xs text-center">
-                Cancela en cualquier momento desde tu cuenta
-              </Text>
             </View>
           </ScrollView>
 
@@ -226,7 +204,7 @@ export const UpgradeToProModal: React.FC<UpgradeToProModalProps> = ({
                   <ActivityIndicator size="small" color="#ffffff" />
                 ) : (
                   <Text className="text-white font-extrabold text-base tracking-wide">
-                    Upgrade to Partify Pro - $5.99/mo
+                    Mejorar a Partify Pro - $5.99/mes
                   </Text>
                 )}
               </LinearGradient>
@@ -237,7 +215,7 @@ export const UpgradeToProModal: React.FC<UpgradeToProModalProps> = ({
               disabled={loading}
               className="py-2.5 items-center justify-center active:opacity-60"
             >
-              <Text className="text-white/60 font-semibold text-sm">
+              <Text className="text-muted-foreground font-medium text-xs">
                 Tal vez más tarde
               </Text>
             </Pressable>

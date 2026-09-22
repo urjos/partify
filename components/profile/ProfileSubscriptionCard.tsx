@@ -1,7 +1,7 @@
 import { icons } from "@/constants/icons";
+import images from "@/constants/images";
 import { colors } from "@/constants/theme";
 import { useBilling } from "@/hooks/use-billing";
-import { Sparkles } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -40,22 +40,22 @@ export default function ProfileSubscriptionCard() {
         className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-accent-pink/10 blur-2xl"
       />
 
+      {/* Badge "Tu plan" */}
+      <View className="self-start px-2.5 py-1 rounded-md bg-white/10 mb-2">
+        <Text className="text-white text-xs font-bold">Tu plan</Text>
+      </View>
+
       <View className="flex-row items-center justify-between mb-3">
         <View className="flex-row items-center gap-2">
           <View className="size-8 rounded-full items-center justify-center">
-            {isPro ? (
-              <Image
-                source={icons.flame}
-                className="size-5"
-                tintColor={colors.accentPink}
-                resizeMode="contain"
-              />
-            ) : (
-              <Sparkles size={16} color={colors.accentPink} />
-            )}
+            <Image
+              source={images.logoPartify}
+              className="size-10"
+              resizeMode="contain"
+            />
           </View>
           <Text className="text-base font-extrabold text-primary">
-            {isPro ? "Partify Pro" : "Suscripción y planes"}
+            {isPro ? "Pro" : "Free"}
           </Text>
         </View>
       </View>
