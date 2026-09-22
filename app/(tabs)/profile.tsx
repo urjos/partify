@@ -7,8 +7,10 @@ import ProfileSegmentedTabs, {
 } from "@/components/profile/ProfileSegmentedTabs";
 import ProfileSpotifyCard from "@/components/profile/ProfileSpotifyCard";
 import ProfileStats from "@/components/profile/ProfileStats";
+import ProfileSubscriptionCard from "@/components/profile/ProfileSubscriptionCard";
 import images from "@/constants/images";
 import { useApi } from "@/hooks/use-api";
+import { useBilling } from "@/hooks/use-billing";
 import { useEventStore } from "@/lib/store/eventStore";
 import { ProfileEventItem, useUserStore } from "@/lib/store/userStore";
 import { formatDateProfile } from "@/lib/utils";
@@ -36,6 +38,7 @@ const Profile = () => {
   const { user } = useUser();
   const posthog = usePostHog();
   const api = useApi();
+  const { hasVerifiedBadge } = useBilling();
 
   const userProfile = useUserStore((state) => state.profile);
   const fetchProfile = useUserStore((state) => state.fetchProfile);
@@ -154,7 +157,7 @@ const Profile = () => {
         name={displayName}
         avatarSource={userAvatar}
         bio={userProfile.bio}
-        isVerified={true}
+        isVerified={hasVerifiedBadge}
         onEditPress={handleEditProfile}
       />
 
@@ -165,6 +168,9 @@ const Profile = () => {
           onEditPress={handleEditProfile}
         />
       ) : null}
+
+      {/* Tarjeta de Suscripción y Planes (Clerk Billing) */}
+      <ProfileSubscriptionCard />
 
       {/* Tarjetas de Estadísticas y Acción */}
       <ProfileStats

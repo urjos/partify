@@ -7,6 +7,7 @@ import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
 import { useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -346,11 +347,11 @@ const SignIn = () => {
                   onPress={handleSubmit}
                   disabled={!formValid || fetchStatus === "fetching"}
                 >
-                  <Text className="auth-button-text">
-                    {fetchStatus === "fetching"
-                      ? "Iniciando sesión..."
-                      : "Iniciar sesión"}
-                  </Text>
+                  {fetchStatus === "fetching" ? (
+                    <ActivityIndicator />
+                  ) : (
+                    <Text className="auth-button-text">Iniciar sesión</Text>
+                  )}
                 </Pressable>
 
                 <View className="auth-divider-row">
@@ -365,11 +366,13 @@ const SignIn = () => {
                   disabled={googleLoading}
                 >
                   <GoogleIcon size={18} />
-                  <Text className="auth-google-button-text">
-                    {googleLoading
-                      ? "Iniciando sesión..."
-                      : "Continuar con Google"}
-                  </Text>
+                  {googleLoading ? (
+                    <ActivityIndicator />
+                  ) : (
+                    <Text className="auth-google-button-text">
+                      Continuar con Google
+                    </Text>
+                  )}
                 </Pressable>
               </View>
             </View>

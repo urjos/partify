@@ -11,6 +11,7 @@ import checkCircle from "@/assets/icons/circle-check.png";
 import clock from "@/assets/icons/clock.png";
 import clothes from "@/assets/icons/clothes.png";
 import ellipsis from "@/assets/icons/ellipsis-vertical.png";
+import externalLink from "@/assets/icons/external-link.png";
 import filter from "@/assets/icons/filter.png";
 import flame from "@/assets/icons/flame.png";
 import heartSolid from "@/assets/icons/heart-solid.png";
@@ -88,6 +89,7 @@ export const icons = {
   cameraAdd,
   link,
   heartSolid,
+  externalLink,
 } as const;
 
 export type IconKey = keyof typeof icons;

@@ -222,7 +222,7 @@
   /* Home */
 
   .home-empty-state {
-    @apply py-4 text-sm font-medium text-muted-foreground;
+    @apply py-4 text-sm font-medium text-muted-foreground text-center;
   }
 
   .home-header {

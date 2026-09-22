@@ -235,7 +235,13 @@ export default function EventDetail() {
           {/* Botón Atrás */}
           <Pressable
             className="size-11 rounded-full items-center justify-center  backdrop-blur-md active:opacity-75 pointer-events-auto"
-            onPress={() => router.back()}
+            onPress={() => {
+              if (router.canGoBack()) {
+                router.back();
+              } else {
+                router.replace("/(tabs)");
+              }
+            }}
             hitSlop={8}
           >
             <Image

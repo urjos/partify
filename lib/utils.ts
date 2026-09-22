@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import * as WebBrowser from "expo-web-browser";
 
 export const formatCurrency = (value: number, currency = "USD"): string => {
   try {
@@ -37,7 +38,9 @@ export const formatPeruPhone = (text: string): string => {
   return `${max.slice(0, 3)} ${max.slice(3, 6)} ${max.slice(6)}`;
 };
 
-export const getPeruPhoneValidationMessage = (rawText: string): string | null => {
+export const getPeruPhoneValidationMessage = (
+  rawText: string,
+): string | null => {
   if (!rawText || rawText.trim() === "") return null;
   const digits = rawText.replace(/\D/g, "");
   const clean =
@@ -90,4 +93,10 @@ export const locationFormattedDistrictAndCity = (location?: string): string => {
 export const formatDateProfile = (date?: string): string => {
   if (!date) return "Próximamente";
   return `${dayjs(date).locale("es").format("D/M")} - ${dayjs(date).locale("es").format("h:mm a")}`;
+};
+
+export const openBillingPortal = () => {
+  return WebBrowser.openBrowserAsync(
+    "https://pleased-quail-73.accounts.dev/user/billing/plans",
+  );
 };

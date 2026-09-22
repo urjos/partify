@@ -1,3 +1,4 @@
+import VerifiedBadge from "@/components/VerifiedBadge";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
@@ -84,13 +85,11 @@ export default function ProfileHeroCard({
         >
           {name}
         </Text>
-        {isVerified && (
-          <Image
-            source={icons.verified}
-            tintColor={colors.accentPink}
-            className="size-4"
-          />
-        )}
+        <VerifiedBadge
+          isVerified={isVerified}
+          size={16}
+          tintColor={colors.accentPink}
+        />
       </View>
 
       <View className="flex justify-center items-center gap-4 w-full">

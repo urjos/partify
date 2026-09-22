@@ -466,7 +466,7 @@ export default function EventForm({
           <View className="flex-row items-center justify-between">
             <Text className="text-xl font-bold text-primary">Detalles</Text>
             <Text className="text-[11px] text-muted-foreground font-medium">
-              Opcional
+              Obligatorio*
             </Text>
           </View>
           <TextInput

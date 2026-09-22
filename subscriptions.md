@@ -65,20 +65,4 @@ Subscriptions monetize **host tools**, never gate attendee actions
 
 `@clerk/expo` does not ship a Checkout/PricingTable component. Send the user
 to Clerk's **Account Portal** billing page in the in-app browser, same
-pattern already used for Google OAuth (`expo-web-browser`):
-
-```ts
-import * as WebBrowser from "expo-web-browser";
-
-const openBillingPortal = () => {
-  WebBrowser.openBrowserAsync(
-    "https://accounts.YOUR-CLERK-DOMAIN.com/user/billing",
-  );
-};
-```
-
-Replace `YOUR-CLERK-DOMAIN` with your instance's Account Portal domain
-(Dashboard → Account Portal → copy the base URL). Confirm the exact
-`/user/billing` path in your dashboard before shipping — Clerk's Account
-Portal paths can vary slightly by instance configuration, and I don't have
-live access to verify yours.
+pattern already used for Google OAuth (`expo-web-browser`). Using the const openBillingPortal() in utils.ts

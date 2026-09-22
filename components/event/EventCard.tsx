@@ -4,6 +4,7 @@ import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
 import { useApi } from "@/hooks/use-api";
+import { useBilling } from "@/hooks/use-billing";
 import { useEventStore } from "@/lib/store/eventStore";
 import { formatDateProfile, locationFormattedDistrict } from "@/lib/utils";
 import { openWhatsApp } from "@/lib/whatsapp";
@@ -19,6 +20,7 @@ import {
   Text,
   View,
 } from "react-native";
+import VerifiedBadge from "../VerifiedBadge";
 
 dayjs.locale("es");
 
@@ -46,6 +48,7 @@ const EventCard = ({
   const [isFavorite, setIsFavorite] = useState<boolean>(
     Boolean(initialIsFavorite),
   );
+  const { hasVerifiedBadge } = useBilling();
 
   useEffect(() => {
     setIsFavorite(Boolean(initialIsFavorite));
@@ -128,11 +131,10 @@ const EventCard = ({
                 className="w-4 h-4 rounded-full"
               />
               <Text className="event-meta-text">{author}</Text>
-              <Image
-                source={icons.verified}
-                className="event-meta-icon"
+              <VerifiedBadge
+                isVerified={hasVerifiedBadge}
+                size={14}
                 tintColor={colors.accentPink}
-                resizeMode="contain"
               />
             </View>
           </View>
