@@ -32,7 +32,7 @@ export default function LoadingScreen({
           className,
         )}
       >
-        <View className="bg-card/95 border border-border/40 rounded-3xl p-6 items-center justify-center gap-3 shadow-2xl min-w-[160px]">
+        <View className="bg-card/95 rounded-3xl p-6 items-center justify-center gap-3 shadow-2xl min-w-[160px]">
           <ActivityIndicator size={size} color={color} />
           {message ? (
             <Text className="text-sm font-semibold text-primary text-center">

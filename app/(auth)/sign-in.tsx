@@ -4,8 +4,8 @@ import { icons } from "@/constants/icons";
 import { useWarmUpBrowser } from "@/hooks/use-warm-up-browser";
 import { useSignIn } from "@clerk/expo";
 import { useSSO } from "@clerk/expo/experimental";
-import * as WebBrowser from "expo-web-browser";
 import { Link, useRouter, type Href } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
 import { useState } from "react";
@@ -400,10 +400,7 @@ const SignIn = () => {
       </KeyboardAvoidingView>
 
       {(fetchStatus === "fetching" || googleLoading) && (
-        <LoadingScreen
-          overlay
-          message={googleLoading ? "Conectando con Google..." : "Iniciando sesión..."}
-        />
+        <LoadingScreen overlay />
       )}
     </SafeAreaView>
   );
