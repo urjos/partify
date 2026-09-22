@@ -1,4 +1,5 @@
 import GoogleIcon from "@/components/auth/GoogleIcon";
+import LoadingScreen from "@/components/shared/LoadingScreen";
 import { icons } from "@/constants/icons";
 import { useSignIn } from "@clerk/expo";
 import { useSSO } from "@clerk/expo/experimental";
@@ -388,6 +389,13 @@ const SignIn = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {(fetchStatus === "fetching" || googleLoading) && (
+        <LoadingScreen
+          overlay
+          message={googleLoading ? "Conectando con Google..." : "Iniciando sesión..."}
+        />
+      )}
     </SafeAreaView>
   );
 };

@@ -1,4 +1,5 @@
 import EventForm from "@/components/event/EventForm";
+import LoadingScreen from "@/components/shared/LoadingScreen";
 import UpgradeToProModal from "@/components/subscription/UpgradeToProModal";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
@@ -84,14 +85,7 @@ const CreateEvent = () => {
 
   // Estado de carga inicial
   if (!billingLoaded || (loadingCount && activeEventsCount === null)) {
-    return (
-      <SafeAreaView className="flex-1 bg-black justify-center items-center px-6">
-        <ActivityIndicator size="large" color="#ea4bc8" />
-        <Text className="text-white/60 text-sm mt-4 font-medium">
-          Verificando límites del plan...
-        </Text>
-      </SafeAreaView>
-    );
+    return <LoadingScreen message="Verificando límites del plan..." />;
   }
 
   // Estado de error al obtener conteo sin datos previos

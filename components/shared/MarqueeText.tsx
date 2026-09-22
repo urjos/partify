@@ -22,6 +22,7 @@ export interface MarqueeTextProps {
   fadeWidth?: number;
   speed?: number; // ms per pixel (default: 35)
   delay?: number; // pause in ms before moving and at the end (default: 1500)
+  initial?: boolean;
 }
 
 export default function MarqueeText({
@@ -30,6 +31,7 @@ export default function MarqueeText({
   style,
   containerClassName,
   containerStyle,
+  initial,
   maxWidth,
   fadeColor = colors.background,
   fadeWidth = 28,
@@ -169,7 +171,7 @@ export default function MarqueeText({
       </Animated.View>
 
       {/* Gradiente de desvanecimiento visual en el inicio (borde izquierdo) */}
-      {isOverflowing && (
+      {isOverflowing && initial && (
         <LinearGradient
           colors={[fadeColor, "transparent"]}
           start={{ x: 0, y: 0 }}

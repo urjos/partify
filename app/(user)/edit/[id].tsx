@@ -1,3 +1,4 @@
+import LoadingScreen from "@/components/shared/LoadingScreen";
 import UserProfileForm from "@/components/profile/edit/UserProfileForm";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
@@ -89,13 +90,16 @@ export default function EditProfileScreen() {
   };
 
   return (
-    <UserProfileForm
-      initialProfile={profile}
-      isSaving={isSaving}
-      onSubmit={handleSubmit}
-      onCancel={() => router.back()}
-      onDeactivate={handleDeactivate}
-      onAvatarChange={() => {}}
-    />
+    <>
+      <UserProfileForm
+        initialProfile={profile}
+        isSaving={isSaving}
+        onSubmit={handleSubmit}
+        onCancel={() => router.back()}
+        onDeactivate={handleDeactivate}
+        onAvatarChange={() => {}}
+      />
+      {isSaving && <LoadingScreen overlay message="Guardando perfil..." />}
+    </>
   );
 }

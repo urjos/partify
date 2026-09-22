@@ -5,6 +5,7 @@ import EventMeetingPointCard from "@/components/event/detail/EventMeetingPointCa
 import EventNightDetailsCard from "@/components/event/detail/EventNightDetailsCard";
 import EventOrganizerCard from "@/components/event/detail/EventOrganizerCard";
 import EventMediaCarousel from "@/components/event/EventMediaCarousel";
+import LoadingScreen from "@/components/shared/LoadingScreen";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 import "@/global.css";
@@ -29,6 +30,7 @@ export default function EventDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const api = useApi();
   const events = useEventStore((state) => state.events);
+  const loading = useEventStore((state) => state.loading);
   const removeEvent = useEventStore((state) => state.removeEvent);
   const setAttendanceAction = useEventStore((state) => state.setAttendance);
   const rateEventAction = useEventStore((state) => state.rateEvent);
@@ -61,6 +63,10 @@ export default function EventDetail() {
     event?.attendanceStatus,
     event?.isGoing,
   ]);
+
+  if (!event && loading) {
+    return <LoadingScreen message="Cargando detalles de la fiesta..." />;
+  }
 
   if (!event) {
     return (

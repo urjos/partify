@@ -3,6 +3,7 @@ import ProfileSpotifyCard from "@/components/profile/ProfileSpotifyCard";
 import ProfileStats from "@/components/profile/ProfileStats";
 import UserOrganizedEventCard from "@/components/profile/UserOrganizedEventCard";
 import UserRatingCard from "@/components/profile/UserRatingCard";
+import LoadingScreen from "@/components/shared/LoadingScreen";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { colors } from "@/constants/theme";
@@ -215,11 +216,7 @@ export default function UserProfileScreen() {
   };
 
   if (loading) {
-    return (
-      <SafeAreaView className="flex-1 bg-background items-center justify-center">
-        <ActivityIndicator size="large" color={colors.accentPink} />
-      </SafeAreaView>
-    );
+    return <LoadingScreen />;
   }
 
   if (!userData) {
