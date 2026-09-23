@@ -90,48 +90,73 @@ const EventMediaCarousel = ({
     }
   };
 
+  if (!media || media.length === 0) return null;
+
   return (
     <View className="event-media-carousel" onLayout={onLayout}>
-      {width > 0 && (
-        <FlatList
-          data={media}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          className="h-full w-full"
-          keyExtractor={(_, index) => String(index)}
-          onScroll={onScroll}
-          scrollEventThrottle={16}
-          getItemLayout={(_, index) => ({
-            length: width,
-            offset: width * index,
-            index,
-          })}
-          renderItem={({ item }) => (
-            <Pressable
-              onPress={onPress}
-              style={{ width, height: "100%" }}
-              className="h-full items-center justify-center overflow-hidden"
-            >
-              {item.type === "video" ? (
-                <VideoSlide
-                  uri={item.uri}
-                  width={width}
-                  className={className}
-                  contentFit={resizeMode}
-                />
-              ) : (
-                <Image
-                  source={item.source}
-                  style={{ width }}
-                  className={className}
-                  resizeMode={resizeMode}
-                />
-              )}
-            </Pressable>
-          )}
-        />
-      )}
+      {width > 0 &&
+        (media.length === 1 ? (
+          <Pressable
+            onPress={onPress}
+            style={{ width, height: "100%" }}
+            className="h-full items-center justify-center overflow-hidden"
+          >
+            {media[0].type === "video" ? (
+              <VideoSlide
+                uri={media[0].uri}
+                width={width}
+                className={className}
+                contentFit={resizeMode}
+              />
+            ) : (
+              <Image
+                source={media[0].source}
+                style={{ width }}
+                className={className}
+                resizeMode={resizeMode}
+              />
+            )}
+          </Pressable>
+        ) : (
+          <FlatList
+            data={media}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            className="h-full w-full"
+            keyExtractor={(_, index) => String(index)}
+            onScroll={onScroll}
+            scrollEventThrottle={16}
+            getItemLayout={(_, index) => ({
+              length: width,
+              offset: width * index,
+              index,
+            })}
+            renderItem={({ item }) => (
+              <Pressable
+                onPress={onPress}
+                style={{ width, height: "100%" }}
+                className="h-full items-center justify-center overflow-hidden"
+              >
+                {item.type === "video" ? (
+                  <VideoSlide
+                    uri={item.uri}
+                    width={width}
+                    className={className}
+                    contentFit={resizeMode}
+                  />
+                ) : (
+                  <Image
+                    source={item.source}
+                    style={{ width }}
+                    className={className}
+                    resizeMode={resizeMode}
+                  />
+                )}
+              </Pressable>
+            )}
+          />
+        ))}
 
       {!hideDots && media.length > 1 && (
         <View className="event-media-dots" pointerEvents="none">
