@@ -45,7 +45,12 @@ module.exports = {
         },
       ],
       "@clerk/expo",
-      "expo-secure-store",
+      [
+        "expo-secure-store",
+        {
+          configureAndroidBackup: true,
+        },
+      ],
       "expo-web-browser",
       [
         "expo-image-picker",

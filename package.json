@@ -16,6 +16,7 @@
     "@react-native-community/datetimepicker": "8.4.4",
     "@react-native-community/slider": "5.0.1",
     "@supabase/supabase-js": "^2.116.0",
+    "babel-preset-expo": "~54.0.10",
     "base64-arraybuffer": "^1.0.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.21",
@@ -56,6 +57,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@types/react": "~19.1.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
     "postcss": "^8.5.26",

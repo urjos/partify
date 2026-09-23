@@ -4,6 +4,7 @@ import { icons } from "@/constants/icons";
 import { useWarmUpBrowser } from "@/hooks/use-warm-up-browser";
 import { useSignIn } from "@clerk/expo";
 import { useSSO } from "@clerk/expo/experimental";
+import * as AuthSession from "expo-auth-session";
 import { Link, useRouter, type Href } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { styled } from "nativewind";
@@ -45,6 +46,7 @@ const SignIn = () => {
     try {
       const { createdSessionId } = await startSSOFlow({
         strategy: "oauth_google",
+        redirectUrl: AuthSession.makeRedirectUri({ path: "sso-callback" }),
         authSessionOptions: {
           showInRecents: true,
         },

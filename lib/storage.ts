@@ -5,70 +5,8 @@ import * as FileSystemLegacy from "expo-file-system/legacy";
 
 export const USERS_MEDIA_BUCKET = "users-media";
 
-export const isSupabaseStorageUrl = (
-  url?: string | null,
-  bucket: string = USERS_MEDIA_BUCKET,
-): boolean => {
-  if (!url || typeof url !== "string") return false;
-  return (
-    url.startsWith("http") &&
-    (url.includes(`/${bucket}/`) ||
-      url.includes(`/storage/v1/object/public/${bucket}/`))
-  );
-};
-
-export const extractSupabasePath = (
-  url: string,
-  bucket: string = USERS_MEDIA_BUCKET,
-): string | null => {
-  if (!url || typeof url !== "string") return null;
-  try {
-    const marker = `/${bucket}/`;
-    const index = url.indexOf(marker);
-    if (index === -1) return null;
-    const pathWithQuery = url.substring(index + marker.length);
-    const cleanPath = pathWithQuery.split("?")[0];
-    return decodeURIComponent(cleanPath);
-  } catch {
-    return null;
-  }
-};
-
-export const deleteFromSupabase = async (
-  bucket: string,
-  fileUrlOrPath?: string | null,
-): Promise<boolean> => {
-  if (!fileUrlOrPath || typeof fileUrlOrPath !== "string") return false;
-  try {
-    // Si no es una URL de Supabase de este bucket, no hacemos nada (ej. Google, Clerk o file://)
-    if (!isSupabaseStorageUrl(fileUrlOrPath, bucket)) {
-      return false;
-    }
-
-    const relativePath = extractSupabasePath(fileUrlOrPath, bucket);
-    if (!relativePath) return false;
-
-    const { error } = await supabase.storage
-      .from(bucket)
-      .remove([relativePath]);
-
-    if (error) {
-      console.warn(
-        `[Supabase Storage] No se pudo eliminar ${relativePath} de ${bucket}:`,
-        error,
-      );
-      return false;
-    }
-    return true;
-  } catch (err) {
-    console.warn(`[Supabase Storage] Excepción al eliminar archivo:`, err);
-    return false;
-  }
-};
-
 export interface UploadAvatarOptions {
   base64?: string;
-  previousUrl?: string | null;
   userId?: string;
 }
 
@@ -83,12 +21,9 @@ export const uploadUserAvatar = async (
     return uri;
   }
 
-  // 1. Eliminar la foto anterior SOLO si pertenecía a users-media (nunca Google o Clerk)
-  if (options?.previousUrl) {
-    await deleteFromSupabase(USERS_MEDIA_BUCKET, options.previousUrl);
-  }
-
-  // 2. Preparar el nombre del archivo y contentType
+  // Deletion is intentionally server-side: only the API has enough context to
+  // verify avatar ownership before using its service-role client.
+  // 1. Prepare the file name and content type.
   const cleanUri = uri.split("?")[0];
   const ext = cleanUri.split(".").pop()?.toLowerCase() || "jpg";
   const validExt = ["jpg", "jpeg", "png", "webp"].includes(ext) ? ext : "jpg";
@@ -188,10 +123,4 @@ export const uploadMediaToSupabase = async (
   const { data } = supabase.storage.from("events-media").getPublicUrl(filename);
 
   return data.publicUrl;
-};
-
-export const deleteUserAvatar = async (
-  avatarUrl?: string | null,
-): Promise<boolean> => {
-  return deleteFromSupabase(USERS_MEDIA_BUCKET, avatarUrl);
 };

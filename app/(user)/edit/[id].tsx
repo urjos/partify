@@ -2,16 +2,17 @@ import LoadingScreen from "@/components/shared/LoadingScreen";
 import UserProfileForm from "@/components/profile/edit/UserProfileForm";
 import "@/global.css";
 import { useApi } from "@/hooks/use-api";
-import { deleteUserAvatar, uploadUserAvatar } from "@/lib/storage";
+import { uploadUserAvatar } from "@/lib/storage";
 import { UserProfile, useUserStore } from "@/lib/store/userStore";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
+import { useUser } from "@clerk/expo";
 
 export default function EditProfileScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const api = useApi();
+  const { user } = useUser();
   const {
     profile,
     fetchProfile,
@@ -31,20 +32,19 @@ export default function EditProfileScreen() {
     try {
       let finalAvatarUrl = draft.avatarUri;
 
-      // Si se seleccionó una nueva foto local, subirla a users-media y eliminar la anterior
+      // The API performs server-side cleanup only after proving storage ownership.
       if (
         draft.avatarUri &&
         !draft.avatarUri.startsWith("http://") &&
         !draft.avatarUri.startsWith("https://")
       ) {
+        if (!user?.id) throw new Error("No active Clerk user");
         finalAvatarUrl = await uploadUserAvatar(draft.avatarUri, {
           base64: options?.avatarBase64,
-          previousUrl: profile.avatarUri,
-          userId: profile.username || id,
+          userId: user?.id,
         });
       } else if (draft.avatarUri === null && profile.avatarUri) {
-        // Si el usuario eliminó la foto y tenía una previa
-        await deleteUserAvatar(profile.avatarUri);
+        // The API safely removes only an avatar owned by this Clerk user.
         finalAvatarUrl = null;
       }
 
