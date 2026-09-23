@@ -11,7 +11,7 @@ import { router, useFocusEffect } from "expo-router";
 import { AlertCircle, Sparkles } from "lucide-react-native";
 import { styled } from "nativewind";
 import React, { useCallback, useState } from "react";
-import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
@@ -85,7 +85,7 @@ const CreateEvent = () => {
 
   // Estado de carga inicial
   if (!billingLoaded || (loadingCount && activeEventsCount === null)) {
-    return <LoadingScreen message="Verificando límites del plan..." />;
+    return <LoadingScreen />;
   }
 
   // Estado de error al obtener conteo sin datos previos
