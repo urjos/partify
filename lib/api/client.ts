@@ -1,4 +1,11 @@
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+const rawApiUrl = process.env.EXPO_PUBLIC_API_URL || "";
+const normalizeApiUrl = (url: string) => {
+  const trimmed = url.replace(/\/+$/, "");
+  if (!trimmed) return "";
+  return trimmed.endsWith("/api/v1") ? trimmed : `${trimmed}/api/v1`;
+};
+
+const API_URL = normalizeApiUrl(rawApiUrl);
 
 if (!API_URL) {
   console.warn(
