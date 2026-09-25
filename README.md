@@ -55,6 +55,49 @@ Al instalar una aplicación fuera de Google Play Store, Android te pedirá confi
 
 ---
 
+## 📱 Capturas de Pantalla
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center" width="33%">
+        <b>🗺️ Radar Geoespacial</b><br /><br />
+        <img src="assets/screenshots/01-map-radar.png" width="220" alt="Radar y Mapa Interactivo" /><br />
+        <sub>Descubrimiento con radio ajustable</sub>
+      </td>
+      <td align="center" width="33%">
+        <b>🎉 Feed de Fiestas</b><br /><br />
+        <img src="assets/screenshots/02-feed-events.png" width="220" alt="Feed de Eventos" /><br />
+        <sub>Filtros por categorías y cercanía</sub>
+      </td>
+      <td align="center" width="33%">
+        <b>🎟️ Detalle del Evento</b><br /><br />
+        <img src="assets/screenshots/03-event-details.png" width="220" alt="Detalle del Evento" /><br />
+        <sub>Carrusel, precios y RSVP</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" width="33%">
+        <b>➕ Publicar Fiesta</b><br /><br />
+        <img src="assets/screenshots/04-create-event.png" width="220" alt="Creación de Eventos" /><br />
+        <sub>Wizard de creación y fotos</sub>
+      </td>
+      <td align="center" width="33%">
+        <b>👤 Perfil Social</b><br /><br />
+        <img src="assets/screenshots/05-user-profile.png" width="220" alt="Perfil del Usuario" /><br />
+        <sub>Gustos musicales y favoritos</sub>
+      </td>
+      <td align="center" width="33%">
+        <b>⭐ Reputación & Ratings</b><br /><br />
+        <img src="assets/screenshots/06-reputation.png" width="220" alt="Reputación del Anfitrión" /><br />
+        <sub>Calificaciones comunitarias</sub>
+      </td>
+    </tr>
+  </table>
+</div>
+
+---
+
 ## ✨ Características Principales
 
 Partify funciona como una capa de descubrimiento social y contacto directo entre fiesteros y anfitriones:
