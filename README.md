@@ -1,54 +1,143 @@
-npm install
-npx expo-doctor
-eas build --profile development --platform android
+<div align="center">
 
-# Welcome to your Expo app 👋
+# 🎉 Partify
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+### La plataforma social para descubrir y conectar con fiestas, eventos nocturnos y gatherings locales en tiempo real.
 
-## Get started
+[![Latest Release](https://img.shields.io/github/v/release/urjos/partify?color=9333EA&label=Versi%C3%B3n&logo=github&style=for-the-badge)](https://github.com/urjos/partify/releases/latest)
+[![Android Compatibility](https://img.shields.io/badge/Android-8.0%2B_(API_26%2B)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/urjos/partify/releases/latest)
+[![Expo SDK](https://img.shields.io/badge/Expo_SDK-54-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev)
+[![React Native](https://img.shields.io/badge/React_Native-0.81-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev)
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+### 📲 Descarga la App para Android (Instalación Directa)
 
-2. Start the app
+Puedes instalar Partify directamente en tu teléfono sin pasar por Google Play Store:
 
-   ```bash
-   npx expo start
-   ```
+<br />
 
-In the output, you'll find options to open the app in a
+<a href="https://github.com/urjos/partify/releases/latest/download/Partify.apk">
+  <img src="https://img.shields.io/badge/%E2%AC%87%EF%B8%8F_DESCARGAR_APK_DIRECTO-Partify.apk-9333EA?style=for-the-badge&logo=android&logoColor=white" height="48" alt="Descargar Partify APK" />
+</a>
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+<br /><br />
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+<table>
+  <tr>
+    <td align="center">
+      <b>📱 Escanea desde tu celular para descargar:</b><br /><br />
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://github.com/urjos/partify/releases/latest/download/Partify.apk" width="180" height="180" alt="Código QR para descargar Partify APK" /><br />
+      <sub>Apunta la cámara de tu teléfono para descargar el archivo <code>Partify.apk</code></sub>
+    </td>
+  </tr>
+</table>
 
-## Get a fresh project
+</div>
 
-When you're ready, run:
+<br />
 
-```bash
-npm run reset-project
+---
+
+## 📖 Guía Rápida de Instalación en Android
+
+Al instalar una aplicación fuera de Google Play Store, Android te pedirá confirmar la instalación. Sigue estos 3 sencillos pasos:
+
+1. **Descarga el APK:** Haz clic en el botón de descarga arriba o escanea el código QR desde tu celular.
+2. **Autoriza la descarga:** Si tu navegador (Chrome, Brave, Samsung Internet) muestra el aviso *"Este archivo puede ser dañino"*, pulsa en **"Descargar de todos modos"**.
+3. **Instala la app:** 
+   - Toca la notificación de descarga finalizada o abre el archivo desde tu carpeta de **Descargas**.
+   - Si es la primera vez que instalas un APK desde ese navegador, Android abrirá Ajustes solicitando **"Instalar aplicaciones de fuentes desconocidas"**. Activa la casilla **"Permitir desde esta fuente"**.
+   - Pulsa **Instalar** y ¡listo! Ya puedes abrir Partify.
+
+> [!NOTE]
+> Cada versión publicada en [GitHub Releases](https://github.com/urjos/partify/releases) incluye su checksum criptográfico **SHA-256** para que puedas verificar la autenticidad e integridad del binario.
+
+---
+
+## ✨ Características Principales
+
+Partify funciona como una capa de descubrimiento social y contacto directo entre fiesteros y anfitriones:
+
+- 🗺️ **Radar Geoespacial y Mapa Interactivo:** Explora eventos en un mapa dinámico con radio ajustable (1 a 50+ km) y filtros por categorías (Rooftops, Fiestas en Casa, Underground, Discotecas, etc.).
+- 👥 **Social RSVP:** Marca tu intención de asistencia con estados como *"Asistiré"* o *"Me interesa"* y guarda tus fiestas favoritas en marcadores.
+- 💬 **Contacto Directo con el Anfitrión:** Conexión vía WhatsApp o chat para acordar métodos de pago externos sin comisiones de ticketera.
+- ⭐ **Sistema de Reputación y Verificación:** Calificaciones comunitarias de 1 a 5 estrellas para anfitriones y fiestas, acumulando el badge de *Anfitrión Verificado*.
+- 📸 **Showcase Multimedia:** Carrusel con fotos y videos de alta calidad alojados en Supabase Storage CDN.
+
+---
+
+## 🏗️ Arquitectura Técnica
+
+```
+                                  +--------------------+
+                                  |     Clerk Auth     |
+                                  +---------+----------+
+                                            | (Webhooks / JWT)
++--------------------------+      +---------v----------+      +---------------------------+
+|  Mobile App (Expo SDK 54 | <--> |  Express REST API  | <--> | MongoDB Atlas             |
+|  React Native 0.81)      |      |  (/api/v1)         |      | (2dsphere geospatial idx) |
++------------+-------------+      +---------+----------+      +---------------------------+
+       |     |                                  |
+       |     | (PostHog Events)                 | (Arcjet Shield)
+       |     v                                  v
+       |   +-------------------+      +-------------------+
+       |   |   PostHog Events  |      |  Arcjet Security  |
+       |   +-------------------+      +-------------------+
+       v
++-------------------------------------------------------+
+| Supabase Storage (CDN)                                |
+| - events-media : Event photos and showcase videos     |
+| - users-media  : User avatars (auto-cleanup on update)|
++-------------------------------------------------------+
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+| Capa | Tecnologías |
+| :--- | :--- |
+| **Frontend Móvil** | React Native 0.81, Expo SDK 54, Expo Router v6, NativeWind v5 |
+| **Backend REST API** | Node.js v20, Express, Arcjet Security Shield |
+| **Base de Datos** | MongoDB Atlas con índices geoespaciales `2dsphere` y regla ESR |
+| **Almacenamiento** | Supabase Storage (`events-media`, `users-media`) |
+| **Autenticación** | Clerk (`@clerk/expo`) con almacenamiento seguro en `expo-secure-store` |
+| **Analítica** | PostHog React Native |
+| **Compilación & CI/CD** | Expo EAS Build + GitHub Releases |
 
-## Learn more
+---
 
-To learn more about developing your project with Expo, look at the following resources:
+## 💻 Entorno de Desarrollo Local
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Si deseas clonar el proyecto y contribuir al desarrollo:
 
-## Join the community
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/urjos/partify.git
+cd partify
+```
 
-Join our community of developers creating universal apps.
+### 2. Instalar dependencias
+```bash
+npm install
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 3. Configurar variables de entorno
+Crea un archivo `.env` en la raíz basado en `.env.example`:
+```env
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+EXPO_PUBLIC_API_URL=https://partify-backend-td9j.onrender.com/api/v1
+EXPO_PUBLIC_SUPABASE_URL=https://...supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=...
+EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=...
+POSTHOG_PROJECT_TOKEN=...
+POSTHOG_HOST=https://us.i.posthog.com
+```
+
+### 4. Iniciar la aplicación en modo desarrollo
+```bash
+npx expo start
+```
+
+---
+
+## 📄 Licencia
+
+Distribuido bajo la Licencia MIT. Consulta el archivo `LICENSE` para más información.

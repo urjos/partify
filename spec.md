@@ -412,3 +412,10 @@ Analytics are wrapped at the root layout (`app/_layout.tsx`) and captured during
    - `eas update --channel production` for zero-downtime over-the-air bug fixes and UI iterations.
 3. **Database Maintenance:**
    - Periodic audit of execution stats using `.explain("executionStats")` to verify 100% `IXSCAN` coverage across queries.
+4. **GitHub Release & Direct APK Distribution Strategy:**
+   - **Distribution Channel:** GitHub Releases hosted under `urjos/partify`.
+   - **Semantic Versioning:** Releases tagged with `vX.Y.Z` matching `app.config.js` `version`.
+   - **Binary Assets:** Every release publishes standalone APK binaries (`Partify-vX.Y.Z.apk` and `Partify.apk`).
+   - **Permanent Latest URL:** Direct download endpoint configured at `https://github.com/urjos/partify/releases/latest/download/Partify.apk`.
+   - **Security & Integrity:** SHA-256 checksums published alongside release notes for client verification.
+   - **Client Installation Support:** README landing page equipped with scannable dynamic QR codes and Android sideloading instructions ("Instalar aplicaciones de fuentes desconocidas").
