@@ -28,14 +28,6 @@ https://github.com/urjos/partify/releases/download/v1.0.0/partify_1.1.0.apk
 | :---------------------------------------------------: | :------------------------------------------------------: | :----------------: |
 | ![Create Event](docs/screenshots/04-create-event.png) | ![Profile](docs/screenshots/05-profile-subscription.png) |
 
-> **Required Screenshots to Capture:**
->
-> 1. `01-map-search.png`: Interactive Google Map radar screen showing event pins and search bar.
-> 2. `02-feed-home.png`: Main feed screen with category chips (Rooftops, Clubs, etc.) and event cards.
-> 3. `03-event-details.png`: Event details view with swipeable media carousel, schedule, and RSVP action bar.
-> 4. `04-create-event.png`: Multi-step event creation form with date pickers and media upload.
-> 5. `05-profile-subscription.png`: User profile screen displaying user stats and current subscription badge.
-> 6. `06-upgrade-modal.png`: Clerk Billing Pro upgrade modal showing feature comparison.
 
 ---
 
