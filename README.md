@@ -12,7 +12,7 @@ The application interacts with a dedicated REST API service hosted in the [parti
 
 <!-- TODO: add demo video or TestFlight/APK link -->
 
-[https://github.com/urjos/partify/releases/download/v1.0.0/partify_1.1.0.apk]
+https://github.com/urjos/partify/releases/download/v1.0.0/partify_1.1.0.apk
 
 ---
 
