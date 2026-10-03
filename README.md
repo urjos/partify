@@ -24,8 +24,8 @@ https://github.com/urjos/partify/releases/download/v1.0.0/partify_1.1.0.apk
 | :------------------------------------------------: | :--------------------------------------------------: | :----------------------------------------------------: |
 | ![Radar & Map](docs/screenshots/01-map-search.png) | ![Feed & Filters](docs/screenshots/02-feed-home.png) | ![Event Detail](docs/screenshots/03-event-details.png) |
 
-|                 Event Creation Wizard                 |                User Profile & Host Plans                 | Plan Upgrade Modal |
-| :---------------------------------------------------: | :------------------------------------------------------: | :----------------: |
+|                 Event Creation Wizard                 |                User Profile & Host Plans                 | 
+| :---------------------------------------------------: | :------------------------------------------------------: |
 | ![Create Event](docs/screenshots/04-create-event.png) | ![Profile](docs/screenshots/05-profile-subscription.png) |
 
 
